@@ -1,3 +1,4 @@
+// server.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -14,6 +15,11 @@ app.use(express.json());
 // Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/nivel", nivelRoutes);
+
+// Ruta de prueba temporal (para diagnóstico)
+app.get("/api/prueba-diagnostico", (req, res) => {
+  res.json({ ok: true, mensaje: "Esta versión del código SÍ está corriendo" });
+});
 
 app.get("/api/health", (req, res) => {
   res.json({ estado: "ok", mensaje: "TutorIA's backend funcionando" });
