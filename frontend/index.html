@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TutorIA's · Aprende inglés con IA</title>
+  <link rel="stylesheet" href="src/styles/global.css" />
+</head>
+<body>
+
+  <!-- Vista de autenticación -->
+  <div id="vista-auth" class="pantalla-auth">
+    <div class="tarjeta-auth">
+      <div class="marca">
+        <h1>TutorIA<span>'s</span></h1>
+        <p>Tu asistente de estudio de inglés con IA</p>
+      </div>
+
+      <div class="pestanas">
+        <div id="tab-login" class="pestana activa">Iniciar sesión</div>
+        <div id="tab-registro" class="pestana">Crear cuenta</div>
+      </div>
+
+      <div id="mensaje-error" class="mensaje-error"></div>
+
+      <!-- Página: Login -->
+      <div id="pagina-login" class="pagina activa">
+        <form id="form-login">
+          <div class="campo">
+            <label for="login-correo">Correo</label>
+            <input type="email" id="login-correo" placeholder="tucorreo@ejemplo.com" required />
+          </div>
+          <div class="campo">
+            <label for="login-contrasena">Contraseña</label>
+            <input type="password" id="login-contrasena" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn-principal">Ingresar</button>
+        </form>
+      </div>
+
+      <!-- Página: Registro -->
+      <div id="pagina-registro" class="pagina">
+        <form id="form-registro">
+          <div class="campo">
+            <label for="registro-nombre">Nombre</label>
+            <input type="text" id="registro-nombre" placeholder="Tu nombre" required />
+          </div>
+          <div class="campo">
+            <label for="registro-correo">Correo</label>
+            <input type="email" id="registro-correo" placeholder="tucorreo@ejemplo.com" required />
+          </div>
+          <div class="campo">
+            <label for="registro-contrasena">Contraseña</label>
+            <input type="password" id="registro-contrasena" placeholder="Mínimo 6 caracteres" required />
+          </div>
+          <button type="submit" class="btn-principal">Crear cuenta</button>
+        </form>
+      </div>
+
+      <div class="pie-auth">Aprende inglés a tu ritmo, todos los días</div>
+    </div>
+  </div>
+
+  <!-- Vista principal tras login (placeholder para siguientes módulos) -->
+  <div id="vista-principal" class="pantalla-principal oculto">
+    <h2 id="saludo-usuario">¡Hola!</h2>
+    <p>Bienvenido a TutorIA's. Aquí irán tu plan de estudio, ejercicios, vocabulario personalizado y la conversación con la IA.</p>
+    <button id="btn-cerrar-sesion" class="btn-secundario">Cerrar sesión</button>
+  </div>
+
+  <script src="src/utils/validaciones.js"></script>
+  <script src="src/store/sesion.js"></script>
+  <script src="src/services/authApi.js"></script>
+  <script src="src/components/formAuth.js"></script>
+</body>
+</html>

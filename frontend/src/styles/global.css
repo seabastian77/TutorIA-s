@@ -1,0 +1,231 @@
+/* src/styles/global.css - Tema TutorIA's: blanco y negro con acento */
+
+:root {
+  --negro: #0d0d0d;
+  --negro-suave: #1a1a1a;
+  --gris-oscuro: #2b2b2b;
+  --gris: #6b6b6b;
+  --gris-claro: #e6e6e6;
+  --blanco: #ffffff;
+  --acento: #ffffff;
+  --radio: 14px;
+  --sombra: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --fuente: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fuente);
+  background: var(--negro);
+  color: var(--blanco);
+  min-height: 100vh;
+}
+
+.pantalla-auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, var(--negro-suave), var(--negro) 70%);
+  padding: 24px;
+}
+
+.tarjeta-auth {
+  background: var(--negro-suave);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 36px;
+  animation: aparecer 0.4s ease-out;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.marca {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.marca h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.marca h1 span {
+  color: var(--gris-claro);
+  font-weight: 400;
+}
+
+.marca p {
+  color: var(--gris);
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.pestanas {
+  display: flex;
+  background: var(--negro);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 24px;
+  border: 1px solid var(--gris-oscuro);
+}
+
+.pestana {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--gris);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.pestana.activa {
+  background: var(--blanco);
+  color: var(--negro);
+}
+
+.campo {
+  margin-bottom: 18px;
+}
+
+.campo label {
+  display: block;
+  font-size: 13px;
+  color: var(--gris-claro);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.campo input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--negro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 8px;
+  color: var(--blanco);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--blanco);
+}
+
+.campo input::placeholder {
+  color: var(--gris);
+}
+
+.btn-principal {
+  width: 100%;
+  padding: 13px;
+  background: var(--blanco);
+  color: var(--negro);
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-principal:hover {
+  opacity: 0.88;
+}
+
+.btn-principal:active {
+  transform: scale(0.98);
+}
+
+.btn-principal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mensaje-error {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--gris-oscuro);
+  color: var(--blanco);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.mensaje-error.visible {
+  display: block;
+}
+
+.pie-auth {
+  text-align: center;
+  margin-top: 22px;
+  font-size: 12px;
+  color: var(--gris);
+}
+
+.oculto {
+  display: none !important;
+}
+
+/* Sistema de páginas por pestaña (mismo patrón usado en ConectaProfe) */
+.pagina {
+  display: none;
+}
+
+.pagina.activa {
+  display: block;
+  animation: aparecer 0.25s ease-out;
+}
+
+/* Pantalla principal tras login (placeholder) */
+.pantalla-principal {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+  padding: 24px;
+}
+
+.pantalla-principal h2 {
+  font-size: 24px;
+}
+
+.pantalla-principal p {
+  color: var(--gris);
+  max-width: 420px;
+}
+
+.btn-secundario {
+  padding: 10px 22px;
+  background: transparent;
+  border: 1px solid var(--gris-oscuro);
+  color: var(--blanco);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-secundario:hover {
+  border-color: var(--blanco);
+}
