@@ -32,10 +32,6 @@ tutorias/
 
 ## 1. Base de datos
 
-Puedes usar la misma instancia de PostgreSQL de ConectaProfe (crear las tablas nuevas ahí)
-o crear una base nueva en Railway. Luego ejecuta el script:
-
-```
 backend/src/config/schema.sql
 ```
 
@@ -59,30 +55,6 @@ Endpoints disponibles:
 - `GET /api/auth/perfil` → requiere header `Authorization: Bearer <token>`
 
 ## 3. Frontend
-
-Es un SPA simple en HTML/JS/CSS (sin build), igual que ConectaProfe. Para probarlo local
-solo abre `frontend/index.html` en el navegador, o sirve la carpeta con una extensión tipo
-"Live Server" de VS Code.
-
-Si el backend queda en otra URL (por ejemplo ya desplegado en Railway), antes de cargar
-`authApi.js` define en el HTML:
-
 ```html
 <script>window.TUTORIAS_API_URL = 'https://tu-backend.up.railway.app/api';</script>
 ```
-
-## 4. Despliegue en Railway (mismo flujo que ConectaProfe)
-
-1. Sube el contenido de `backend/` a un repo de GitHub.
-2. Conecta el repo en Railway y agrega la variable `DATABASE_URL` (puede ser la misma
-   base de ConectaProfe si prefieres compartirla) y `JWT_SECRET`.
-3. Railway detecta `npm start` automáticamente.
-4. El frontend lo puedes servir estático (Railway, GitHub Pages, o el mismo backend con
-   `express.static` más adelante).
-
-## Qué sigue (próximos módulos)
-
-- Prueba de nivel inicial (MCER)
-- Generación de ejercicios adaptativos por IA
-- Vocabulario personalizado con repetición espaciada (tabla `vocabulario_usuario` ya existe)
-- Conversación con corrección en tiempo real (tabla `conversaciones` ya existe)
