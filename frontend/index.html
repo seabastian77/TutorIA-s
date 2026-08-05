@@ -23,7 +23,6 @@
 
       <div id="mensaje-error" class="mensaje-error"></div>
 
-      <!-- Página: Login -->
       <div id="pagina-login" class="pagina activa">
         <form id="form-login">
           <div class="campo">
@@ -38,7 +37,6 @@
         </form>
       </div>
 
-      <!-- Página: Registro -->
       <div id="pagina-registro" class="pagina">
         <form id="form-registro">
           <div class="campo">
@@ -61,17 +59,37 @@
     </div>
   </div>
 
-  <!-- Vista principal tras login (placeholder para siguientes módulos) -->
+  <!-- Vista principal tras login -->
   <div id="vista-principal" class="pantalla-principal oculto">
     <h2 id="saludo-usuario">¡Hola!</h2>
-    <p>Bienvenido a TutorIA's. Aquí irán tu plan de estudio, ejercicios, vocabulario personalizado y la conversación con la IA.</p>
+    <p>Bienvenido a TutorIA's. Empecemos por descubrir tu nivel actual de inglés.</p>
+    <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Realizar prueba de nivel</button>
     <button id="btn-cerrar-sesion" class="btn-secundario">Cerrar sesión</button>
+  </div>
+
+  <!-- Vista: prueba de nivel -->
+  <div id="vista-nivel" class="pantalla-principal oculto">
+    <div class="tarjeta-nivel">
+      <div id="nivel-progreso" class="nivel-progreso">Pregunta 1 de 6</div>
+      <h3 id="nivel-pregunta-texto">Cargando pregunta...</h3>
+      <div id="nivel-opciones" class="nivel-opciones"></div>
+    </div>
+  </div>
+
+  <!-- Vista: resultado de la prueba -->
+  <div id="vista-resultado-nivel" class="pantalla-principal oculto">
+    <h2>¡Prueba completada!</h2>
+    <p>Tu nivel estimado según el MCER es:</p>
+    <div id="resultado-nivel-valor" class="resultado-nivel"></div>
+    <button id="btn-continuar-resultado" class="btn-principal" style="max-width:280px">Continuar</button>
   </div>
 
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/store/sesion.js"></script>
   <script src="src/services/authApi.js"></script>
+  <script src="src/services/nivelApi.js"></script>
   <script src="src/components/formAuth.js"></script>
+  <script src="src/components/pruebaNivel.js"></script>
 </body>
 </html>

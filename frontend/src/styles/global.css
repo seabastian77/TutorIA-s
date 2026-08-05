@@ -229,3 +229,56 @@ body {
 .btn-secundario:hover {
   border-color: var(--blanco);
 }
+.tarjeta-nivel {
+  background: var(--negro-suave);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  width: 100%;
+  max-width: 480px;
+  padding: 32px;
+}
+
+.nivel-progreso {
+  color: var(--gris);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#nivel-pregunta-texto {
+  font-size: 20px;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.nivel-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.opcion-nivel {
+  text-align: left;
+  padding: 14px 16px;
+  background: var(--negro);
+  border: 1px solid var(--gris-oscuro);
+  border-radius: 8px;
+  color: var(--blanco);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.opcion-nivel:hover {
+  border-color: var(--blanco);
+  background: var(--gris-oscuro);
+}
+
+.resultado-nivel {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 16px 0;
+}
