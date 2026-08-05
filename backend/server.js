@@ -32,3 +32,6 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 TutorIA's backend corriendo en el puerto ${PORT}`);
 });
+app.get("/api/verificacion-zz9k", (req, res) => {
+  res.json({ ok: true, mensaje: "Ruta jamás solicitada antes" });
+});
