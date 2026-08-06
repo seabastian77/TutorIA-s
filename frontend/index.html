@@ -64,6 +64,7 @@
     <h2 id="saludo-usuario">¡Hola!</h2>
     <p>Bienvenido a TutorIA's. Empecemos por descubrir tu nivel actual de inglés.</p>
     <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Realizar prueba de nivel</button>
+    <button id="btn-practicar" class="btn-principal" style="max-width:280px">Practicar ahora</button>
     <button id="btn-cerrar-sesion" class="btn-secundario">Cerrar sesión</button>
   </div>
 
@@ -84,12 +85,23 @@
     <button id="btn-continuar-resultado" class="btn-principal" style="max-width:280px">Continuar</button>
   </div>
 
+  <!-- Vista: práctica continua -->
+  <div id="vista-practica" class="pantalla-principal oculto">
+    <div class="tarjeta-nivel" id="practica-contenedor">
+      <div id="practica-nivel-tag" class="nivel-progreso">Nivel</div>
+      <div id="practica-cuerpo"></div>
+    </div>
+    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:16px;">Volver al inicio</button>
+  </div>
+
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/store/sesion.js"></script>
   <script src="src/services/authApi.js"></script>
   <script src="src/services/nivelApi.js"></script>
+  <script src="src/services/practicaApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
+  <script src="src/components/practica.js"></script>
 </body>
 </html>
