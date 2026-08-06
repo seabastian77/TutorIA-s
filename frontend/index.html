@@ -5,6 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TutorIA's · Aprende inglés con IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="src/styles/global.css" />
 </head>
@@ -13,7 +16,7 @@
   <!-- Vista de autenticación -->
   <div id="vista-auth" class="pantalla-auth">
 
-    <!-- Columna izquierda: frase grande -->
+    <!-- Columna izquierda: frase (solo escritorio) -->
     <div class="auth-lado-izquierdo">
       <div class="auth-frase">
         <span>Think,</span>
@@ -21,6 +24,13 @@
         <span class="auth-frase-destacada">Speak <span class="auth-frase-glow">English</span></span>
       </div>
       <p class="auth-subfrase">Open your world</p>
+    </div>
+
+    <!-- Decoración compacta SOLO para móvil, va justo encima de la tarjeta -->
+    <div class="deco-movil deco-movil-top">
+      <div class="deco-movil-icono"><i class="fa-solid fa-brain"></i></div>
+      <div class="deco-movil-badge">AI</div>
+      <div class="deco-movil-icono"><i class="fa-solid fa-graduation-cap"></i></div>
     </div>
 
     <!-- Tarjeta central de login/registro -->
@@ -72,7 +82,12 @@
       <div class="pie-auth">Aprende inglés a tu ritmo, todos los días</div>
     </div>
 
-    <!-- Columna derecha: cabeza IA tipo constelación + burbujas -->
+    <!-- Decoración compacta SOLO para móvil, va justo debajo de la tarjeta -->
+    <div class="deco-movil deco-movil-bottom">
+      <div class="burbuja-movil">Let's learn together! 👋</div>
+    </div>
+
+    <!-- Columna derecha: cabeza IA tipo constelación + burbujas (solo escritorio) -->
     <div class="auth-lado-derecho">
       <div class="badge-ia">AI</div>
 
@@ -132,11 +147,18 @@
   <!-- Vista principal tras login -->
   <div id="vista-principal" class="pantalla-principal oculto">
 
-    <!-- Decoración de fondo del panel -->
+    <!-- Decoración de fondo del panel (escritorio) -->
     <div class="decoracion-principal">
       <i class="fa-solid fa-brain icono-flotante icono-cerebro-panel"></i>
       <i class="fa-solid fa-book icono-flotante icono-libro-panel"></i>
       <div class="burbuja burbuja-panel">Hello! 👋</div>
+    </div>
+
+    <!-- Decoración compacta del panel (móvil) -->
+    <div class="deco-movil deco-movil-panel">
+      <div class="deco-movil-icono"><i class="fa-solid fa-brain"></i></div>
+      <div class="deco-movil-badge">AI</div>
+      <div class="deco-movil-icono"><i class="fa-solid fa-book"></i></div>
     </div>
 
     <h2 id="saludo-usuario">¡Hola!</h2>
