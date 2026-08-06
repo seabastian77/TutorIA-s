@@ -5,6 +5,7 @@ const cors = require("cors");
 
 const authRoutes = require("./src/routes/authRoutes");
 const nivelRoutes = require("./src/routes/nivelRoutes");
+const practicaRoutes = require("./src/routes/practicaRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,7 @@ app.use(express.json());
 // Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/nivel", nivelRoutes);
+app.use("/api/practica", practicaRoutes);
 
 // Ruta de prueba temporal (para diagnóstico)
 app.get("/api/prueba-diagnostico", (req, res) => {
