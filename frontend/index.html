@@ -13,23 +13,17 @@
   <!-- Vista de autenticación -->
   <div id="vista-auth" class="pantalla-auth">
 
-    <!-- Decoración de fondo (cerebro IA, libro, birrete, globo, burbujas, banderas) -->
-    <div class="decoracion-auth">
-      <i class="fa-solid fa-brain icono-flotante icono-cerebro"></i>
-      <i class="fa-solid fa-book-open icono-flotante icono-libro"></i>
-      <i class="fa-solid fa-graduation-cap icono-flotante icono-graduacion"></i>
-      <i class="fa-solid fa-globe icono-flotante icono-globo"></i>
-
-      <div class="burbuja burbuja-1">Hello!</div>
-      <div class="burbuja burbuja-2">How are you?</div>
-      <div class="burbuja burbuja-3">Let's learn together</div>
-
-      <div class="banderas-deco">
-        <i class="fa-solid fa-flag"></i>
-        <i class="fa-solid fa-earth-americas"></i>
+    <!-- Columna izquierda: frase grande -->
+    <div class="auth-lado-izquierdo">
+      <div class="auth-frase">
+        <span>Think,</span>
+        <span>Learn,</span>
+        <span class="auth-frase-destacada">Speak <span class="auth-frase-glow">English</span></span>
       </div>
+      <p class="auth-subfrase">Open your world</p>
     </div>
 
+    <!-- Tarjeta central de login/registro -->
     <div class="tarjeta-auth">
       <div class="marca">
         <h1>TutorIA<span>'s</span></h1>
@@ -76,6 +70,62 @@
       </div>
 
       <div class="pie-auth">Aprende inglés a tu ritmo, todos los días</div>
+    </div>
+
+    <!-- Columna derecha: cabeza IA tipo constelación + burbujas -->
+    <div class="auth-lado-derecho">
+      <div class="badge-ia">AI</div>
+
+      <svg viewBox="0 0 200 260" class="cabeza-ia" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="cabezaClip">
+            <path d="M40,230 C20,190 15,150 25,110 C33,75 55,45 90,28 C115,15 140,18 155,35 C165,47 160,60 150,62 C160,70 165,85 160,100 C168,105 172,118 168,130 C178,140 176,158 165,168 C170,185 160,205 140,215 C130,235 100,245 70,240 C55,238 45,235 40,230 Z" />
+          </clipPath>
+          <pattern id="puntosRed" width="14" height="14" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.4" fill="currentColor" opacity="0.8" />
+          </pattern>
+          <radialGradient id="brilloCentro" cx="55%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="currentColor" stop-opacity="0.9" />
+            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <g clip-path="url(#cabezaClip)">
+          <rect x="0" y="0" width="200" height="260" fill="url(#puntosRed)" />
+          <rect x="0" y="0" width="200" height="260" fill="url(#brilloCentro)" opacity="0.5" />
+          <g stroke="currentColor" stroke-width="0.6" opacity="0.55">
+            <line x1="60" y1="80" x2="100" y2="60" />
+            <line x1="100" y1="60" x2="130" y2="90" />
+            <line x1="60" y1="80" x2="80" y2="120" />
+            <line x1="80" y1="120" x2="130" y2="90" />
+            <line x1="80" y1="120" x2="70" y2="170" />
+            <line x1="70" y1="170" x2="110" y2="190" />
+            <line x1="130" y1="90" x2="140" y2="140" />
+            <line x1="140" y1="140" x2="110" y2="190" />
+          </g>
+          <g fill="currentColor">
+            <circle cx="60" cy="80" r="3"></circle>
+            <circle cx="100" cy="60" r="3"></circle>
+            <circle cx="130" cy="90" r="3"></circle>
+            <circle cx="80" cy="120" r="3"></circle>
+            <circle cx="70" cy="170" r="3"></circle>
+            <circle cx="140" cy="140" r="3"></circle>
+            <circle cx="110" cy="190" r="3"></circle>
+          </g>
+        </g>
+        <path d="M40,230 C20,190 15,150 25,110 C33,75 55,45 90,28 C115,15 140,18 155,35 C165,47 160,60 150,62 C160,70 165,85 160,100 C168,105 172,118 168,130 C178,140 176,158 165,168 C170,185 160,205 140,215 C130,235 100,245 70,240 C55,238 45,235 40,230 Z" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4"></path>
+      </svg>
+
+      <div class="burbuja burbuja-1">Hello!</div>
+      <div class="burbuja burbuja-2">How are you?</div>
+      <div class="burbuja burbuja-3">Let's learn together</div>
+
+      <i class="fa-solid fa-graduation-cap icono-flotante icono-graduacion"></i>
+      <i class="fa-solid fa-book-open icono-flotante icono-libro"></i>
+    </div>
+
+    <div class="banderas-deco">
+      <i class="fa-solid fa-flag"></i>
+      <i class="fa-solid fa-earth-americas"></i>
     </div>
   </div>
 
