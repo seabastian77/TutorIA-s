@@ -168,20 +168,31 @@
     <button id="btn-cerrar-sesion" class="btn-secundario">Cerrar sesión</button>
   </div>
 
-  <!-- Vista: prueba de nivel -->
+  <!-- Vista: prueba de nivel (Diagnóstico Inmersivo) -->
   <div id="vista-nivel" class="pantalla-principal oculto">
     <div class="tarjeta-nivel">
-      <div id="nivel-progreso" class="nivel-progreso">Pregunta 1 de 6</div>
+      <div id="nivel-progreso" class="nivel-progreso">Escena 1 de 8</div>
+      <p id="nivel-narrativa" class="nivel-narrativa">...</p>
       <h3 id="nivel-pregunta-texto">Cargando pregunta...</h3>
       <div id="nivel-opciones" class="nivel-opciones"></div>
+
+      <div id="nivel-respuesta-abierta" class="oculto">
+        <textarea id="nivel-texto-usuario" rows="3" placeholder="Escribe tu respuesta en inglés..."></textarea>
+        <button id="btn-enviar-respuesta" class="btn-principal" style="margin-top:10px;">Enviar respuesta</button>
+      </div>
+
+      <div id="nivel-feedback" class="nivel-feedback oculto"></div>
+      <button id="btn-siguiente-turno" class="btn-principal oculto" style="margin-top:14px;">Siguiente</button>
     </div>
   </div>
 
-  <!-- Vista: resultado de la prueba -->
+  <!-- Vista: resultado del diagnóstico -->
   <div id="vista-resultado-nivel" class="pantalla-principal oculto">
-    <h2>¡Prueba completada!</h2>
+    <h2>¡Diagnóstico completado!</h2>
     <p>Tu nivel estimado según el MCER es:</p>
     <div id="resultado-nivel-valor" class="resultado-nivel"></div>
+    <p id="resultado-resumen" class="resultado-resumen"></p>
+    <div id="resultado-habilidades" class="resultado-habilidades"></div>
     <button id="btn-continuar-resultado" class="btn-principal" style="max-width:280px">Continuar</button>
   </div>
 
