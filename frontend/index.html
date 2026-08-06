@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TutorIA's · Aprende inglés con IA</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="src/styles/global.css" />
 </head>
 <body>
 
   <!-- Vista de autenticación -->
   <div id="vista-auth" class="pantalla-auth">
+
+    <!-- Decoración de fondo (cerebro IA, libro, birrete, globo, burbujas, banderas) -->
+    <div class="decoracion-auth">
+      <i class="fa-solid fa-brain icono-flotante icono-cerebro"></i>
+      <i class="fa-solid fa-book-open icono-flotante icono-libro"></i>
+      <i class="fa-solid fa-graduation-cap icono-flotante icono-graduacion"></i>
+      <i class="fa-solid fa-globe icono-flotante icono-globo"></i>
+
+      <div class="burbuja burbuja-1">Hello!</div>
+      <div class="burbuja burbuja-2">How are you?</div>
+      <div class="burbuja burbuja-3">Let's learn together</div>
+
+      <div class="banderas-deco">
+        <i class="fa-solid fa-flag"></i>
+        <i class="fa-solid fa-earth-americas"></i>
+      </div>
+    </div>
+
     <div class="tarjeta-auth">
       <div class="marca">
         <h1>TutorIA<span>'s</span></h1>
@@ -61,6 +81,14 @@
 
   <!-- Vista principal tras login -->
   <div id="vista-principal" class="pantalla-principal oculto">
+
+    <!-- Decoración de fondo del panel -->
+    <div class="decoracion-principal">
+      <i class="fa-solid fa-brain icono-flotante icono-cerebro-panel"></i>
+      <i class="fa-solid fa-book icono-flotante icono-libro-panel"></i>
+      <div class="burbuja burbuja-panel">Hello! 👋</div>
+    </div>
+
     <h2 id="saludo-usuario">¡Hola!</h2>
     <p>Bienvenido a TutorIA's. Empecemos por descubrir tu nivel actual de inglés.</p>
     <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Realizar prueba de nivel</button>

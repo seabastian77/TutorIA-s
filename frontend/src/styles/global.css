@@ -54,6 +54,8 @@ body {
   box-shadow:
     0 8px 40px rgba(0, 0, 0, 0.45),
     0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  position: relative;
+  z-index: 2;
 }
 
 /* ============================================================
@@ -69,7 +71,6 @@ body {
   overflow: hidden;
 }
 
-/* Líneas de luz decorativas de fondo, estilo "circuito" */
 .pantalla-auth::before,
 .pantalla-auth::after {
   content: "";
@@ -98,8 +99,6 @@ body {
   max-width: 400px;
   padding: 2.5rem 2rem;
   text-align: center;
-  position: relative;
-  z-index: 1;
 }
 
 .marca h1 {
@@ -232,6 +231,8 @@ body {
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
+  z-index: 2;
 }
 .btn-secundario:hover {
   border-color: var(--primary);
@@ -251,6 +252,8 @@ body {
   gap: 1rem;
   max-width: 560px;
   margin: 0 auto;
+  position: relative;
+  overflow: hidden;
 }
 
 #saludo-usuario {
@@ -260,15 +263,25 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  position: relative;
+  z-index: 2;
 }
 
 .pantalla-principal p {
   color: var(--text-dim);
   margin-bottom: 1rem;
   max-width: 420px;
+  position: relative;
+  z-index: 2;
 }
 
-/* Botones de acción principal del panel: nivel = azul/morado, practicar = naranja */
+#btn-iniciar-nivel,
+#btn-practicar,
+#btn-cerrar-sesion {
+  position: relative;
+  z-index: 2;
+}
+
 #btn-iniciar-nivel {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   box-shadow: 0 4px 20px rgba(0, 229, 255, 0.25);
@@ -355,6 +368,119 @@ body {
 #practica-contenedor {
   width: 100%;
   max-width: 480px;
+}
+
+/* ============================================================
+   DECORACIÓN — íconos flotantes, burbujas de chat, banderas
+   ============================================================ */
+.icono-flotante {
+  position: absolute;
+  color: var(--primary);
+  opacity: 0.55;
+  filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.6));
+  z-index: 0;
+  animation: flotar 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.burbuja {
+  position: absolute;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  color: var(--text);
+  font-size: 0.8rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.2);
+  z-index: 0;
+  animation: flotar 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+/* --- Decoración de la vista de login --- */
+.decoracion-auth {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.icono-cerebro {
+  font-size: 3.5rem;
+  top: 10%;
+  left: 8%;
+  color: var(--secondary);
+  filter: drop-shadow(0 0 16px rgba(124, 77, 255, 0.6));
+}
+.icono-libro {
+  font-size: 2.2rem;
+  bottom: 14%;
+  left: 12%;
+}
+.icono-graduacion {
+  font-size: 2.6rem;
+  top: 12%;
+  right: 10%;
+  color: var(--accent-gold);
+  filter: drop-shadow(0 0 14px rgba(255, 182, 72, 0.6));
+}
+.icono-globo {
+  font-size: 2rem;
+  bottom: 10%;
+  right: 14%;
+}
+
+.burbuja-1 { top: 18%; right: 6%; animation-delay: 0.3s; }
+.burbuja-2 { top: 42%; right: 2%; animation-delay: 1.1s; }
+.burbuja-3 { bottom: 20%; right: 8%; animation-delay: 1.8s; }
+
+.banderas-deco {
+  position: absolute;
+  bottom: 4%;
+  left: 4%;
+  display: flex;
+  gap: 0.8rem;
+  font-size: 1.4rem;
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
+/* --- Decoración de la vista principal (panel) --- */
+.decoracion-principal {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.icono-cerebro-panel {
+  font-size: 3rem;
+  top: 6%;
+  left: 4%;
+  color: var(--secondary);
+}
+.icono-libro-panel {
+  font-size: 2rem;
+  bottom: 8%;
+  right: 6%;
+}
+.burbuja-panel {
+  top: 4%;
+  right: 4%;
+}
+
+/* En pantallas chicas, ocultamos la decoración para no estorbar el contenido */
+@media (max-width: 640px) {
+  .decoracion-auth,
+  .decoracion-principal {
+    display: none;
+  }
 }
 
 /* ============================================================
