@@ -185,6 +185,7 @@
 
     <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Realizar prueba de nivel</button>
     <button id="btn-practicar" class="btn-principal" style="max-width:280px">Practicar ahora</button>
+    <button id="btn-hablar-ia" class="btn-principal btn-voz" style="max-width:280px">🎙️ Hablar con la IA</button>
     <button id="btn-cerrar-sesion" class="btn-secundario">Cerrar sesión</button>
 
     <div class="tarjeta-tip">
@@ -233,6 +234,25 @@
     <button id="btn-salir-practica" class="btn-secundario" style="margin-top:16px;">Volver al inicio</button>
   </div>
 
+  <!-- Vista: conversación de voz con la IA -->
+  <div id="vista-voz" class="pantalla-principal oculto">
+    <div class="tarjeta-voz">
+      <div id="voz-aviso-navegador" class="voz-aviso oculto">
+        Tu navegador no soporta reconocimiento de voz. Prueba con Google Chrome o Microsoft Edge en computador.
+      </div>
+
+      <div id="voz-chat" class="voz-chat"></div>
+
+      <div class="voz-controles">
+        <button id="btn-mic" class="btn-mic">
+          <i class="fa-solid fa-microphone"></i>
+        </button>
+        <p id="voz-estado" class="voz-estado">Presiona el micrófono y empieza a hablar</p>
+      </div>
+    </div>
+    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:16px;">Volver al inicio</button>
+  </div>
+
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/store/sesion.js"></script>
@@ -240,9 +260,11 @@
   <script src="src/services/nivelApi.js"></script>
   <script src="src/services/practicaApi.js"></script>
   <script src="src/services/usuarioApi.js"></script>
+  <script src="src/services/vozApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
   <script src="src/components/progreso.js"></script>
+  <script src="src/components/voz.js"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+// src/services/iaService.js
 const Groq = require("groq-sdk");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -157,6 +158,50 @@ Responde ÚNICAMENTE con el texto del párrafo, sin comillas ni JSON.`;
   return completion.choices[0].message.content.trim();
 }
 
+// ============================================================
+// Práctica de voz — conversación hablada con la IA
+// ============================================================
+
+async function generarRespuestaConversacion({
+  historial,
+  mensajeUsuario,
+  nivel,
+}) {
+  const historialTexto = historial
+    .slice(-6)
+    .map((h) => `${h.rol === "usuario" ? "Estudiante" : "Tutor"}: ${h.texto}`)
+    .join("\n");
+
+  const prompt = `Eres un tutor de inglés conversando por voz con un estudiante hispanohablante de nivel ${nivel} del MCER.
+El estudiante te está hablando en inglés (lo que dice viene transcrito automáticamente por el navegador, puede tener errores de transcripción).
+
+Historial reciente de la conversación:
+${historialTexto || "(inicio de la conversación)"}
+
+Lo que acaba de decir el estudiante: "${mensajeUsuario}"
+
+Responde como un tutor amigable, continuando la conversación en inglés de forma natural,
+con vocabulario y gramática apropiados para nivel ${nivel} (ni muy fácil ni muy difícil para él).
+Mantén tu respuesta corta (1-3 frases), como una conversación real hablada.
+
+Si notas un error de gramática o vocabulario claro en lo que dijo, prepara una corrección breve.
+Si no hay error notorio (o la transcripción es muy corta para juzgar), deja "correccion" en null.
+
+Responde ÚNICAMENTE con un JSON válido, sin texto adicional, con esta forma exacta:
+{
+  "respuesta": "tu respuesta en inglés, corta y natural",
+  "correccion": "nota breve EN ESPAÑOL señalando el error y la forma correcta, o null si no hubo error claro"
+}`;
+
+  const completion = await groq.chat.completions.create({
+    model: MODELO,
+    messages: [{ role: "user", content: prompt }],
+    response_format: { type: "json_object" },
+  });
+
+  return JSON.parse(completion.choices[0].message.content);
+}
+
 module.exports = {
   generarPreguntaNivel,
   generarPreguntaEscrita,
@@ -164,4 +209,5 @@ module.exports = {
   generarEscenaDiagnostico,
   evaluarRespuestaAbierta,
   generarResumenFinal,
+  generarRespuestaConversacion,
 };

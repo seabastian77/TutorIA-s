@@ -1,3 +1,4 @@
+// server.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -6,6 +7,7 @@ const authRoutes = require("./src/routes/authRoutes");
 const nivelRoutes = require("./src/routes/nivelRoutes");
 const practicaRoutes = require("./src/routes/practicaRoutes");
 const usuarioRoutes = require("./src/routes/usuarioRoutes");
+const vozRoutes = require("./src/routes/vozRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +20,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/nivel", nivelRoutes);
 app.use("/api/practica", practicaRoutes);
 app.use("/api/usuario", usuarioRoutes);
+app.use("/api/voz", vozRoutes);
 
 // Ruta de prueba temporal (para diagnóstico)
 app.get("/api/prueba-diagnostico", (req, res) => {
