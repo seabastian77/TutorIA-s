@@ -4,10 +4,10 @@
   
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TutorIA's · Aprende inglés con IA</title>
+  <title>TutorIA's · Learn English with AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="src/styles/global.css" />
 </head>
@@ -23,13 +23,13 @@
         <span>Learn,</span>
         <span class="auth-frase-destacada">Speak <span class="auth-frase-glow">English</span></span>
       </div>
-      <p class="auth-subfrase">Open your world</p>
+      <p class="auth-subfrase">Open Your World</p>
     </div>
 
     <!-- Decoración compacta SOLO para móvil, va justo encima de la tarjeta -->
     <div class="deco-movil deco-movil-top">
       <div class="deco-movil-icono deco-verde"><i class="fa-solid fa-language"></i></div>
-      <div class="deco-movil-badge">EN · ES</div>
+      <div class="deco-movil-badge">EN · AI</div>
       <div class="deco-movil-icono deco-naranja"><i class="fa-solid fa-book-open"></i></div>
     </div>
 
@@ -37,12 +37,12 @@
     <div class="tarjeta-auth">
       <div class="marca">
         <h1>TutorIA<span>'s</span></h1>
-        <p>Tu asistente de estudio de inglés con IA</p>
+        <p>Your AI English Study Assistant</p>
       </div>
 
       <div class="pestanas">
-        <div id="tab-login" class="pestana activa">Iniciar sesión</div>
-        <div id="tab-registro" class="pestana">Crear cuenta</div>
+        <div id="tab-login" class="pestana activa">Log In</div>
+        <div id="tab-registro" class="pestana">Sign Up</div>
       </div>
 
       <div id="mensaje-error" class="mensaje-error"></div>
@@ -50,36 +50,36 @@
       <div id="pagina-login" class="pagina activa">
         <form id="form-login">
           <div class="campo">
-            <label for="login-correo">Correo</label>
-            <input type="email" id="login-correo" placeholder="tucorreo@ejemplo.com" required />
+            <label for="login-correo">Email</label>
+            <input type="email" id="login-correo" placeholder="youremail@example.com" required />
           </div>
           <div class="campo">
-            <label for="login-contrasena">Contraseña</label>
+            <label for="login-contrasena">Password</label>
             <input type="password" id="login-contrasena" placeholder="••••••••" required />
           </div>
-          <button type="submit" class="btn-principal">Ingresar</button>
+          <button type="submit" class="btn-principal">Log In</button>
         </form>
       </div>
 
       <div id="pagina-registro" class="pagina">
         <form id="form-registro">
           <div class="campo">
-            <label for="registro-nombre">Nombre</label>
-            <input type="text" id="registro-nombre" placeholder="Tu nombre" required />
+            <label for="registro-nombre">Name</label>
+            <input type="text" id="registro-nombre" placeholder="Your name" required />
           </div>
           <div class="campo">
-            <label for="registro-correo">Correo</label>
-            <input type="email" id="registro-correo" placeholder="tucorreo@ejemplo.com" required />
+            <label for="registro-correo">Email</label>
+            <input type="email" id="registro-correo" placeholder="youremail@example.com" required />
           </div>
           <div class="campo">
-            <label for="registro-contrasena">Contraseña</label>
-            <input type="password" id="registro-contrasena" placeholder="Mínimo 6 caracteres" required />
+            <label for="registro-contrasena">Password</label>
+            <input type="password" id="registro-contrasena" placeholder="Minimum 6 characters" required />
           </div>
-          <button type="submit" class="btn-principal">Crear cuenta</button>
+          <button type="submit" class="btn-principal">Sign Up</button>
         </form>
       </div>
 
-      <div class="pie-auth">Aprende inglés a tu ritmo, todos los días</div>
+      <div class="pie-auth">Learn English at your own pace, every day</div>
     </div>
 
     <!-- Decoración compacta SOLO para móvil, va justo debajo de la tarjeta -->
@@ -133,12 +133,12 @@
     <!-- Decoración compacta del panel (móvil) -->
     <div class="deco-movil deco-movil-panel">
       <div class="deco-movil-icono deco-verde"><i class="fa-solid fa-language"></i></div>
-      <div class="deco-movil-badge">EN · ES</div>
+      <div class="deco-movil-badge">EN · AI</div>
       <div class="deco-movil-icono deco-azul"><i class="fa-solid fa-book"></i></div>
     </div>
 
-    <h2 id="saludo-usuario">¡Hola!</h2>
-    <p>Bienvenido a TutorIA's. Empecemos por descubrir tu nivel actual de inglés.</p>
+    <h2 id="saludo-usuario">Hi!</h2>
+    <p>Welcome to TutorIA's. Let's start by discovering your current English level.</p>
 
     <div id="progreso-usuario" class="progreso-usuario oculto">
       <div class="progreso-item">
@@ -147,7 +147,7 @@
       </div>
       <div class="progreso-item">
         <i class="fa-solid fa-fire"></i>
-        <span id="progreso-racha">0</span> días
+        <span id="progreso-racha">0</span> days
       </div>
       <div class="progreso-item" id="progreso-tendencia-wrap">
         <i class="fa-solid fa-minus" id="progreso-tendencia-icono"></i>
@@ -155,16 +155,16 @@
       </div>
     </div>
 
-    <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Realizar prueba de nivel</button>
-    <button id="btn-practicar" class="btn-principal" style="max-width:280px">Practicar ahora</button>
-    <button id="btn-hablar-ia" class="btn-principal btn-voz" style="max-width:280px">🎙️ Hablar con la IA</button>
-    <button id="btn-cerrar-sesion" class="btn-secundario">Cerrar sesión</button>
+    <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Take Level Test</button>
+    <button id="btn-practicar" class="btn-principal" style="max-width:280px">Practice Now</button>
+    <button id="btn-hablar-ia" class="btn-principal btn-voz" style="max-width:280px">🎙️ Talk to the AI</button>
+    <button id="btn-cerrar-sesion" class="btn-secundario">Log Out</button>
 
     <div class="tarjeta-tip">
       <div class="tarjeta-tip-icono"><i class="fa-solid fa-lightbulb"></i></div>
       <div>
-        <p class="tarjeta-tip-titulo">Tip del día</p>
-        <p class="tarjeta-tip-texto">"Practice makes perfect" — dedica aunque sean 10 minutos hoy a repasar tu vocabulario en TutorIA's.</p>
+        <p class="tarjeta-tip-titulo">Tip of the Day</p>
+        <p class="tarjeta-tip-texto">"Practice makes perfect" — spend at least 10 minutes today reviewing your vocabulary on TutorIA's.</p>
       </div>
     </div>
   </div>
@@ -172,45 +172,45 @@
   <!-- Vista: prueba de nivel (Diagnóstico Inmersivo) -->
   <div id="vista-nivel" class="pantalla-principal oculto">
     <div class="tarjeta-nivel">
-      <div id="nivel-progreso" class="nivel-progreso">Escena 1 de 8</div>
+      <div id="nivel-progreso" class="nivel-progreso">Scene 1 of 8</div>
       <p id="nivel-narrativa" class="nivel-narrativa">...</p>
-      <h3 id="nivel-pregunta-texto">Cargando pregunta...</h3>
+      <h3 id="nivel-pregunta-texto">Loading question...</h3>
       <div id="nivel-opciones" class="nivel-opciones"></div>
 
       <div id="nivel-respuesta-abierta" class="oculto">
-        <textarea id="nivel-texto-usuario" rows="3" placeholder="Escribe tu respuesta en inglés..."></textarea>
-        <button id="btn-enviar-respuesta" class="btn-principal" style="margin-top:10px;">Enviar respuesta</button>
+        <textarea id="nivel-texto-usuario" rows="3" placeholder="Write your answer in English..."></textarea>
+        <button id="btn-enviar-respuesta" class="btn-principal" style="margin-top:10px;">Submit Answer</button>
       </div>
 
       <div id="nivel-feedback" class="nivel-feedback oculto"></div>
-      <button id="btn-siguiente-turno" class="btn-principal oculto" style="margin-top:14px;">Siguiente</button>
+      <button id="btn-siguiente-turno" class="btn-principal oculto" style="margin-top:14px;">Next</button>
     </div>
   </div>
 
   <!-- Vista: resultado del diagnóstico -->
   <div id="vista-resultado-nivel" class="pantalla-principal oculto">
-    <h2>¡Diagnóstico completado!</h2>
-    <p>Tu nivel estimado según el MCER es:</p>
+    <h2>Diagnostic Complete!</h2>
+    <p>Your estimated CEFR level is:</p>
     <div id="resultado-nivel-valor" class="resultado-nivel"></div>
     <p id="resultado-resumen" class="resultado-resumen"></p>
     <div id="resultado-habilidades" class="resultado-habilidades"></div>
-    <button id="btn-continuar-resultado" class="btn-principal" style="max-width:280px">Continuar</button>
+    <button id="btn-continuar-resultado" class="btn-principal" style="max-width:280px">Continue</button>
   </div>
 
   <!-- Vista: práctica continua -->
   <div id="vista-practica" class="pantalla-principal oculto">
     <div class="tarjeta-nivel" id="practica-contenedor">
-      <div id="practica-nivel-tag" class="nivel-progreso">Nivel</div>
+      <div id="practica-nivel-tag" class="nivel-progreso">Level</div>
       <div id="practica-cuerpo"></div>
     </div>
-    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:16px;">Volver al inicio</button>
+    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
   </div>
 
   <!-- Vista: conversación de voz con la IA -->
   <div id="vista-voz" class="pantalla-principal oculto">
     <div class="tarjeta-voz">
       <div id="voz-aviso-navegador" class="voz-aviso oculto">
-        Tu navegador no soporta reconocimiento de voz. Prueba con Google Chrome o Microsoft Edge en computador.
+        Your browser doesn't support voice recognition. Try Google Chrome or Microsoft Edge on desktop.
       </div>
 
       <div id="voz-chat" class="voz-chat"></div>
@@ -219,10 +219,10 @@
         <button id="btn-mic" class="btn-mic">
           <i class="fa-solid fa-microphone"></i>
         </button>
-        <p id="voz-estado" class="voz-estado">Presiona el micrófono y empieza a hablar</p>
+        <p id="voz-estado" class="voz-estado">Press the microphone and start talking</p>
       </div>
     </div>
-    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:16px;">Volver al inicio</button>
+    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
   </div>
 
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
