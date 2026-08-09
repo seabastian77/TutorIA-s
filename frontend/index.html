@@ -167,6 +167,22 @@
 
     <h2 id="saludo-usuario">¡Hola!</h2>
     <p>Bienvenido a TutorIA's. Empecemos por descubrir tu nivel actual de inglés.</p>
+
+    <div id="progreso-usuario" class="progreso-usuario oculto">
+      <div class="progreso-item">
+        <i class="fa-solid fa-star"></i>
+        <span id="progreso-puntos">0</span> pts
+      </div>
+      <div class="progreso-item">
+        <i class="fa-solid fa-fire"></i>
+        <span id="progreso-racha">0</span> días
+      </div>
+      <div class="progreso-item" id="progreso-tendencia-wrap">
+        <i class="fa-solid fa-minus" id="progreso-tendencia-icono"></i>
+        <span id="progreso-tendencia-texto">—</span>
+      </div>
+    </div>
+
     <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Realizar prueba de nivel</button>
     <button id="btn-practicar" class="btn-principal" style="max-width:280px">Practicar ahora</button>
     <button id="btn-cerrar-sesion" class="btn-secundario">Cerrar sesión</button>
@@ -223,8 +239,10 @@
   <script src="src/services/authApi.js"></script>
   <script src="src/services/nivelApi.js"></script>
   <script src="src/services/practicaApi.js"></script>
+  <script src="src/services/usuarioApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
+  <script src="src/components/progreso.js"></script>
 </body>
 </html>

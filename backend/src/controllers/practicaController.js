@@ -4,6 +4,7 @@ const {
   evaluarRespuestaEscrita,
 } = require("../services/iaService");
 const EjercicioModel = require("../models/ejercicioModel");
+const { registrarActividad } = require("../utils/gamificacion");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
@@ -80,7 +81,21 @@ const PracticaController = {
         correcto,
       });
 
-      res.json({ correcto, explicacion });
+      // Puntos: 10 si acertaste, 0 si no — pero cualquier intento
+      // cuenta para mantener viva la racha de días practicando.
+      const puntosGanados = correcto ? 10 : 0;
+      const gamificacion = await registrarActividad(
+        req.usuario.id,
+        puntosGanados,
+      );
+
+      res.json({
+        correcto,
+        explicacion,
+        puntosGanados,
+        puntosTotales: gamificacion.puntos,
+        racha: gamificacion.racha,
+      });
     } catch (error) {
       console.error("Error en /practica/responder:", error);
       res.status(500).json({ error: "No se pudo evaluar la respuesta" });

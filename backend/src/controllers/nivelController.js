@@ -3,13 +3,13 @@ const {
   evaluarRespuestaAbierta,
   generarResumenFinal,
 } = require("../services/iaService");
+const { registrarActividad } = require("../utils/gamificacion");
 const pool = require("../config/db");
 
 const NIVELES_VALIDOS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 const HABILIDADES = ["vocabulario", "gramatica", "comprension", "fluidez"];
 
 const DiagnosticoController = {
-  // Genera la siguiente "escena" de la historia (pregunta MC o abierta)
   async escena(req, res) {
     try {
       const { nivel, turno, historialNarrativo } = req.body;
@@ -33,7 +33,6 @@ const DiagnosticoController = {
     }
   },
 
-  // Evalúa una respuesta de texto libre (preguntas tipo "abierta")
   async evaluarAbierta(req, res) {
     try {
       const { pregunta, respuestaUsuario, nivel } = req.body;
@@ -55,11 +54,9 @@ const DiagnosticoController = {
     }
   },
 
-  // Cierra el diagnóstico: calcula promedios por habilidad, pide el resumen
-  // humano a la IA, guarda todo y actualiza el nivel del usuario
   async finalizar(req, res) {
     try {
-      const { historial } = req.body; // [{ habilidad, puntuacion }, ...]
+      const { historial } = req.body;
 
       if (!Array.isArray(historial) || historial.length === 0) {
         return res.status(400).json({ error: "Historial vacío" });
@@ -112,7 +109,22 @@ const DiagnosticoController = {
         req.usuario.id,
       ]);
 
-      res.json({ ok: true, nivel: nivelFinal, promedios, resumen });
+      // Puntos y racha: entre más alto el promedio, más puntos ganas
+      const puntosGanados = Math.max(20, Math.round(promedioGeneral));
+      const gamificacion = await registrarActividad(
+        req.usuario.id,
+        puntosGanados,
+      );
+
+      res.json({
+        ok: true,
+        nivel: nivelFinal,
+        promedios,
+        resumen,
+        puntosGanados,
+        puntosTotales: gamificacion.puntos,
+        racha: gamificacion.racha,
+      });
     } catch (error) {
       console.error("Error en /nivel/finalizar:", error);
       res.status(500).json({ error: "No se pudo guardar el diagnóstico" });

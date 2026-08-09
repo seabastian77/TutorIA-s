@@ -37,10 +37,6 @@ CREATE TABLE IF NOT EXISTS conversaciones (
     correcciones JSONB,
     fecha TIMESTAMP DEFAULT NOW()
 );
-
--- ============================================================
--- NUEVA TABLA: Diagnóstico Inmersivo (reemplaza la prueba plana)
--- ============================================================
 CREATE TABLE IF NOT EXISTS diagnosticos_nivel (
     id SERIAL PRIMARY KEY,
     usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
@@ -52,3 +48,7 @@ CREATE TABLE IF NOT EXISTS diagnosticos_nivel (
     resumen TEXT,          -- párrafo humano generado por IA
     fecha TIMESTAMP DEFAULT NOW()
 );
+
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS puntos INTEGER DEFAULT 0;
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS racha_dias INTEGER DEFAULT 0;
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS ultima_actividad DATE;
