@@ -7,7 +7,7 @@
   <title>TutorIA's · Aprende inglés con IA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="src/styles/global.css" />
 </head>
@@ -28,9 +28,9 @@
 
     <!-- Decoración compacta SOLO para móvil, va justo encima de la tarjeta -->
     <div class="deco-movil deco-movil-top">
-      <div class="deco-movil-icono"><i class="fa-solid fa-brain"></i></div>
-      <div class="deco-movil-badge">AI</div>
-      <div class="deco-movil-icono"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="deco-movil-icono deco-verde"><i class="fa-solid fa-language"></i></div>
+      <div class="deco-movil-badge">🇺🇸🇬🇧</div>
+      <div class="deco-movil-icono deco-naranja"><i class="fa-solid fa-book-open"></i></div>
     </div>
 
     <!-- Tarjeta central de login/registro -->
@@ -87,60 +87,32 @@
       <div class="burbuja-movil">Let's learn together! 👋</div>
     </div>
 
-    <!-- Columna derecha: cabeza IA tipo constelación + burbujas (solo escritorio) -->
+    <!-- Columna derecha: iconos coloridos relacionados con el inglés (solo escritorio) -->
     <div class="auth-lado-derecho">
-      <div class="badge-ia">AI</div>
+      <div class="insignia insignia-verde insignia-1">
+        <i class="fa-solid fa-language"></i>
+      </div>
+      <div class="insignia insignia-azul insignia-2">
+        <i class="fa-solid fa-book-open"></i>
+      </div>
+      <div class="insignia insignia-naranja insignia-3">
+        <i class="fa-solid fa-spell-check"></i>
+      </div>
+      <div class="insignia insignia-morada insignia-4">
+        <i class="fa-solid fa-headphones"></i>
+      </div>
+      <div class="insignia insignia-amarilla insignia-5">
+        <i class="fa-solid fa-star"></i>
+      </div>
 
-      <svg viewBox="0 0 200 260" class="cabeza-ia" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <clipPath id="cabezaClip">
-            <path d="M40,230 C20,190 15,150 25,110 C33,75 55,45 90,28 C115,15 140,18 155,35 C165,47 160,60 150,62 C160,70 165,85 160,100 C168,105 172,118 168,130 C178,140 176,158 165,168 C170,185 160,205 140,215 C130,235 100,245 70,240 C55,238 45,235 40,230 Z" />
-          </clipPath>
-          <pattern id="puntosRed" width="14" height="14" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.4" fill="currentColor" opacity="0.8" />
-          </pattern>
-          <radialGradient id="brilloCentro" cx="55%" cy="35%" r="60%">
-            <stop offset="0%" stop-color="currentColor" stop-opacity="0.9" />
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
-          </radialGradient>
-        </defs>
-        <g clip-path="url(#cabezaClip)">
-          <rect x="0" y="0" width="200" height="260" fill="url(#puntosRed)" />
-          <rect x="0" y="0" width="200" height="260" fill="url(#brilloCentro)" opacity="0.5" />
-          <g stroke="currentColor" stroke-width="0.6" opacity="0.55">
-            <line x1="60" y1="80" x2="100" y2="60" />
-            <line x1="100" y1="60" x2="130" y2="90" />
-            <line x1="60" y1="80" x2="80" y2="120" />
-            <line x1="80" y1="120" x2="130" y2="90" />
-            <line x1="80" y1="120" x2="70" y2="170" />
-            <line x1="70" y1="170" x2="110" y2="190" />
-            <line x1="130" y1="90" x2="140" y2="140" />
-            <line x1="140" y1="140" x2="110" y2="190" />
-          </g>
-          <g fill="currentColor">
-            <circle cx="60" cy="80" r="3"></circle>
-            <circle cx="100" cy="60" r="3"></circle>
-            <circle cx="130" cy="90" r="3"></circle>
-            <circle cx="80" cy="120" r="3"></circle>
-            <circle cx="70" cy="170" r="3"></circle>
-            <circle cx="140" cy="140" r="3"></circle>
-            <circle cx="110" cy="190" r="3"></circle>
-          </g>
-        </g>
-        <path d="M40,230 C20,190 15,150 25,110 C33,75 55,45 90,28 C115,15 140,18 155,35 C165,47 160,60 150,62 C160,70 165,85 160,100 C168,105 172,118 168,130 C178,140 176,158 165,168 C170,185 160,205 140,215 C130,235 100,245 70,240 C55,238 45,235 40,230 Z" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4"></path>
-      </svg>
-
-      <div class="burbuja burbuja-1">Hello!</div>
+      <div class="burbuja burbuja-1">Hello! 👋</div>
       <div class="burbuja burbuja-2">How are you?</div>
-      <div class="burbuja burbuja-3">Let's learn together</div>
-
-      <i class="fa-solid fa-graduation-cap icono-flotante icono-graduacion"></i>
-      <i class="fa-solid fa-book-open icono-flotante icono-libro"></i>
+      <div class="burbuja burbuja-3">Let's learn together!</div>
     </div>
 
     <div class="banderas-deco">
-      <i class="fa-solid fa-flag"></i>
-      <i class="fa-solid fa-earth-americas"></i>
+      <span class="bandera-emoji">🇺🇸</span>
+      <span class="bandera-emoji">🇬🇧</span>
     </div>
   </div>
 
@@ -149,20 +121,20 @@
 
     <!-- Decoración de fondo del panel (escritorio) -->
     <div class="decoracion-principal">
-      <i class="fa-solid fa-brain icono-flotante icono-cerebro-panel"></i>
-      <i class="fa-solid fa-book icono-flotante icono-libro-panel"></i>
-      <i class="fa-solid fa-earth-americas icono-flotante icono-globo-panel"></i>
-      <i class="fa-solid fa-flag icono-flotante icono-bandera-panel"></i>
-      <i class="fa-solid fa-headphones icono-flotante icono-auriculares-panel"></i>
-      <i class="fa-solid fa-pen icono-flotante icono-lapiz-panel"></i>
+      <div class="insignia insignia-verde insignia-panel-1"><i class="fa-solid fa-language"></i></div>
+      <div class="insignia insignia-azul insignia-panel-2"><i class="fa-solid fa-book"></i></div>
+      <div class="insignia insignia-naranja insignia-panel-3"><i class="fa-solid fa-headphones"></i></div>
+      <div class="insignia insignia-morada insignia-panel-4"><i class="fa-solid fa-spell-check"></i></div>
+      <div class="insignia insignia-amarilla insignia-panel-5"><i class="fa-solid fa-pen"></i></div>
+      <span class="bandera-emoji bandera-panel-flotante">🇬🇧</span>
       <div class="burbuja burbuja-panel">Hello! 👋</div>
     </div>
 
     <!-- Decoración compacta del panel (móvil) -->
     <div class="deco-movil deco-movil-panel">
-      <div class="deco-movil-icono"><i class="fa-solid fa-brain"></i></div>
-      <div class="deco-movil-badge">AI</div>
-      <div class="deco-movil-icono"><i class="fa-solid fa-book"></i></div>
+      <div class="deco-movil-icono deco-verde"><i class="fa-solid fa-language"></i></div>
+      <div class="deco-movil-badge">🇺🇸🇬🇧</div>
+      <div class="deco-movil-icono deco-azul"><i class="fa-solid fa-book"></i></div>
     </div>
 
     <h2 id="saludo-usuario">¡Hola!</h2>
