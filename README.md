@@ -1,10 +1,8 @@
-# TutorIA's — Asistente de estudio de inglés con IA
+# TutorIA's 
 
 Backend Node/Express + PostgreSQL, frontend Vanilla JS.
 
 ## Estructura
-
-```
 tutorias/
 ├── backend/
 │   ├── src/
@@ -28,33 +26,8 @@ tutorias/
     │   ├── utils/         # validaciones.js
     │   └── styles/        # global.css (tema blanco y negro)
     └── index.html
-```
 
 ## 1. Base de datos
 
 backend/src/config/schema.sql
-```
-
-Esto crea las tablas: `usuarios`, `vocabulario_usuario`, `ejercicios`, `conversaciones`.
-
-## 2. Backend
-
-```bash
-cd backend
-npm install
-cp .env.example .env
-# Edita .env con tu DATABASE_URL real y un JWT_SECRET seguro
-npm run dev
-```
-
-El backend queda corriendo en `http://localhost:3000`.
-
-Endpoints disponibles:
-- `POST /api/auth/registro` → { nombre, correo, contrasena }
-- `POST /api/auth/login` → { correo, contrasena }
-- `GET /api/auth/perfil` → requiere header `Authorization: Bearer <token>`
-
-## 3. Frontend
-```html
-<script>window.TUTORIAS_API_URL = 'https://tu-backend.up.railway.app/api';</script>
 ```
