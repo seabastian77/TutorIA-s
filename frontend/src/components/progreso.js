@@ -21,11 +21,7 @@ function renderizarProgreso(datos) {
   const info = TEXTO_TENDENCIA[datos.tendencia] || TEXTO_TENDENCIA["sin-datos"];
   tendenciaTextoEl.textContent = info.texto;
   tendenciaIconoEl.className = `fa-solid ${info.icono}`;
-  tendenciaWrap.classList.remove(
-    "tendencia-buena",
-    "tendencia-mala",
-    "tendencia-neutra",
-  );
+  tendenciaWrap.classList.remove("tendencia-buena", "tendencia-mala", "tendencia-neutra");
   tendenciaWrap.classList.add(`tendencia-${info.color}`);
 
   contenedor.classList.remove("oculto");
@@ -40,10 +36,7 @@ function renderizarMetaDiaria(actividadesHoy, metaDiaria) {
 
   if (!contenedor) return;
 
-  const porcentaje = Math.min(
-    100,
-    Math.round((actividadesHoy / metaDiaria) * 100),
-  );
+  const porcentaje = Math.min(100, Math.round((actividadesHoy / metaDiaria) * 100));
   relleno.style.width = `${porcentaje}%`;
   texto.textContent =
     actividadesHoy >= metaDiaria
@@ -71,10 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cargarProgreso();
     }
   });
-  observador.observe(vistaPrincipal, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
+  observador.observe(vistaPrincipal, { attributes: true, attributeFilter: ["class"] });
 
   if (!vistaPrincipal.classList.contains("oculto")) {
     cargarProgreso();
