@@ -1,14 +1,8 @@
-// frontend/src/components/progreso.js
-
 const TEXTO_TENDENCIA = {
-  mejorando: { texto: "Mejorando", icono: "fa-arrow-trend-up", color: "buena" },
-  bajando: { texto: "Bajando", icono: "fa-arrow-trend-down", color: "mala" },
-  estable: { texto: "Estable", icono: "fa-minus", color: "neutra" },
-  "sin-datos": {
-    texto: "Sigue practicando",
-    icono: "fa-minus",
-    color: "neutra",
-  },
+  mejorando: { texto: "Improving", icono: "fa-arrow-trend-up", color: "buena" },
+  bajando: { texto: "Declining", icono: "fa-arrow-trend-down", color: "mala" },
+  estable: { texto: "Stable", icono: "fa-minus", color: "neutra" },
+  "sin-datos": { texto: "Keep Practicing", icono: "fa-minus", color: "neutra" },
 };
 
 function renderizarProgreso(datos) {
@@ -35,6 +29,28 @@ function renderizarProgreso(datos) {
   tendenciaWrap.classList.add(`tendencia-${info.color}`);
 
   contenedor.classList.remove("oculto");
+
+  renderizarMetaDiaria(datos.actividadesHoy, datos.metaDiaria);
+}
+
+function renderizarMetaDiaria(actividadesHoy, metaDiaria) {
+  const contenedor = document.getElementById("meta-diaria");
+  const relleno = document.getElementById("meta-diaria-relleno");
+  const texto = document.getElementById("meta-diaria-texto");
+
+  if (!contenedor) return;
+
+  const porcentaje = Math.min(
+    100,
+    Math.round((actividadesHoy / metaDiaria) * 100),
+  );
+  relleno.style.width = `${porcentaje}%`;
+  texto.textContent =
+    actividadesHoy >= metaDiaria
+      ? "🎯 Daily goal completed!"
+      : `Daily goal: ${actividadesHoy} / ${metaDiaria}`;
+
+  contenedor.classList.remove("oculto");
 }
 
 async function cargarProgreso() {
@@ -50,8 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const vistaPrincipal = document.getElementById("vista-principal");
   if (!vistaPrincipal) return;
 
-  // Se actualiza cada vez que la vista principal vuelve a mostrarse
-  // (por ejemplo, después de terminar el diagnóstico o la práctica)
   const observador = new MutationObserver(() => {
     if (!vistaPrincipal.classList.contains("oculto")) {
       cargarProgreso();
@@ -62,7 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     attributeFilter: ["class"],
   });
 
-  // Por si ya está visible al cargar la página (sesión ya iniciada)
   if (!vistaPrincipal.classList.contains("oculto")) {
     cargarProgreso();
   }

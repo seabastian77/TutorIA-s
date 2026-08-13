@@ -4,6 +4,7 @@ const {
   generarResumenFinal,
 } = require("../services/iaService");
 const { registrarActividad } = require("../utils/gamificacion");
+const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const pool = require("../config/db");
 
 const NIVELES_VALIDOS = ["A1", "A2", "B1", "B2", "C1", "C2"];
@@ -47,10 +48,42 @@ const DiagnosticoController = {
         nivel: NIVELES_VALIDOS.includes(nivel) ? nivel : "B1",
       });
 
+      // Si le fue mal, aprovechamos y guardamos la palabra en su vocabulario
+      if ((evaluacion.puntuacion || 0) < 60) {
+        guardarPalabraSiFalla(req.usuario.id, "escrita", {
+          frase: pregunta,
+          tema: "level diagnostic",
+        });
+      }
+
       res.json(evaluacion);
     } catch (error) {
       console.error("Error en /nivel/evaluar-abierta:", error);
       res.status(500).json({ error: "No se pudo evaluar tu respuesta." });
+    }
+  },
+
+  // El frontend llama esto cuando el usuario falla una pregunta de
+  // opción múltiple del diagnóstico, para capturar la palabra clave
+  async falloOpcion(req, res) {
+    try {
+      const { pregunta, opciones, respuestaCorrecta, tema } = req.body;
+
+      if (!pregunta || !Array.isArray(opciones)) {
+        return res.status(400).json({ error: "Faltan datos" });
+      }
+
+      guardarPalabraSiFalla(req.usuario.id, "opcion_multiple", {
+        pregunta,
+        opciones,
+        respuestaCorrecta,
+        tema: tema || "level diagnostic",
+      });
+
+      res.json({ ok: true });
+    } catch (error) {
+      console.error("Error en /nivel/fallo-opcion:", error);
+      res.status(500).json({ error: "No se pudo registrar" });
     }
   },
 
@@ -109,7 +142,6 @@ const DiagnosticoController = {
         req.usuario.id,
       ]);
 
-      // Puntos y racha: entre más alto el promedio, más puntos ganas
       const puntosGanados = Math.max(20, Math.round(promedioGeneral));
       const gamificacion = await registrarActividad(
         req.usuario.id,

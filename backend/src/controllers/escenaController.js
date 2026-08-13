@@ -3,6 +3,8 @@ const {
   evaluarLineaEscena,
 } = require("../services/iaService");
 const { registrarActividad } = require("../utils/gamificacion");
+const { guardarPalabraSiFalla } = require("../utils/vocabulario");
+const pool = require("../config/db");
 
 const EscenaController = {
   async nueva(req, res) {
@@ -28,6 +30,30 @@ const EscenaController = {
         lineaObjetivo,
         transcripcion,
       });
+
+      // Queda registrado en el historial de conversaciones (también cuenta
+      // para los logros de "conversación") y si salió mal, capturamos la palabra
+      await pool.query(
+        `INSERT INTO conversaciones (usuario_id, mensaje_usuario, respuesta_ia, correcciones)
+         VALUES ($1, $2, $3, $4)`,
+        [
+          req.usuario.id,
+          transcripcion,
+          lineaObjetivo,
+          JSON.stringify({
+            tipo: "escena",
+            puntuacion: evaluacion.puntuacion,
+            feedback: evaluacion.feedback,
+          }),
+        ],
+      );
+
+      if ((evaluacion.puntuacion || 0) < 60) {
+        guardarPalabraSiFalla(req.usuario.id, "escrita", {
+          frase: lineaObjetivo,
+          tema: "movie scene practice",
+        });
+      }
 
       const puntosGanados = Math.max(
         2,

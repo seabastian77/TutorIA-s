@@ -97,6 +97,15 @@ function responderOpcionMultiple(indiceElegido, btnElegido) {
       : "Casi, no era esa — mira la opción marcada en verde.",
   );
 
+  if (!esCorrecta) {
+    NivelAPI.registrarFalloOpcion({
+      pregunta: escenaVigente.pregunta,
+      opciones: escenaVigente.opciones,
+      respuestaCorrecta: escenaVigente.respuestaCorrecta,
+      tema: escenaVigente.tema,
+    });
+  }
+
   historialResultados.push({ habilidad: escenaVigente.habilidad, puntuacion });
   ajustarNivelPorPuntuacion(puntuacion);
 }

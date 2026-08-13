@@ -32,6 +32,23 @@ const NivelAPI = {
     return datos;
   },
 
+  async registrarFalloOpcion({ pregunta, opciones, respuestaCorrecta, tema }) {
+    const token = Sesion.obtenerToken();
+    // No es crítico para el flujo del diagnóstico si esto falla, solo alimenta el vocabulario
+    try {
+      await fetch(`${URL_BASE_NIVEL}/nivel/fallo-opcion`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ pregunta, opciones, respuestaCorrecta, tema }),
+      });
+    } catch (err) {
+      console.error("No se pudo registrar el fallo para vocabulario:", err);
+    }
+  },
+
   async guardarDiagnosticoFinal(historial) {
     const token = Sesion.obtenerToken();
     const resp = await fetch(`${URL_BASE_NIVEL}/nivel/finalizar`, {

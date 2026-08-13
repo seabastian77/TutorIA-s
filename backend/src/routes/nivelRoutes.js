@@ -9,6 +9,7 @@ router.post(
   verificarAuth,
   DiagnosticoController.evaluarAbierta,
 );
+router.post("/fallo-opcion", verificarAuth, DiagnosticoController.falloOpcion);
 router.post("/finalizar", verificarAuth, DiagnosticoController.finalizar);
 
 module.exports = router;

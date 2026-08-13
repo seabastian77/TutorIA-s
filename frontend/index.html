@@ -155,11 +155,19 @@
       </div>
     </div>
 
+    <div id="meta-diaria" class="meta-diaria oculto">
+      <div class="meta-diaria-fondo">
+        <div id="meta-diaria-relleno" class="meta-diaria-relleno" style="width:0%"></div>
+      </div>
+      <p id="meta-diaria-texto" class="meta-diaria-texto">Daily goal: 0 / 5</p>
+    </div>
+
     <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Take Level Test</button>
     <button id="btn-practicar" class="btn-principal" style="max-width:280px">Practice Now</button>
     <button id="btn-hablar-ia" class="btn-principal btn-voz" style="max-width:280px">🎙️ Talk to the AI</button>
     <button id="btn-escena" class="btn-principal btn-escena" style="max-width:280px">🎬 Practice a Scene</button>
     <button id="btn-vocabulario" class="btn-principal btn-vocab" style="max-width:280px">📚 My Vocabulary</button>
+    <button id="btn-logros" class="btn-principal btn-logros" style="max-width:280px">🏆 Achievements</button>
     <button id="btn-cerrar-sesion" class="btn-secundario">Log Out</button>
 
     <div class="tarjeta-tip">
@@ -262,6 +270,14 @@
     <button id="btn-salir-vocabulario" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
   </div>
 
+  <!-- Vista: logros / achievements -->
+  <div id="vista-logros" class="pantalla-principal oculto">
+    <h2>Achievements</h2>
+    <p id="logros-estado"></p>
+    <div id="logros-lista" class="logros-lista"></div>
+    <button id="btn-salir-logros" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
+  </div>
+
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/store/sesion.js"></script>
@@ -272,6 +288,7 @@
   <script src="src/services/vozApi.js"></script>
   <script src="src/services/escenaApi.js"></script>
   <script src="src/services/vocabularioApi.js"></script>
+  <script src="src/services/logrosApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
@@ -279,5 +296,6 @@
   <script src="src/components/voz.js"></script>
   <script src="src/components/escena.js"></script>
   <script src="src/components/vocabulario.js"></script>
+  <script src="src/components/logros.js"></script>
 </body>
 </html>
