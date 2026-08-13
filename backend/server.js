@@ -68,7 +68,6 @@ app.use("/api/usuario", usuarioRoutes);
 app.use("/api/voz", vozRoutes);
 app.use("/api/escena", escenaRoutes);
 app.use("/api/vocabulario", vocabularioRoutes);
-app.options("*", cors(opcionesCors));
 
 // Ruta de prueba temporal (para diagnóstico)
 app.get("/api/prueba-diagnostico", (req, res) => {
