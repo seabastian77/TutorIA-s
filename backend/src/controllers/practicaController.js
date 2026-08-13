@@ -2,9 +2,11 @@ const {
   generarPreguntaNivel,
   generarPreguntaEscrita,
   evaluarRespuestaEscrita,
+  extraerPalabraVocabulario,
 } = require("../services/iaService");
 const EjercicioModel = require("../models/ejercicioModel");
 const { registrarActividad } = require("../utils/gamificacion");
+const pool = require("../config/db");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
@@ -26,6 +28,29 @@ function calcularNivelAdaptativo(historial, nivelUsuarioBase) {
     .filter(Boolean);
 
   return { indice, temasRecientes };
+}
+
+// Cuando el estudiante falla, guarda la palabra clave en su vocabulario
+// (si falla algo en el intento, esto nunca debe tumbar la respuesta principal)
+async function guardarPalabraSiFalla(usuarioId, tipo, contenido) {
+  try {
+    const vocab = await extraerPalabraVocabulario({ contenido, tipo });
+
+    const existente = await pool.query(
+      "SELECT id FROM vocabulario_usuario WHERE usuario_id = $1 AND LOWER(palabra) = LOWER($2)",
+      [usuarioId, vocab.palabra],
+    );
+
+    if (existente.rows.length === 0) {
+      await pool.query(
+        `INSERT INTO vocabulario_usuario (usuario_id, palabra, traduccion, contexto)
+         VALUES ($1, $2, $3, $4)`,
+        [usuarioId, vocab.palabra, vocab.traduccion, vocab.contexto],
+      );
+    }
+  } catch (error) {
+    console.error("No se pudo guardar la palabra en el vocabulario:", error);
+  }
 }
 
 const PracticaController = {
@@ -81,8 +106,10 @@ const PracticaController = {
         correcto,
       });
 
-      // Puntos: 10 si acertaste, 0 si no — pero cualquier intento
-      // cuenta para mantener viva la racha de días practicando.
+      if (!correcto) {
+        guardarPalabraSiFalla(req.usuario.id, tipo, contenido);
+      }
+
       const puntosGanados = correcto ? 10 : 0;
       const gamificacion = await registrarActividad(
         req.usuario.id,

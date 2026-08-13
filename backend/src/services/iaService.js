@@ -258,6 +258,39 @@ puntuacion is 0 to 100 based on how close the transcription is to the target lin
   return JSON.parse(completion.choices[0].message.content);
 }
 
+// ============================================================
+// Vocabulario — extrae la palabra clave cuando el estudiante falla
+// ============================================================
+
+async function extraerPalabraVocabulario({ contenido, tipo }) {
+  const texto =
+    tipo === "opcion_multiple"
+      ? `Question: ${contenido.pregunta}\nOptions: ${contenido.opciones.join(", ")}\nCorrect answer: ${contenido.opciones[contenido.respuestaCorrecta]}\nTopic: ${contenido.tema}`
+      : `Sentence: ${contenido.frase}\nTopic: ${contenido.tema}`;
+
+  const prompt = `A Spanish-speaking English student just got this exercise wrong:
+
+${texto}
+
+Identify the ONE most important English word or short phrase from this exercise that the student
+should add to their vocabulary flashcards to study — the key word/phrase being tested, not a random word.
+
+Respond ONLY with valid JSON, no extra text, in this exact shape:
+{
+  "palabra": "the English word or phrase",
+  "traduccion": "su traducción al español",
+  "contexto": "the original sentence or a short example sentence in English using the word"
+}`;
+
+  const completion = await groq.chat.completions.create({
+    model: MODELO,
+    messages: [{ role: "user", content: prompt }],
+    response_format: { type: "json_object" },
+  });
+
+  return JSON.parse(completion.choices[0].message.content);
+}
+
 module.exports = {
   generarPreguntaNivel,
   generarPreguntaEscrita,
@@ -268,4 +301,5 @@ module.exports = {
   generarRespuestaConversacion,
   generarEscenaGuion,
   evaluarLineaEscena,
+  extraerPalabraVocabulario,
 };

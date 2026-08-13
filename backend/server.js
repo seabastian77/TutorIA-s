@@ -8,6 +8,7 @@ const practicaRoutes = require("./src/routes/practicaRoutes");
 const usuarioRoutes = require("./src/routes/usuarioRoutes");
 const vozRoutes = require("./src/routes/vozRoutes");
 const escenaRoutes = require("./src/routes/escenaRoutes");
+const vocabularioRoutes = require("./src/routes/vocabularioRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +23,7 @@ app.use("/api/practica", practicaRoutes);
 app.use("/api/usuario", usuarioRoutes);
 app.use("/api/voz", vozRoutes);
 app.use("/api/escena", escenaRoutes);
+app.use("/api/vocabulario", vocabularioRoutes);
 
 // Ruta de prueba temporal (para diagnóstico)
 app.get("/api/prueba-diagnostico", (req, res) => {

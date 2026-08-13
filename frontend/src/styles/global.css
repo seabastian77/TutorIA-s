@@ -713,3 +713,15 @@ body::after {
   box-shadow: 0 0 18px rgba(57,255,138,0.35);
 }
 .btn-escena:hover { box-shadow: 0 0 28px rgba(57,255,138,0.6); }
+
+/* ============================================================
+   VOCABULARIO — botón rosado/magenta, distinto a los demás
+   ============================================================ */
+:root { --magenta: #ff3b8a; }
+
+.btn-vocab {
+  background: var(--magenta);
+  border-color: var(--magenta);
+  box-shadow: 0 0 18px rgba(255,59,138,0.35);
+}
+.btn-vocab:hover { box-shadow: 0 0 28px rgba(255,59,138,0.6); }
