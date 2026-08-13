@@ -41,8 +41,8 @@
       </div>
 
       <div class="pestanas">
-        <div id="tab-login" class="pestana activa">Log In</div>
-        <div id="tab-registro" class="pestana">Sign Up</div>
+        <div id="tab-login" class="pestana activa">🔑 Log In</div>
+        <div id="tab-registro" class="pestana">✨ Sign Up</div>
       </div>
 
       <div id="mensaje-error" class="mensaje-error"></div>
@@ -57,7 +57,7 @@
             <label for="login-contrasena">Password</label>
             <input type="password" id="login-contrasena" placeholder="••••••••" required />
           </div>
-          <button type="submit" class="btn-principal">Log In</button>
+          <button type="submit" class="btn-principal">🔑 Log In</button>
         </form>
       </div>
 
@@ -75,7 +75,7 @@
             <label for="registro-contrasena">Password</label>
             <input type="password" id="registro-contrasena" placeholder="Minimum 6 characters" required />
           </div>
-          <button type="submit" class="btn-principal">Sign Up</button>
+          <button type="submit" class="btn-principal">✨ Sign Up</button>
         </form>
       </div>
 
@@ -159,21 +159,21 @@
       <div class="meta-diaria-fondo">
         <div id="meta-diaria-relleno" class="meta-diaria-relleno" style="width:0%"></div>
       </div>
-      <p id="meta-diaria-texto" class="meta-diaria-texto">Daily goal: 0 / 5</p>
+      <p id="meta-diaria-texto" class="meta-diaria-texto">🎯 Daily goal: 0 / 5</p>
     </div>
 
-    <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">Take Level Test</button>
-    <button id="btn-practicar" class="btn-principal" style="max-width:280px">Practice Now</button>
+    <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">🧠 Level Check</button>
+    <button id="btn-practicar" class="btn-principal" style="max-width:280px">💪 Daily Practice</button>
     <button id="btn-hablar-ia" class="btn-principal btn-voz" style="max-width:280px">🎙️ Talk to the AI</button>
-    <button id="btn-escena" class="btn-principal btn-escena" style="max-width:280px">🎬 Practice a Scene</button>
+    <button id="btn-escena" class="btn-principal btn-escena" style="max-width:280px">🎬 Movie Scene</button>
     <button id="btn-vocabulario" class="btn-principal btn-vocab" style="max-width:280px">📚 My Vocabulary</button>
     <button id="btn-logros" class="btn-principal btn-logros" style="max-width:280px">🏆 Achievements</button>
-    <button id="btn-cerrar-sesion" class="btn-secundario">Log Out</button>
+    <button id="btn-cerrar-sesion" class="btn-secundario">🚪 Log Out</button>
 
     <div class="tarjeta-tip">
       <div class="tarjeta-tip-icono"><i class="fa-solid fa-lightbulb"></i></div>
       <div>
-        <p class="tarjeta-tip-titulo">Tip of the Day</p>
+        <p class="tarjeta-tip-titulo">💡 Tip of the Day</p>
         <p class="tarjeta-tip-texto">"Practice makes perfect" — spend at least 10 minutes today reviewing your vocabulary on TutorIA's.</p>
       </div>
     </div>
@@ -189,22 +189,22 @@
 
       <div id="nivel-respuesta-abierta" class="oculto">
         <textarea id="nivel-texto-usuario" rows="3" placeholder="Write your answer in English..."></textarea>
-        <button id="btn-enviar-respuesta" class="btn-principal" style="margin-top:10px;">Submit Answer</button>
+        <button id="btn-enviar-respuesta" class="btn-principal" style="margin-top:10px;">✍️ Submit Answer</button>
       </div>
 
       <div id="nivel-feedback" class="nivel-feedback oculto"></div>
-      <button id="btn-siguiente-turno" class="btn-principal oculto" style="margin-top:14px;">Next</button>
+      <button id="btn-siguiente-turno" class="btn-principal oculto" style="margin-top:14px;">➡️ Next</button>
     </div>
   </div>
 
   <!-- Vista: resultado del diagnóstico -->
   <div id="vista-resultado-nivel" class="pantalla-principal oculto">
-    <h2>Diagnostic Complete!</h2>
+    <h2>🎉 Diagnostic Complete!</h2>
     <p>Your estimated CEFR level is:</p>
     <div id="resultado-nivel-valor" class="resultado-nivel"></div>
     <p id="resultado-resumen" class="resultado-resumen"></p>
     <div id="resultado-habilidades" class="resultado-habilidades"></div>
-    <button id="btn-continuar-resultado" class="btn-principal" style="max-width:280px">Continue</button>
+    <button id="btn-continuar-resultado" class="btn-principal" style="max-width:280px">🎉 Continue</button>
   </div>
 
   <!-- Vista: práctica continua -->
@@ -213,7 +213,7 @@
       <div id="practica-nivel-tag" class="nivel-progreso">Level</div>
       <div id="practica-cuerpo"></div>
     </div>
-    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
+    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
   </div>
 
   <!-- Vista: conversación de voz con la IA -->
@@ -232,7 +232,7 @@
         <p id="voz-estado" class="voz-estado">Press the microphone and start talking</p>
       </div>
     </div>
-    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
+    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
   </div>
 
   <!-- Vista: modo escena — guiones originales para pronunciación -->
@@ -250,9 +250,9 @@
       </div>
 
       <div id="escena-feedback" class="nivel-feedback oculto"></div>
-      <button id="btn-siguiente-linea" class="btn-principal oculto" style="margin-top:14px;">Next Line</button>
+      <button id="btn-siguiente-linea" class="btn-principal oculto" style="margin-top:14px;">➡️ Next Line</button>
     </div>
-    <button id="btn-salir-escena" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
+    <button id="btn-salir-escena" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
   </div>
 
   <!-- Vista: mi vocabulario — tarjetas de repaso con repetición espaciada -->
@@ -261,21 +261,21 @@
       <div id="vocab-progreso" class="nivel-progreso"></div>
       <h3 id="vocab-tarjeta-texto">Loading...</h3>
       <p id="vocab-contexto" class="nivel-narrativa oculto"></p>
-      <button id="vocab-btn-mostrar" class="btn-principal oculto" style="margin-top:14px;">Show Translation</button>
+      <button id="vocab-btn-mostrar" class="btn-principal oculto" style="margin-top:14px;">🔍 Show Translation</button>
       <div id="vocab-controles" class="oculto" style="display:flex; gap:10px; margin-top:14px;">
         <button id="btn-vocab-no-sabia" class="btn-secundario" style="flex:1; margin:0;">😕 Didn't know it</button>
         <button id="btn-vocab-sabia" class="btn-principal" style="flex:1; margin:0;">✅ I knew it</button>
       </div>
     </div>
-    <button id="btn-salir-vocabulario" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
+    <button id="btn-salir-vocabulario" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
   </div>
 
   <!-- Vista: logros / achievements -->
   <div id="vista-logros" class="pantalla-principal oculto">
-    <h2>Achievements</h2>
+    <h2>🏆 Achievements</h2>
     <p id="logros-estado"></p>
     <div id="logros-lista" class="logros-lista"></div>
-    <button id="btn-salir-logros" class="btn-secundario" style="margin-top:16px;">Back to Home</button>
+    <button id="btn-salir-logros" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
   </div>
 
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
