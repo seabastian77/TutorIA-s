@@ -13,7 +13,16 @@ const vocabularioRoutes = require("./src/routes/vocabularioRoutes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+const opcionesCors = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(opcionesCors));
+// Responde explícitamente a las peticiones "preflight" (OPTIONS) en cualquier ruta
+app.options("*", cors(opcionesCors));
+
 app.use(express.json());
 
 // Rutas
