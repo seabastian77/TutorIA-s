@@ -1,4 +1,3 @@
-// src/services/iaService.js
 const Groq = require("groq-sdk");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -202,6 +201,63 @@ Responde ÚNICAMENTE con un JSON válido, sin texto adicional, con esta forma ex
   return JSON.parse(completion.choices[0].message.content);
 }
 
+// ============================================================
+// Modo Escena — guiones originales tipo película para pronunciación
+// (contenido 100% generado por IA, nunca diálogos de películas reales)
+// ============================================================
+
+async function generarEscenaGuion({ nivel }) {
+  const prompt = `Create an ORIGINAL short movie-style monologue scene for English pronunciation practice.
+Do NOT use real movies, characters, franchises, or existing scripts — everything must be invented from scratch.
+
+Level: ${nivel} (CEFR)
+
+The scene is a short monologue of exactly 4 lines said by a single invented character, in a dramatic,
+emotional, or exciting situation (like a movie trailer moment), with vocabulary and grammar appropriate
+for level ${nivel}.
+
+Respond ONLY with valid JSON, no extra text, in this exact shape:
+{
+  "titulo": "short original scene title",
+  "situacion": "one sentence setting up the scene, in English",
+  "lineas": ["line 1", "line 2", "line 3", "line 4"]
+}`;
+
+  const completion = await groq.chat.completions.create({
+    model: MODELO,
+    messages: [{ role: "user", content: prompt }],
+    response_format: { type: "json_object" },
+  });
+
+  return JSON.parse(completion.choices[0].message.content);
+}
+
+async function evaluarLineaEscena({ lineaObjetivo, transcripcion }) {
+  const prompt = `You are a friendly pronunciation coach for Spanish-speaking English learners.
+
+The student was supposed to say this line out loud: "${lineaObjetivo}"
+What the browser's speech recognition transcribed from their voice: "${transcripcion}"
+
+Compare them. The transcription reflects what the speech recognizer understood, so differences
+can hint at pronunciation issues (not just memory). Be encouraging but honest.
+
+Respond ONLY with valid JSON, no extra text, in this exact shape:
+{
+  "puntuacion": 80,
+  "feedback": "short friendly feedback IN SPANISH about their pronunciation attempt, mentioning any word that seems mispronounced based on the transcription difference, or praising them if it matched well"
+}
+
+puntuacion is 0 to 100 based on how close the transcription is to the target line.`;
+
+  const completion = await groq.chat.completions.create({
+    model: MODELO,
+    messages: [{ role: "user", content: prompt }],
+    response_format: { type: "json_object" },
+  });
+
+  return JSON.parse(completion.choices[0].message.content);
+}
+
 module.exports = {
   generarPreguntaNivel,
   generarPreguntaEscrita,
@@ -210,4 +266,6 @@ module.exports = {
   evaluarRespuestaAbierta,
   generarResumenFinal,
   generarRespuestaConversacion,
+  generarEscenaGuion,
+  evaluarLineaEscena,
 };
