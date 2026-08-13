@@ -1,3 +1,4 @@
+// server.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -13,15 +14,22 @@ const vocabularioRoutes = require("./src/routes/vocabularioRoutes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const opcionesCors = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+app.use(cors({ origin: "*" }));
 
-app.use(cors(opcionesCors));
-// Responde explícitamente a las peticiones "preflight" (OPTIONS) en cualquier ruta
-app.options("*", cors(opcionesCors));
+// Manejo de CORS a mano, SIN ningún patrón de ruta (nada de "*" como path),
+// para no depender de cómo Express interprete ese símbolo por versión.
+// Esto se ejecuta para TODAS las peticiones, a cualquier ruta.
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 app.use(express.json());
 
