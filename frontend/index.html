@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TutorIA's · Learn English with AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="src/styles/global.css" />
 </head>
@@ -16,33 +16,46 @@
   <!-- Vista de autenticación -->
   <div id="vista-auth" class="pantalla-auth">
 
-    <!-- Columna izquierda: frase (solo escritorio) -->
+    <!-- Panel naranja de marca -->
     <div class="auth-lado-izquierdo">
-      <div class="auth-frase">
-        <span>Think,</span>
-        <span>Learn,</span>
-        <span class="auth-frase-destacada">Speak <span class="auth-frase-glow">English</span></span>
+      <div class="logo-marca">
+        <span class="logo-cuadro">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v16" />
+            <path d="M12 4a4 4 0 0 0-4 4 3 3 0 0 0-1 5.8V17a3 3 0 0 0 5 2.2" />
+            <path d="M12 4a4 4 0 0 1 4 4 3 3 0 0 1 1 5.8V17a3 3 0 0 1-5 2.2" />
+          </svg>
+        </span>
+        <span class="logo-nombre">TutorIA<span class="logo-apostrofe">'s</span></span>
       </div>
-      <p class="auth-subfrase">Open Your World</p>
+
+      <div class="auth-frase">
+        <span>Speak</span>
+        <span>English</span>
+        <span class="auth-frase-destacada"><span class="auth-frase-glow">out loud.</span></span>
+      </div>
+
+      <p class="auth-subfrase">
+        Your AI tutor listens, corrects you mid-sentence, and makes tomorrow harder only when you're ready.
+      </p>
+
+      <div class="auth-lado-derecho">
+        <span class="bento-etiqueta">A1 → C2</span>
+        <span class="bento-etiqueta">VOICE</span>
+        <span class="bento-etiqueta">ADAPTIVE</span>
+      </div>
     </div>
 
-    <!-- Decoración compacta SOLO para móvil, va justo encima de la tarjeta -->
-    <div class="deco-movil deco-movil-top">
-      <div class="deco-movil-icono deco-verde"><i class="fa-solid fa-language"></i></div>
-      <div class="deco-movil-badge">EN · AI</div>
-      <div class="deco-movil-icono deco-naranja"><i class="fa-solid fa-book-open"></i></div>
-    </div>
-
-    <!-- Tarjeta central de login/registro -->
+    <!-- Tarjeta de login/registro -->
     <div class="tarjeta-auth">
       <div class="marca">
         <h1>TutorIA<span>'s</span></h1>
-        <p>Your AI English Study Assistant</p>
+        <p>Your AI English study assistant</p>
       </div>
 
       <div class="pestanas">
-        <div id="tab-login" class="pestana activa">🔑 Log In</div>
-        <div id="tab-registro" class="pestana">✨ Sign Up</div>
+        <div id="tab-login" class="pestana activa">Log In</div>
+        <div id="tab-registro" class="pestana">Sign Up</div>
       </div>
 
       <div id="mensaje-error" class="mensaje-error"></div>
@@ -57,7 +70,7 @@
             <label for="login-contrasena">Password</label>
             <input type="password" id="login-contrasena" placeholder="••••••••" required />
           </div>
-          <button type="submit" class="btn-principal">🔑 Log In</button>
+          <button type="submit" class="btn-principal">Start practicing</button>
         </form>
       </div>
 
@@ -75,105 +88,160 @@
             <label for="registro-contrasena">Password</label>
             <input type="password" id="registro-contrasena" placeholder="Minimum 6 characters" required />
           </div>
-          <button type="submit" class="btn-principal">✨ Sign Up</button>
+          <button type="submit" class="btn-principal">Create my account</button>
         </form>
       </div>
 
       <div class="pie-auth">Learn English at your own pace, every day</div>
-    </div>
-
-    <!-- Decoración compacta SOLO para móvil, va justo debajo de la tarjeta -->
-    <div class="deco-movil deco-movil-bottom">
-      <div class="burbuja-movil">Let's learn together! 👋</div>
-    </div>
-
-    <!-- Columna derecha: iconos coloridos relacionados con el inglés (solo escritorio) -->
-    <div class="auth-lado-derecho">
-      <div class="insignia insignia-verde insignia-1">
-        <i class="fa-solid fa-language"></i>
-      </div>
-      <div class="insignia insignia-azul insignia-2">
-        <i class="fa-solid fa-book-open"></i>
-      </div>
-      <div class="insignia insignia-naranja insignia-3">
-        <i class="fa-solid fa-spell-check"></i>
-      </div>
-      <div class="insignia insignia-morada insignia-4">
-        <i class="fa-solid fa-headphones"></i>
-      </div>
-      <div class="insignia insignia-amarilla insignia-5">
-        <i class="fa-solid fa-star"></i>
-      </div>
-
-      <div class="burbuja burbuja-1">Hello! 👋</div>
-      <div class="burbuja burbuja-2">How are you?</div>
-      <div class="burbuja burbuja-3">Let's learn together!</div>
-    </div>
-
-    <div class="banderas-deco">
-      <span class="bandera-emoji">🇺🇸</span>
-      <span class="bandera-emoji">🇬🇧</span>
     </div>
   </div>
 
   <!-- Vista principal tras login -->
   <div id="vista-principal" class="pantalla-principal oculto">
 
-    <!-- Decoración de fondo del panel (escritorio) -->
-    <div class="decoracion-principal">
-      <div class="insignia insignia-verde insignia-panel-1"><i class="fa-solid fa-language"></i></div>
-      <div class="insignia insignia-azul insignia-panel-2"><i class="fa-solid fa-book"></i></div>
-      <div class="insignia insignia-naranja insignia-panel-3"><i class="fa-solid fa-headphones"></i></div>
-      <div class="insignia insignia-morada insignia-panel-4"><i class="fa-solid fa-spell-check"></i></div>
-      <div class="insignia insignia-amarilla insignia-panel-5"><i class="fa-solid fa-pen"></i></div>
-      <span class="bandera-emoji bandera-panel-flotante">🇬🇧</span>
-      <div class="burbuja burbuja-panel">Hello! 👋</div>
-    </div>
+    <div class="barra-superior">
+      <div class="logo-marca">
+        <span class="logo-cuadro">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v16" />
+            <path d="M12 4a4 4 0 0 0-4 4 3 3 0 0 0-1 5.8V17a3 3 0 0 0 5 2.2" />
+            <path d="M12 4a4 4 0 0 1 4 4 3 3 0 0 1 1 5.8V17a3 3 0 0 1-5 2.2" />
+          </svg>
+        </span>
+        <span class="logo-nombre">TutorIA<span class="logo-apostrofe">'s</span></span>
+      </div>
 
-    <!-- Decoración compacta del panel (móvil) -->
-    <div class="deco-movil deco-movil-panel">
-      <div class="deco-movil-icono deco-verde"><i class="fa-solid fa-language"></i></div>
-      <div class="deco-movil-badge">EN · AI</div>
-      <div class="deco-movil-icono deco-azul"><i class="fa-solid fa-book"></i></div>
+      <div id="progreso-usuario" class="progreso-usuario oculto">
+        <div class="progreso-item">
+          <i class="fa-solid fa-star"></i>
+          <span id="progreso-puntos">0</span> pts
+        </div>
+        <div class="progreso-item">
+          <i class="fa-solid fa-fire"></i>
+          <span id="progreso-racha">0</span> days
+        </div>
+        <div class="progreso-item" id="progreso-tendencia-wrap">
+          <i class="fa-solid fa-minus" id="progreso-tendencia-icono"></i>
+          <span id="progreso-tendencia-texto">—</span>
+        </div>
+      </div>
+
+      <button id="btn-cerrar-sesion" class="btn-secundario">Log Out</button>
     </div>
 
     <h2 id="saludo-usuario">Hi!</h2>
     <p>Welcome to TutorIA's. Let's start by discovering your current English level.</p>
 
-    <div id="progreso-usuario" class="progreso-usuario oculto">
-      <div class="progreso-item">
-        <i class="fa-solid fa-star"></i>
-        <span id="progreso-puntos">0</span> pts
-      </div>
-      <div class="progreso-item">
-        <i class="fa-solid fa-fire"></i>
-        <span id="progreso-racha">0</span> days
-      </div>
-      <div class="progreso-item" id="progreso-tendencia-wrap">
-        <i class="fa-solid fa-minus" id="progreso-tendencia-icono"></i>
-        <span id="progreso-tendencia-texto">—</span>
-      </div>
-    </div>
-
     <div id="meta-diaria" class="meta-diaria oculto">
       <div class="meta-diaria-fondo">
         <div id="meta-diaria-relleno" class="meta-diaria-relleno" style="width:0%"></div>
       </div>
-      <p id="meta-diaria-texto" class="meta-diaria-texto">🎯 Daily goal: 0 / 5</p>
+      <p id="meta-diaria-texto" class="meta-diaria-texto">Daily goal: 0 / 5</p>
     </div>
 
-    <button id="btn-iniciar-nivel" class="btn-principal" style="max-width:280px">🧠 Level Check</button>
-    <button id="btn-practicar" class="btn-principal" style="max-width:280px">💪 Daily Practice</button>
-    <button id="btn-hablar-ia" class="btn-principal btn-voz" style="max-width:280px">🎙️ Talk to the AI</button>
-    <button id="btn-escena" class="btn-principal btn-escena" style="max-width:280px">🎬 Movie Scene</button>
-    <button id="btn-vocabulario" class="btn-principal btn-vocab" style="max-width:280px">📚 My Vocabulary</button>
-    <button id="btn-logros" class="btn-principal btn-logros" style="max-width:280px">🏆 Achievements</button>
-    <button id="btn-cerrar-sesion" class="btn-secundario">🚪 Log Out</button>
+    <div class="bento">
+
+      <button id="btn-iniciar-nivel" class="btn-principal">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v16" />
+            <path d="M12 4a4 4 0 0 0-4 4 3 3 0 0 0-1 5.8V17a3 3 0 0 0 5 2.2" />
+            <path d="M12 4a4 4 0 0 1 4 4 3 3 0 0 1 1 5.8V17a3 3 0 0 1-5 2.2" />
+          </svg>
+          <span class="bento-etiqueta">DIAGNOSTIC</span>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Level Check</span>
+          <span class="bento-nota">An immersive AI diagnostic in 8 scenes</span>
+        </span>
+      </button>
+
+      <button id="btn-hablar-ia" class="btn-principal btn-voz">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="3" width="6" height="11" rx="3" />
+            <path d="M5 11a7 7 0 0 0 14 0" />
+            <path d="M12 18v3" />
+          </svg>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Talk to the AI</span>
+          <span class="bento-nota">Speak out loud, corrected in real time</span>
+        </span>
+      </button>
+
+      <button id="btn-practicar" class="btn-principal">
+        <span class="bento-fila-icono">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6.5 6.5v11" />
+            <path d="M17.5 6.5v11" />
+            <path d="M3 9v6" />
+            <path d="M21 9v6" />
+            <path d="M6.5 12h11" />
+          </svg>
+          <span class="bento-etiqueta">START HERE</span>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Daily Practice</span>
+          <span class="bento-nota">Unlimited questions that get harder the moment you stop missing them.</span>
+        </span>
+      </button>
+
+      <button id="btn-escena" class="btn-principal btn-escena">
+        <span class="bento-fila-icono">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="M3 9h18" />
+            <path d="M7 5v4" />
+            <path d="M13 5v4" />
+          </svg>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Scene Mode</span>
+          <span class="bento-nota">Original AI scripts</span>
+        </span>
+      </button>
+
+      <button id="btn-vocabulario" class="btn-principal btn-vocab">
+        <span class="bento-fila-icono">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2z" />
+            <path d="M8 3v18" />
+          </svg>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Vocabulary</span>
+          <span class="bento-nota">Spaced repetition cards</span>
+        </span>
+      </button>
+
+      <button id="btn-logros" class="btn-principal btn-logros">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 4h8v5a4 4 0 0 1-8 0z" />
+            <path d="M8 5H5v2a3 3 0 0 0 3 3" />
+            <path d="M16 5h3v2a3 3 0 0 1-3 3" />
+            <path d="M10 20h4" />
+            <path d="M12 13v7" />
+          </svg>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Achievements</span>
+          <span class="bento-nota">Badges you unlock as you go</span>
+        </span>
+      </button>
+    </div>
 
     <div class="tarjeta-tip">
-      <div class="tarjeta-tip-icono"><i class="fa-solid fa-lightbulb"></i></div>
+      <div class="tarjeta-tip-icono">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18h6" />
+          <path d="M10 21h4" />
+          <path d="M12 3a6 6 0 0 0-4 10.5V15h8v-1.5A6 6 0 0 0 12 3z" />
+        </svg>
+      </div>
       <div>
-        <p class="tarjeta-tip-titulo">💡 Tip of the Day</p>
+        <p class="tarjeta-tip-titulo">Tip of the day</p>
         <p class="tarjeta-tip-texto">"Practice makes perfect" — spend at least 10 minutes today reviewing your vocabulary on TutorIA's.</p>
       </div>
     </div>
@@ -189,22 +257,22 @@
 
       <div id="nivel-respuesta-abierta" class="oculto">
         <textarea id="nivel-texto-usuario" rows="3" placeholder="Write your answer in English..."></textarea>
-        <button id="btn-enviar-respuesta" class="btn-principal" style="margin-top:10px;">✍️ Submit Answer</button>
+        <button id="btn-enviar-respuesta" class="btn-principal" style="margin-top:12px;">Submit Answer</button>
       </div>
 
       <div id="nivel-feedback" class="nivel-feedback oculto"></div>
-      <button id="btn-siguiente-turno" class="btn-principal oculto" style="margin-top:14px;">➡️ Next</button>
+      <button id="btn-siguiente-turno" class="btn-principal oculto" style="margin-top:16px;">Next</button>
     </div>
   </div>
 
   <!-- Vista: resultado del diagnóstico -->
   <div id="vista-resultado-nivel" class="pantalla-principal oculto">
-    <h2>🎉 Diagnostic Complete!</h2>
+    <h2>Diagnostic complete</h2>
     <p>Your estimated CEFR level is:</p>
     <div id="resultado-nivel-valor" class="resultado-nivel"></div>
     <p id="resultado-resumen" class="resultado-resumen"></p>
     <div id="resultado-habilidades" class="resultado-habilidades"></div>
-    <button id="btn-continuar-resultado" class="btn-principal" style="max-width:280px">🎉 Continue</button>
+    <button id="btn-continuar-resultado" class="btn-secundario">Continue</button>
   </div>
 
   <!-- Vista: práctica continua -->
@@ -213,7 +281,7 @@
       <div id="practica-nivel-tag" class="nivel-progreso">Level</div>
       <div id="practica-cuerpo"></div>
     </div>
-    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
+    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
   </div>
 
   <!-- Vista: conversación de voz con la IA -->
@@ -232,7 +300,7 @@
         <p id="voz-estado" class="voz-estado">Press the microphone and start talking</p>
       </div>
     </div>
-    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
+    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
   </div>
 
   <!-- Vista: modo escena — guiones originales para pronunciación -->
@@ -242,7 +310,7 @@
       <h3 id="escena-linea-texto"></h3>
 
       <div class="voz-controles">
-        <button id="btn-escuchar-linea" class="btn-secundario" style="margin-bottom:8px;">🔊 Listen</button>
+        <button id="btn-escuchar-linea" class="btn-secundario" style="margin-bottom:10px;">Listen</button>
         <button id="btn-mic-escena" class="btn-mic">
           <i class="fa-solid fa-microphone"></i>
         </button>
@@ -250,9 +318,9 @@
       </div>
 
       <div id="escena-feedback" class="nivel-feedback oculto"></div>
-      <button id="btn-siguiente-linea" class="btn-principal oculto" style="margin-top:14px;">➡️ Next Line</button>
+      <button id="btn-siguiente-linea" class="btn-principal oculto" style="margin-top:16px;">Next Line</button>
     </div>
-    <button id="btn-salir-escena" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
+    <button id="btn-salir-escena" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
   </div>
 
   <!-- Vista: mi vocabulario — tarjetas de repaso con repetición espaciada -->
@@ -261,21 +329,21 @@
       <div id="vocab-progreso" class="nivel-progreso"></div>
       <h3 id="vocab-tarjeta-texto">Loading...</h3>
       <p id="vocab-contexto" class="nivel-narrativa oculto"></p>
-      <button id="vocab-btn-mostrar" class="btn-principal oculto" style="margin-top:14px;">🔍 Show Translation</button>
-      <div id="vocab-controles" class="oculto" style="display:flex; gap:10px; margin-top:14px;">
-        <button id="btn-vocab-no-sabia" class="btn-secundario" style="flex:1; margin:0;">😕 Didn't know it</button>
-        <button id="btn-vocab-sabia" class="btn-principal" style="flex:1; margin:0;">✅ I knew it</button>
+      <button id="vocab-btn-mostrar" class="btn-principal oculto" style="margin-top:16px;">Show Translation</button>
+      <div id="vocab-controles" class="oculto" style="margin-top:16px;">
+        <button id="btn-vocab-no-sabia" class="btn-secundario">Didn't know it</button>
+        <button id="btn-vocab-sabia" class="btn-principal">I knew it</button>
       </div>
     </div>
-    <button id="btn-salir-vocabulario" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
+    <button id="btn-salir-vocabulario" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
   </div>
 
   <!-- Vista: logros / achievements -->
   <div id="vista-logros" class="pantalla-principal oculto">
-    <h2>🏆 Achievements</h2>
+    <h2>Achievements</h2>
     <p id="logros-estado"></p>
     <div id="logros-lista" class="logros-lista"></div>
-    <button id="btn-salir-logros" class="btn-secundario" style="margin-top:16px;">🏠 Back to Home</button>
+    <button id="btn-salir-logros" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
   </div>
 
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
