@@ -100,7 +100,7 @@ function mostrarPantallaPrincipal(usuario) {
   const principal = document.getElementById("vista-principal");
   principal.classList.remove("oculto");
   document.getElementById("saludo-usuario").textContent =
-    `¡Hola, ${usuario.nombre}!`;
+    `Hi, ${usuario.nombre}!`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {

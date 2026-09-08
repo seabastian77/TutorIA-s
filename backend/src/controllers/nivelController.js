@@ -146,6 +146,7 @@ const DiagnosticoController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         puntosGanados,
+        { perfecto: promedioGeneral >= 90 },
       );
 
       res.json({
@@ -154,8 +155,13 @@ const DiagnosticoController = {
         promedios,
         resumen,
         puntosGanados,
+        bonusPerfecto: gamificacion.bonusPerfecto,
+        xpGanado: gamificacion.xpGanado,
         puntosTotales: gamificacion.puntos,
         racha: gamificacion.racha,
+        monedas: gamificacion.monedas,
+        monedasGanadas: gamificacion.monedasGanadas,
+        metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
       console.error("Error en /nivel/finalizar:", error);

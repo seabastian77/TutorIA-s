@@ -41,6 +41,9 @@ const VozController = {
         correccion: resultado.correccion,
         puntosTotales: gamificacion.puntos,
         racha: gamificacion.racha,
+        monedas: gamificacion.monedas,
+        monedasGanadas: gamificacion.monedasGanadas,
+        metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
       console.error("Error en /voz/responder:", error);

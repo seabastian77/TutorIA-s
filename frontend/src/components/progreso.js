@@ -18,6 +18,9 @@ function renderizarProgreso(datos) {
   puntosEl.textContent = datos.puntos;
   rachaEl.textContent = datos.racha;
 
+  const monedasEl = document.getElementById("progreso-monedas");
+  if (monedasEl) monedasEl.textContent = datos.monedas ?? 0;
+
   const info = TEXTO_TENDENCIA[datos.tendencia] || TEXTO_TENDENCIA["sin-datos"];
   tendenciaTextoEl.textContent = info.texto;
   tendenciaIconoEl.className = `fa-solid ${info.icono}`;

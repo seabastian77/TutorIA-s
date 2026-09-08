@@ -120,6 +120,10 @@
           <i class="fa-solid fa-fire"></i>
           <span id="progreso-racha">0</span> days
         </div>
+        <div class="progreso-item" id="progreso-monedas-wrap">
+          <i class="fa-solid fa-coins"></i>
+          <span id="progreso-monedas">0</span>
+        </div>
         <div class="progreso-item" id="progreso-tendencia-wrap">
           <i class="fa-solid fa-minus" id="progreso-tendencia-icono"></i>
           <span id="progreso-tendencia-texto">—</span>
@@ -215,6 +219,22 @@
         </span>
       </button>
 
+      <button id="btn-liga" class="btn-principal btn-liga">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 21h14" />
+            <rect x="9" y="10" width="6" height="11" rx="1" />
+            <rect x="3" y="14" width="6" height="7" rx="1" />
+            <rect x="15" y="6" width="6" height="15" rx="1" />
+          </svg>
+          <span class="bento-etiqueta">WEEKLY</span>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">League</span>
+          <span class="bento-nota">Compete with 29 other learners</span>
+        </span>
+      </button>
+
       <button id="btn-logros" class="btn-principal btn-logros">
         <span class="bento-fila-icono">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -228,6 +248,19 @@
         <span class="bento-texto">
           <span class="bento-titulo">Achievements</span>
           <span class="bento-nota">Badges you unlock as you go</span>
+        </span>
+      </button>
+
+      <button id="btn-tienda" class="btn-principal btn-tienda">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 8h16l-1 11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
+            <path d="M9 11V7a3 3 0 0 1 6 0v4" />
+          </svg>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Shop</span>
+          <span class="bento-nota">Spend your coins on shields and hints</span>
         </span>
       </button>
     </div>
@@ -346,6 +379,42 @@
     <button id="btn-salir-logros" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
   </div>
 
+  <!-- Vista: tienda -->
+  <div id="vista-tienda" class="pantalla-principal oculto">
+    <div class="cabecera-seccion">
+      <h2>Shop</h2>
+      <div class="monedas-grandes">
+        <i class="fa-solid fa-coins"></i>
+        <span id="tienda-monedas">0</span>
+      </div>
+    </div>
+
+    <div id="tienda-inventario" class="inventario"></div>
+    <p id="tienda-estado" class="tienda-estado"></p>
+    <div id="tienda-lista" class="tienda-lista"></div>
+
+    <button id="btn-salir-tienda" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+  </div>
+
+  <!-- Vista: liga semanal -->
+  <div id="vista-liga" class="pantalla-principal oculto">
+    <div class="liga-cabecera">
+      <i id="liga-icono" class="fa-solid fa-medal"></i>
+      <h2 id="liga-nombre">Bronze</h2>
+      <div class="liga-meta">
+        <span id="liga-grupo">Group 1</span>
+        <span id="liga-dias">7 days left</span>
+      </div>
+      <p id="liga-resumen" class="liga-resumen"></p>
+    </div>
+
+    <p id="liga-aviso" class="liga-aviso oculto"></p>
+    <p id="liga-estado" class="tienda-estado"></p>
+    <div id="liga-tabla" class="liga-tabla"></div>
+
+    <button id="btn-salir-liga" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+  </div>
+
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/store/sesion.js"></script>
@@ -357,6 +426,8 @@
   <script src="src/services/escenaApi.js"></script>
   <script src="src/services/vocabularioApi.js"></script>
   <script src="src/services/logrosApi.js"></script>
+  <script src="src/services/tiendaApi.js"></script>
+  <script src="src/services/ligaApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
@@ -365,5 +436,7 @@
   <script src="src/components/escena.js"></script>
   <script src="src/components/vocabulario.js"></script>
   <script src="src/components/logros.js"></script>
+  <script src="src/components/tienda.js"></script>
+  <script src="src/components/liga.js"></script>
 </body>
 </html>

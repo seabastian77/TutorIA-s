@@ -62,13 +62,19 @@ const EscenaController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         puntosGanados,
+        { perfecto: (evaluacion.puntuacion || 0) >= 90 },
       );
 
       res.json({
         ...evaluacion,
         puntosGanados,
+        bonusPerfecto: gamificacion.bonusPerfecto,
+        xpGanado: gamificacion.xpGanado,
         puntosTotales: gamificacion.puntos,
         racha: gamificacion.racha,
+        monedas: gamificacion.monedas,
+        monedasGanadas: gamificacion.monedasGanadas,
+        metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
       console.error("Error en /escena/evaluar-linea:", error);

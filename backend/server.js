@@ -9,6 +9,8 @@ const usuarioRoutes = require("./src/routes/usuarioRoutes");
 const vozRoutes = require("./src/routes/vozRoutes");
 const escenaRoutes = require("./src/routes/escenaRoutes");
 const vocabularioRoutes = require("./src/routes/vocabularioRoutes");
+const tiendaRoutes = require("./src/routes/tiendaRoutes");
+const ligaRoutes = require("./src/routes/ligaRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,11 +42,8 @@ app.use("/api/usuario", usuarioRoutes);
 app.use("/api/voz", vozRoutes);
 app.use("/api/escena", escenaRoutes);
 app.use("/api/vocabulario", vocabularioRoutes);
-
-// Ruta de prueba temporal (para diagnóstico)
-app.get("/api/prueba-diagnostico", (req, res) => {
-  res.json({ ok: true, mensaje: "Esta versión del código SÍ está corriendo" });
-});
+app.use("/api/tienda", tiendaRoutes);
+app.use("/api/liga", ligaRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ estado: "ok", mensaje: "TutorIA's backend funcionando" });
@@ -55,9 +54,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 TutorIA's backend corriendo en el puerto ${PORT}`);
-});
-
-app.get("/api/verificacion-zz9k", (req, res) => {
-  res.json({ ok: true, mensaje: "Ruta jamás solicitada antes" });
+  console.log(`TutorIA's backend corriendo en el puerto ${PORT}`);
 });

@@ -76,7 +76,9 @@ const UsuarioController = {
   async progreso(req, res) {
     try {
       const { rows: urows } = await pool.query(
-        "SELECT puntos, racha_dias, nivel_mcer, actividades_hoy FROM usuarios WHERE id = $1",
+        `SELECT puntos, racha_dias, racha_maxima, nivel_mcer, actividades_hoy,
+                monedas, escudos, pistas, vidas, liga
+           FROM usuarios WHERE id = $1`,
         [req.usuario.id],
       );
       const usuario = urows[0] || {};
@@ -99,10 +101,16 @@ const UsuarioController = {
       res.json({
         puntos: usuario.puntos || 0,
         racha: usuario.racha_dias || 0,
+        rachaMaxima: usuario.racha_maxima || 0,
         nivel: usuario.nivel_mcer || null,
         tendencia,
         actividadesHoy: Math.min(usuario.actividades_hoy || 0, META_DIARIA),
         metaDiaria: META_DIARIA,
+        monedas: usuario.monedas || 0,
+        escudos: usuario.escudos || 0,
+        pistas: usuario.pistas || 0,
+        vidas: usuario.vidas || 0,
+        liga: usuario.liga || "bronce",
       });
     } catch (error) {
       console.error("Error en /usuario/progreso:", error);

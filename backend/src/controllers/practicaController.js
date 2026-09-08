@@ -4,6 +4,7 @@ const {
   evaluarRespuestaEscrita,
 } = require("../services/iaService");
 const EjercicioModel = require("../models/ejercicioModel");
+const pool = require("../config/db");
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 
@@ -86,18 +87,37 @@ const PracticaController = {
         guardarPalabraSiFalla(req.usuario.id, tipo, contenido);
       }
 
+      // "Leccion perfecta": cinco aciertos seguidos, contando este.
+      // Se mira el historial ya guardado, asi no hace falta estado en memoria.
+      let perfecto = false;
+      if (correcto) {
+        const { rows: ultimos } = await pool.query(
+          `SELECT correcto FROM ejercicios
+            WHERE usuario_id = $1 ORDER BY fecha DESC, id DESC LIMIT 5`,
+          [req.usuario.id],
+        );
+        perfecto = ultimos.length === 5 && ultimos.every((e) => e.correcto);
+      }
+
       const puntosGanados = correcto ? 10 : 0;
       const gamificacion = await registrarActividad(
         req.usuario.id,
         puntosGanados,
+        { perfecto },
       );
 
       res.json({
         correcto,
         explicacion,
         puntosGanados,
+        perfecto,
+        bonusPerfecto: gamificacion.bonusPerfecto,
+        xpGanado: gamificacion.xpGanado,
         puntosTotales: gamificacion.puntos,
         racha: gamificacion.racha,
+        monedas: gamificacion.monedas,
+        monedasGanadas: gamificacion.monedasGanadas,
+        metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
       console.error("Error en /practica/responder:", error);
