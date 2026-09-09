@@ -1,133 +1,137 @@
-# TutorIA's — Asistente de Estudio de Inglés con IA
+# TutorIA's
 
-TutorIA's es una plataforma web que usa inteligencia artificial para ayudar a estudiantes hispanohablantes a aprender inglés de forma personalizada: diagnostica tu nivel, se adapta a tu ritmo, te corrige en tiempo real y te ayuda a practicar pronunciación por voz.
+Asistente de estudio de inglés con inteligencia artificial. Evalúa tu nivel,
+te pone a practicar lo que necesitas, te escucha hablar y te corrige.
 
-Backend Node/Express + PostgreSQL · Frontend HTML/CSS/JavaScript vanilla · IA vía Groq.
-
----
-
-## ✨ Funcionalidades
-
-- **🧠 Diagnóstico Inmersivo de nivel** — en vez de una prueba estática, la IA arma una historia interactiva adaptativa (opción múltiple + respuestas abiertas) que ajusta la dificultad en tiempo real y entrega un perfil de habilidades (vocabulario, gramática, comprensión, fluidez) al finalizar.
-- **💪 Práctica diaria adaptativa** — ejercicios ilimitados generados por IA, con dificultad ajustada según el rendimiento reciente del usuario.
-- **🎙️ Conversación por voz con la IA** — reconocimiento y síntesis de voz del navegador para practicar hablando en inglés en tiempo real, con corrección de errores.
-- **🎬 Modo Escena** — guiones cortos 100% originales generados por IA (nunca diálogos de películas reales) para practicar pronunciación escuchando y repitiendo líneas.
-- **📚 Vocabulario con repetición espaciada** — cada palabra que el usuario falla (en práctica, diagnóstico o escena) se guarda automáticamente y se repasa con tarjetas tipo flashcard usando un algoritmo de repetición espaciada.
-- **🏆 Logros** — medallas que se desbloquean según la actividad del usuario (rachas, puntos, vocabulario dominado, nivel alcanzado, etc.).
-- **🎯 Meta diaria y sistema de puntos/racha** — gamificación que motiva la práctica constante, con indicador de tendencia (mejorando / estable / bajando).
+**Aplicación:** https://tutorias-frontend-production.up.railway.app
 
 ---
 
-## 🗂️ Estructura del proyecto
+## Qué hace
+
+**Diagnóstico de nivel.** Ocho escenas encadenadas donde la dificultad se
+ajusta según respondes, mezclando opción múltiple y respuesta abierta. Al final
+te da tu nivel MCER (A1 a C2) y una puntuación por habilidad.
+
+**Práctica adaptativa.** Ejercicios ilimitados generados por IA. Eliges qué
+estudiar hoy entre 18 temas: gramática, vocabulario o situaciones de la vida
+real. La dificultad sube cuando aciertas y baja cuando fallas.
+
+**Conversación por voz.** Hablas al micrófono y la IA te responde y te corrige
+en tiempo real.
+
+**Situaciones reales.** Cinco escenarios de roleplay: pedir un café, pasar
+migración en el aeropuerto, una entrevista de trabajo, el check-in de un hotel
+y una cita médica. La IA se queda en personaje.
+
+**Biblioteca.** Cuentos originales a tu nivel. Tocas cualquier palabra y ves
+qué significa en ese contexto — y la palabra entra sola a tu vocabulario.
+
+**Laboratorio de audio.** Dictados que te marcan cada palabra en verde o rojo,
+y ejercicios de comprensión auditiva.
+
+**Modo escena.** Guiones originales para leer en voz alta y practicar
+pronunciación.
+
+**Mi vocabulario.** Las palabras que fallas se guardan solas y vuelven con
+repetición espaciada.
+
+**Gamificación.** XP con bonus por rachas de aciertos, monedas, tienda con
+escudos que salvan tu racha, once insignias y ligas semanales de 30 personas
+donde suben los siete primeros.
+
+---
+
+## Tecnología
+
+| Capa | Qué se usó |
+|---|---|
+| Frontend | HTML, CSS y JavaScript vanilla — sin framework ni build |
+| Backend | Node.js + Express |
+| Base de datos | PostgreSQL |
+| IA | Groq — `openai/gpt-oss-120b` |
+| Voz | Web Speech API del navegador |
+| Despliegue | Railway |
+
+Todo el contenido (ejercicios, cuentos, guiones, conversaciones) es original y
+generado en el momento por IA. No hay bancos de preguntas fijos ni material de
+terceros.
+
+---
+
+## Estructura
 
 ```
-tutorias/
-├── backend/
-│   ├── src/
-│   │   ├── config/        # db.js (conexión PostgreSQL) + schema.sql
-│   │   ├── controllers/   # authController, nivelController, practicaController,
-│   │   │                  # usuarioController, vozController, escenaController,
-│   │   │                  # vocabularioController
-│   │   ├── models/        # userModel.js, ejercicioModel.js
-│   │   ├── routes/        # una ruta por controller
-│   │   ├── services/      # iaService.js (todas las llamadas a Groq)
-│   │   ├── middleware/    # authMiddleware.js (verificación de token)
-│   │   ├── utils/         # gamificacion.js, vocabulario.js
-│   │   └── tests/
-│   ├── server.js
-│   ├── package.json
-│   └── .env.example
-└── frontend/
-    ├── src/
-    │   ├── assets/
-    │   ├── components/    # un archivo por vista (pruebaNivel, practica, voz,
-    │   │                  # escena, vocabulario, logros, progreso, formAuth)
-    │   ├── services/      # un archivo API por módulo (fetch al backend)
-    │   ├── store/         # sesion.js (estado global vía localStorage)
-    │   ├── utils/         # validaciones.js
-    │   └── styles/        # global.css
-    ├── index.html
-    └── package.json       # sirve el sitio como estático (usado en Railway)
+TutorIA-s/
+├── .github/          Workflows de CI y plantillas de issues
+├── src/
+│   ├── backend/      API REST en Node + Express
+│   └── frontend/     Aplicación web
+├── docs/             Arquitectura, base de datos y API
+├── tests/            Pruebas con Jest
+├── LICENSE
+├── README.md
+└── package.json
 ```
 
----
-
-## 🧱 Base de datos
-
-Tablas principales (PostgreSQL):
-
-- `usuarios` — cuentas, nivel MCER actual, puntos, racha, actividad diaria
-- `vocabulario_usuario` — palabras guardadas con repetición espaciada
-- `ejercicios` — historial de práctica diaria
-- `conversaciones` — historial de intercambios de voz (libres y de escena)
-- `diagnosticos_nivel` — resultados de cada Diagnóstico Inmersivo completado
-
-El esquema completo está en `backend/src/config/schema.sql`.
+La documentación técnica está en [`docs/`](docs/):
+[arquitectura](docs/arquitectura.md) ·
+[base de datos](docs/base-de-datos.md) ·
+[API](docs/api.md)
 
 ---
 
-## ⚙️ Instalación local
+## Cómo levantarlo en local
 
-### 1. Base de datos
-
-Ejecuta `backend/src/config/schema.sql` en tu instancia de PostgreSQL (crea todas las tablas y columnas necesarias).
-
-### 2. Backend
+Necesitas Node 18 o superior y una base PostgreSQL.
 
 ```bash
-cd backend
-npm install
-cp .env.example .env
-# Edita .env con tu DATABASE_URL, un JWT_SECRET seguro, y tu GROQ_API_KEY
+git clone https://github.com/seabastian77/TutorIA-s.git
+cd TutorIA-s
+npm run install:all
+```
+
+Crea `src/backend/.env` con tus datos (hay una plantilla en
+`src/backend/.env.example`):
+
+```
+PORT=3000
+DATABASE_URL=postgresql://usuario:clave@host:puerto/basededatos
+JWT_SECRET=una_clave_larga_y_secreta
+GROQ_API_KEY=tu_clave_de_groq
+```
+
+Crea las tablas ejecutando `src/backend/src/config/schema.sql` sobre tu base, y
+arranca:
+
+```bash
 npm run dev
 ```
 
-El backend queda corriendo en `http://localhost:3000`.
+Para el frontend, abre `src/frontend/index.html` con Live Server y cambia la
+constante `window.TUTORIAS_API_URL` al final del archivo para que apunte a
+`http://localhost:3000/api`.
 
-**Endpoints principales:**
+---
 
-| Ruta | Método | Descripción |
-|---|---|---|
-| `/api/auth/registro` | POST | Crear cuenta |
-| `/api/auth/login` | POST | Iniciar sesión |
-| `/api/nivel/escena` | POST | Siguiente escena del diagnóstico |
-| `/api/nivel/finalizar` | POST | Cerrar diagnóstico y obtener nivel |
-| `/api/practica/pregunta` | POST | Siguiente ejercicio de práctica |
-| `/api/voz/responder` | POST | Conversación libre por voz |
-| `/api/escena/nueva` | POST | Nueva escena de pronunciación |
-| `/api/vocabulario/repaso` | GET | Palabras pendientes de repasar |
-| `/api/usuario/progreso` | GET | Puntos, racha, tendencia, meta diaria |
-| `/api/usuario/logros` | GET | Estado de todos los logros |
+## Pruebas
 
-### 3. Frontend
-
-```html
-<script>window.TUTORIAS_API_URL = 'http://localhost:3000/api';</script>
+```bash
+npm test
 ```
 
-Abre `frontend/index.html` directamente en el navegador, o sírvelo con cualquier servidor estático.
+Cubren la comparación de dictados y el cálculo de semanas de la liga.
 
 ---
 
-## 🌐 Despliegue
+## Requisitos del navegador
 
-- **Backend + PostgreSQL**: [Railway](https://railway.app)
-- **Frontend**: desplegado como sitio estático (Netlify o Railway, usando `npx serve`)
-
----
-
-## 🤖 Inteligencia Artificial
-
-Todas las funciones de IA usan **Groq** (`openai/gpt-oss-120b`) a través de `groq-sdk`, centralizadas en `backend/src/services/iaService.js`. El modo Escena genera contenido 100% original — nunca reproduce diálogos, personajes ni guiones de obras existentes.
+Las funciones de voz (conversación, modo escena y laboratorio de audio) usan la
+Web Speech API, disponible en **Chrome y Edge de escritorio**. El resto de la
+aplicación funciona en cualquier navegador moderno.
 
 ---
 
-## 🛠️ Stack técnico
+## Licencia
 
-**Lenguajes:** JavaScript (Node.js + Vanilla JS), HTML5, CSS3, SQL
-
-**Backend:** Express.js, PostgreSQL (`pg`), JWT (`jsonwebtoken`), `bcryptjs`, `cors`, `dotenv`, `groq-sdk`
-
-**Frontend:** HTML/CSS/JS puro, Font Awesome, Google Fonts, Web Speech API (reconocimiento y síntesis de voz nativos del navegador)
-
-**Herramientas:** VS Code, GitHub Desktop, pgAdmin 4
+MIT — ver [LICENSE](LICENSE).

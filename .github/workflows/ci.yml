@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  pruebas:
+    name: Sintaxis y pruebas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Instalar dependencias del proyecto
+        run: npm install
+      - name: Instalar dependencias del backend
+        run: npm install --prefix src/backend
+      - name: Revisar que todo el JavaScript compile
+        run: |
+          errores=0
+          for archivo in $(find src -name "*.js" -not -path "*/node_modules/*"); do
+            if ! node --check "$archivo"; then
+              echo "Error de sintaxis en $archivo"
+              errores=1
+            fi
+          done
+          exit $errores
+      - name: Correr las pruebas
+        run: npm test

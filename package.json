@@ -1,0 +1,30 @@
+{
+  "name": "tutorias",
+  "version": "1.0.0",
+  "description": "TutorIA's — asistente de estudio de inglés con IA: diagnóstico de nivel, práctica adaptativa, conversación por voz, lecturas y gamificación.",
+  "private": true,
+  "license": "MIT",
+  "author": "Sebastian Gonzalez Gonzalez",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seabastian77/TutorIA-s.git"
+  },
+  "scripts": {
+    "start": "npm start --prefix src/backend",
+    "dev": "npm run dev --prefix src/backend",
+    "install:all": "npm install --prefix src/backend && npm install --prefix src/frontend",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint:sintaxis": "node scripts/verificar-sintaxis.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["<rootDir>/tests/**/*.test.js"]
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

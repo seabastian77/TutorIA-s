@@ -6,46 +6,9 @@ const {
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const { obtenerPerfil } = require("../utils/perfil");
+const { compararDictado } = require("../utils/textoDictado");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
-
-/** Quita puntuación y tildes para comparar lo que escribió el usuario. */
-function normalizar(texto) {
-  return (texto || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s']/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-/**
- * Compara el dictado palabra por palabra contra la frase original.
- * Devuelve cada palabra esperada marcada como acertada o fallada,
- * que es lo que el frontend pinta en verde y rojo.
- */
-function compararDictado(fraseOriginal, escrito) {
-  const esperadas = normalizar(fraseOriginal).split(" ").filter(Boolean);
-  const dichas = normalizar(escrito).split(" ").filter(Boolean);
-
-  const disponibles = [...dichas];
-  const detalle = esperadas.map((palabra) => {
-    const pos = disponibles.indexOf(palabra);
-    if (pos !== -1) {
-      disponibles.splice(pos, 1);
-      return { palabra, acerto: true };
-    }
-    return { palabra, acerto: false };
-  });
-
-  const aciertos = detalle.filter((d) => d.acerto).length;
-  const porcentaje = esperadas.length
-    ? Math.round((aciertos / esperadas.length) * 100)
-    : 0;
-
-  return { detalle, aciertos, total: esperadas.length, porcentaje };
-}
 
 const AudioController = {
   /** Genera una frase para dictado y la guarda para poder corregirla después. */
@@ -251,5 +214,3 @@ const AudioController = {
 };
 
 module.exports = AudioController;
-module.exports.compararDictado = compararDictado;
-module.exports.normalizar = normalizar;
