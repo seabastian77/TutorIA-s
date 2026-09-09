@@ -5,6 +5,7 @@ const {
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const pool = require("../config/db");
+const { compararPronunciacion } = require("../utils/textoDictado");
 
 const EscenaController = {
   async nueva(req, res) {
@@ -30,6 +31,8 @@ const EscenaController = {
         lineaObjetivo,
         transcripcion,
       });
+
+      const pronunciacion = compararPronunciacion(lineaObjetivo, transcripcion);
 
       // Registra la conversación y captura la palabra fallada
       await pool.query(
@@ -66,6 +69,11 @@ const EscenaController = {
 
       res.json({
         ...evaluacion,
+        palabras: pronunciacion.detalle,
+        sobrantes: pronunciacion.sobrantes,
+        aciertos: pronunciacion.aciertos,
+        totalPalabras: pronunciacion.total,
+        precision: pronunciacion.porcentaje,
         puntosGanados,
         bonusPerfecto: gamificacion.bonusPerfecto,
         xpGanado: gamificacion.xpGanado,

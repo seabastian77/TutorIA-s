@@ -1954,3 +1954,148 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   .popover-palabra { width: calc(100vw - 32px); }
   .lectura-cuerpo { font-size: 16px; }
 }
+
+/* Flashcards con arrastre */
+
+.vocab-zona {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  margin: 10px auto 0;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Las tarjetas de atrás dan la sensación de pila */
+.vocab-pila {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radio);
+  background: var(--panel);
+  border: 1.5px solid var(--borde);
+  transform: rotate(-3deg) scale(0.96);
+}
+
+.vocab-pila::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radio);
+  background: var(--panel);
+  border: 1.5px solid var(--borde);
+  transform: rotate(4deg) scale(0.99);
+  z-index: -1;
+}
+
+.vocab-tarjeta {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 300px;
+  padding: 34px 30px;
+  border-radius: var(--radio);
+  background: var(--panel-alto);
+  border: 1.5px solid var(--borde);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  will-change: transform;
+}
+
+.vocab-arrastrando { cursor: grabbing; }
+
+.vocab-tarjeta.hacia-si { border-color: var(--verde); }
+.vocab-tarjeta.hacia-no { border-color: var(--rojo); }
+
+.vocab-tarjeta-vacia {
+  cursor: default;
+  border-style: dashed;
+}
+
+.vocab-tarjeta #vocab-tarjeta-texto {
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.vocab-tarjeta #vocab-contexto {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.vocab-sello {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-6deg);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.sello-si {
+  background: rgba(33, 192, 138, 0.18);
+  border: 1.5px solid var(--verde);
+  color: #7fe4bd;
+}
+
+.sello-no {
+  background: rgba(255, 77, 94, 0.16);
+  border: 1.5px solid var(--rojo);
+  color: #ff9aa5;
+}
+
+.vocab-ayuda {
+  margin-top: 14px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gris-tenue);
+}
+
+#vista-vocabulario {
+  align-items: center;
+}
+
+#vista-vocabulario #vocab-btn-mostrar,
+#vista-vocabulario #vocab-controles {
+  width: 100%;
+  max-width: 460px;
+}
+
+/* La línea de la escena marcada palabra por palabra */
+
+#escena-palabras {
+  justify-content: center;
+  margin-top: 4px;
+}
+
+#escena-precision {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 620px) {
+  .vocab-zona { min-height: 260px; }
+  .vocab-tarjeta { min-height: 260px; padding: 26px 20px; }
+}

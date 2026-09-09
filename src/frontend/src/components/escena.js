@@ -31,7 +31,7 @@ async function iniciarEscena() {
 
 function mostrarLineaActual() {
   document.getElementById("escena-situacion").textContent =
-    `🎬 ${escenaActual.titulo} — ${escenaActual.situacion}`;
+    `${escenaActual.titulo} — ${escenaActual.situacion}`;
   document.getElementById("escena-linea-texto").textContent =
     `Line ${indiceLinea + 1} of ${escenaActual.lineas.length}: "${escenaActual.lineas[indiceLinea]}"`;
   document.getElementById("escena-feedback").classList.add("oculto");
@@ -106,6 +106,33 @@ function detenerEscuchaEscena() {
   if (btn) btn.classList.remove("escuchando");
 }
 
+
+/** Pinta la línea marcando en verde y rojo cada palabra pronunciada. */
+function pintarPronunciacion(resultado) {
+  const zona = document.getElementById("escena-palabras");
+  const resumen = document.getElementById("escena-precision");
+  if (!zona || !Array.isArray(resultado.palabras)) return;
+
+  zona.innerHTML = "";
+
+  resultado.palabras.forEach((p) => {
+    const palabra = document.createElement("span");
+    palabra.className = `palabra-marcada ${p.acerto ? "palabra-ok" : "palabra-mal"}`;
+    palabra.textContent = p.palabra;
+    zona.appendChild(palabra);
+  });
+
+  if (resumen) {
+    const extra = (resultado.sobrantes || []).length
+      ? ` · extra: ${resultado.sobrantes.join(", ")}`
+      : "";
+    resumen.textContent = `${resultado.aciertos}/${resultado.totalPalabras} words · ${resultado.precision}%${extra}`;
+  }
+
+  zona.classList.remove("oculto");
+  if (resumen) resumen.classList.remove("oculto");
+}
+
 async function evaluarLineaDicha(transcripcion) {
   document.getElementById("escena-estado").textContent = "Checking...";
 
@@ -114,6 +141,8 @@ async function evaluarLineaDicha(transcripcion) {
       lineaObjetivo: escenaActual.lineas[indiceLinea],
       transcripcion,
     });
+
+    pintarPronunciacion(resultado);
 
     const feedbackEl = document.getElementById("escena-feedback");
     feedbackEl.textContent = `${resultado.puntuacion}/100 — ${resultado.feedback}`;
@@ -129,11 +158,16 @@ async function evaluarLineaDicha(transcripcion) {
 }
 
 function siguienteLineaEscena() {
+  const zona = document.getElementById("escena-palabras");
+  const resumen = document.getElementById("escena-precision");
+  if (zona) zona.classList.add("oculto");
+  if (resumen) resumen.classList.add("oculto");
+
   indiceLinea++;
 
   if (indiceLinea >= escenaActual.lineas.length) {
     document.getElementById("escena-situacion").textContent =
-      "🎉 Scene complete! Great job.";
+      "Scene complete! Great job.";
     document.getElementById("escena-linea-texto").textContent = "";
     document.getElementById("escena-feedback").classList.add("oculto");
     document.getElementById("btn-siguiente-linea").classList.add("oculto");

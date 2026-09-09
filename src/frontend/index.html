@@ -400,6 +400,9 @@
       <div id="escena-situacion" class="nivel-narrativa">Loading scene...</div>
       <h3 id="escena-linea-texto"></h3>
 
+      <div id="escena-palabras" class="dictado-palabras oculto"></div>
+      <p id="escena-precision" class="dictado-original oculto"></p>
+
       <div class="voz-controles">
         <button id="btn-escuchar-linea" class="btn-secundario" style="margin-bottom:10px;">Listen</button>
         <button id="btn-mic-escena" class="btn-mic">
@@ -416,16 +419,25 @@
 
   <!-- Vista: mi vocabulario — tarjetas de repaso con repetición espaciada -->
   <div id="vista-vocabulario" class="pantalla-principal oculto">
-    <div class="tarjeta-nivel">
-      <div id="vocab-progreso" class="nivel-progreso"></div>
-      <h3 id="vocab-tarjeta-texto">Loading...</h3>
-      <p id="vocab-contexto" class="nivel-narrativa oculto"></p>
-      <button id="vocab-btn-mostrar" class="btn-principal oculto" style="margin-top:16px;">Show Translation</button>
-      <div id="vocab-controles" class="oculto" style="margin-top:16px;">
-        <button id="btn-vocab-no-sabia" class="btn-secundario">Didn't know it</button>
-        <button id="btn-vocab-sabia" class="btn-principal">I knew it</button>
+    <div id="vocab-progreso" class="nivel-progreso"></div>
+
+    <div class="vocab-zona">
+      <div id="vocab-pila" class="vocab-pila oculto"></div>
+      <div id="vocab-tarjeta" class="vocab-tarjeta">
+        <span id="vocab-sello" class="vocab-sello oculto"></span>
+        <h3 id="vocab-tarjeta-texto">Loading...</h3>
+        <p id="vocab-contexto" class="nivel-narrativa oculto"></p>
       </div>
     </div>
+
+    <p class="vocab-ayuda">Drag the card right if you knew it, left if you didn't</p>
+
+    <button id="vocab-btn-mostrar" class="btn-principal oculto">Show Translation</button>
+    <div id="vocab-controles" class="oculto">
+      <button id="btn-vocab-no-sabia" class="btn-secundario">Didn't know it</button>
+      <button id="btn-vocab-sabia" class="btn-principal">I knew it</button>
+    </div>
+
     <button id="btn-salir-vocabulario" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
   </div>
 
