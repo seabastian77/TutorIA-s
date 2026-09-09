@@ -143,6 +143,12 @@
       <p id="meta-diaria-texto" class="meta-diaria-texto">Daily goal: 0 / 5</p>
     </div>
 
+    <label id="ayuda-espanol" class="ayuda-espanol oculto">
+      <input type="checkbox" id="ayuda-espanol-check" />
+      <span class="ayuda-espanol-palanca"></span>
+      <span id="ayuda-espanol-texto">Explanations in Spanish: on</span>
+    </label>
+
     <div class="bento">
 
       <button id="btn-iniciar-nivel" class="btn-principal">
@@ -191,6 +197,20 @@
         </span>
       </button>
 
+      <button id="btn-roleplay" class="btn-principal btn-roleplay">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8l-5 4z" />
+            <path d="M17 9h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v3l-3-3" />
+          </svg>
+          <span class="bento-etiqueta">ROLE-PLAY</span>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Real Situations</span>
+          <span class="bento-nota">Order a coffee, pass immigration, nail an interview</span>
+        </span>
+      </button>
+
       <button id="btn-escena" class="btn-principal btn-escena">
         <span class="bento-fila-icono">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -216,6 +236,36 @@
         <span class="bento-texto">
           <span class="bento-titulo">Vocabulary</span>
           <span class="bento-nota">Spaced repetition cards</span>
+        </span>
+      </button>
+
+      <button id="btn-biblioteca" class="btn-principal btn-biblioteca">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 7c-1.5-1.5-4-2-7-2v13c3 0 5.5.5 7 2 1.5-1.5 4-2 7-2V5c-3 0-5.5.5-7 2z" />
+            <path d="M12 7v13" />
+          </svg>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Library</span>
+          <span class="bento-nota">Stories at your level — tap any word to see what it means</span>
+        </span>
+      </button>
+
+      <button id="btn-audio" class="btn-principal btn-audio">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 11v2" />
+            <path d="M7 8v8" />
+            <path d="M11 5v14" />
+            <path d="M15 8v8" />
+            <path d="M19 11v2" />
+          </svg>
+          <span class="bento-etiqueta">LISTENING</span>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Audio Lab</span>
+          <span class="bento-nota">Dictations and listening comprehension</span>
         </span>
       </button>
 
@@ -310,6 +360,14 @@
 
   <!-- Vista: práctica continua -->
   <div id="vista-practica" class="pantalla-principal oculto">
+
+    <div id="practica-temas" class="practica-temas">
+      <h2>What do you want to practise today?</h2>
+      <div id="practica-grupos" class="practica-grupos"></div>
+    </div>
+
+    <button id="btn-cambiar-tema" class="btn-secundario oculto">Change topic</button>
+
     <div class="tarjeta-nivel" id="practica-contenedor">
       <div id="practica-nivel-tag" class="nivel-progreso">Level</div>
       <div id="practica-cuerpo"></div>
@@ -415,6 +473,149 @@
     <button id="btn-salir-liga" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
   </div>
 
+  <!-- Vista: roleplay de situaciones reales -->
+  <div id="vista-roleplay" class="pantalla-principal oculto">
+
+    <div id="roleplay-seleccion">
+      <h2>Real Situations</h2>
+      <p>Pick a situation and talk your way through it.</p>
+      <div id="roleplay-escenarios" class="escenarios"></div>
+    </div>
+
+    <div id="roleplay-chat-zona" class="oculto">
+      <div class="roleplay-cabecera">
+        <h2 id="roleplay-titulo"></h2>
+        <p id="roleplay-situacion" class="nivel-narrativa"></p>
+      </div>
+
+      <div class="tarjeta-voz">
+        <div id="roleplay-chat" class="voz-chat"></div>
+        <div id="roleplay-sugerencias" class="sugerencias"></div>
+        <div class="roleplay-entrada-fila">
+          <input type="text" id="roleplay-entrada" placeholder="Type your answer in English..." />
+          <button id="btn-enviar-roleplay" class="btn-principal">Send</button>
+        </div>
+      </div>
+
+      <button id="btn-cambiar-escenario" class="btn-secundario" style="margin-top:14px;">Another situation</button>
+    </div>
+
+    <p id="roleplay-estado" class="tienda-estado"></p>
+    <button id="btn-salir-roleplay" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+  </div>
+
+  <!-- Vista: biblioteca de lecturas -->
+  <div id="vista-biblioteca" class="pantalla-principal oculto">
+
+    <div id="biblioteca-catalogo">
+      <div class="cabecera-seccion">
+        <h2>Library</h2>
+        <span id="biblioteca-nivel" class="nivel-progreso"></span>
+      </div>
+      <p>Tap any word while you read to see what it means.</p>
+      <div id="biblioteca-lista" class="biblioteca-lista"></div>
+    </div>
+
+    <div id="biblioteca-lectura" class="oculto">
+      <div class="tarjeta-nivel">
+        <h2 id="lectura-titulo-texto" class="lectura-titulo-grande"></h2>
+        <div id="lectura-cuerpo" class="lectura-cuerpo"></div>
+      </div>
+
+      <div class="tarjeta-nivel" style="margin-top:16px;">
+        <div class="nivel-progreso">Comprehension</div>
+        <div id="lectura-preguntas"></div>
+        <button id="btn-enviar-lectura" class="btn-principal" style="margin-top:16px;">Check answers</button>
+        <div id="lectura-resultado" class="nivel-feedback oculto"></div>
+      </div>
+
+      <button id="btn-volver-catalogo" class="btn-secundario" style="margin-top:14px;">Another story</button>
+    </div>
+
+    <p id="biblioteca-estado" class="tienda-estado"></p>
+    <button id="btn-salir-biblioteca" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+  </div>
+
+  <!-- Globo de traduccion de palabras -->
+  <div id="popover-palabra" class="popover-palabra oculto">
+    <button id="btn-cerrar-popover" class="popover-cerrar" aria-label="Close">&times;</button>
+    <p id="popover-palabra-texto" class="popover-titulo"></p>
+    <p id="popover-tipo" class="popover-tipo"></p>
+    <p id="popover-traduccion" class="popover-traduccion"></p>
+    <p id="popover-ejemplo" class="popover-ejemplo"></p>
+  </div>
+
+  <!-- Vista: laboratorio de audio -->
+  <div id="vista-audio" class="pantalla-principal oculto">
+    <h2>Audio Lab</h2>
+
+    <div id="audio-aviso-navegador" class="voz-aviso oculto">
+      Your browser cannot read text aloud. Try Google Chrome or Microsoft Edge.
+    </div>
+
+    <div id="audio-menu" class="audio-menu">
+      <button id="btn-modo-dictado" class="modo-audio modo-dictado">
+        <i class="fa-solid fa-pen-to-square"></i>
+        <span class="modo-titulo">Dictation</span>
+        <span class="modo-nota">Listen and write exactly what you hear</span>
+      </button>
+      <button id="btn-modo-comprension" class="modo-audio modo-comprension">
+        <i class="fa-solid fa-headphones"></i>
+        <span class="modo-titulo">Listening</span>
+        <span class="modo-nota">Hear a passage and answer questions about it</span>
+      </button>
+    </div>
+
+    <div id="audio-dictado" class="oculto">
+      <div class="tarjeta-nivel">
+        <div class="nivel-progreso">Dictation</div>
+        <p id="dictado-pista" class="nivel-narrativa"></p>
+
+        <div class="audio-botones">
+          <button id="btn-repetir-dictado" class="btn-secundario">Play again</button>
+          <button id="btn-lento-dictado" class="btn-secundario">Slower</button>
+        </div>
+
+        <input type="text" id="dictado-entrada" placeholder="Write what you hear..." />
+        <button id="btn-comprobar-dictado" class="btn-principal" style="margin-top:14px;">Check</button>
+
+        <div id="dictado-frase-revelada" class="oculto" style="margin-top:18px;">
+          <div id="dictado-palabras" class="dictado-palabras"></div>
+          <p id="dictado-frase-original" class="dictado-original"></p>
+        </div>
+
+        <div id="dictado-resultado" class="nivel-feedback oculto"></div>
+      </div>
+      <div class="audio-botones" style="margin-top:14px;">
+        <button id="btn-otro-dictado" class="btn-secundario">Another one</button>
+        <button id="btn-menu-audio" class="btn-secundario">Change mode</button>
+      </div>
+    </div>
+
+    <div id="audio-comprension" class="oculto">
+      <div class="tarjeta-nivel">
+        <div class="nivel-progreso" id="comprension-titulo">Listening</div>
+        <div class="audio-botones">
+          <button id="btn-repetir-comprension" class="btn-secundario">Play again</button>
+        </div>
+        <div id="comprension-preguntas"></div>
+        <button id="btn-enviar-comprension" class="btn-principal" style="margin-top:16px;">Check answers</button>
+        <div id="comprension-resultado" class="nivel-feedback oculto"></div>
+        <div id="comprension-transcripcion" class="oculto" style="margin-top:16px;">
+          <div class="nivel-progreso">Transcript</div>
+          <p id="comprension-texto" class="nivel-narrativa"></p>
+        </div>
+      </div>
+      <div class="audio-botones" style="margin-top:14px;">
+        <button id="btn-otro-comprension" class="btn-secundario">Another one</button>
+        <button id="btn-menu-audio-2" class="btn-secundario">Change mode</button>
+      </div>
+    </div>
+
+    <p id="audio-estado" class="tienda-estado"></p>
+    <button id="btn-salir-audio" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+  </div>
+
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/store/sesion.js"></script>
@@ -428,6 +629,7 @@
   <script src="src/services/logrosApi.js"></script>
   <script src="src/services/tiendaApi.js"></script>
   <script src="src/services/ligaApi.js"></script>
+  <script src="src/services/contenidoApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
@@ -438,5 +640,9 @@
   <script src="src/components/logros.js"></script>
   <script src="src/components/tienda.js"></script>
   <script src="src/components/liga.js"></script>
+  <script src="src/components/preferencias.js"></script>
+  <script src="src/components/roleplay.js"></script>
+  <script src="src/components/biblioteca.js"></script>
+  <script src="src/components/audioLab.js"></script>
 </body>
 </html>

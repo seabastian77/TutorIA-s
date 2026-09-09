@@ -2,7 +2,7 @@ const URL_BASE_PRACTICA =
   window.TUTORIAS_API_URL || "http://localhost:3000/api";
 
 const PracticaAPI = {
-  async obtenerPregunta() {
+  async obtenerPregunta(tema = null) {
     const token = Sesion.obtenerToken();
     const resp = await fetch(`${URL_BASE_PRACTICA}/practica/pregunta`, {
       method: "POST",
@@ -10,6 +10,7 @@ const PracticaAPI = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({ tema }),
     });
     const datos = await resp.json();
     if (!resp.ok) throw new Error(datos.error || "Error generando ejercicio");

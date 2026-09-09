@@ -11,6 +11,9 @@ const escenaRoutes = require("./src/routes/escenaRoutes");
 const vocabularioRoutes = require("./src/routes/vocabularioRoutes");
 const tiendaRoutes = require("./src/routes/tiendaRoutes");
 const ligaRoutes = require("./src/routes/ligaRoutes");
+const roleplayRoutes = require("./src/routes/roleplayRoutes");
+const bibliotecaRoutes = require("./src/routes/bibliotecaRoutes");
+const audioRoutes = require("./src/routes/audioRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,7 +25,7 @@ app.use(cors({ origin: "*" }));
 // Esto se ejecuta para TODAS las peticiones, a cualquier ruta.
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") {
@@ -44,6 +47,9 @@ app.use("/api/escena", escenaRoutes);
 app.use("/api/vocabulario", vocabularioRoutes);
 app.use("/api/tienda", tiendaRoutes);
 app.use("/api/liga", ligaRoutes);
+app.use("/api/roleplay", roleplayRoutes);
+app.use("/api/biblioteca", bibliotecaRoutes);
+app.use("/api/audio", audioRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ estado: "ok", mensaje: "TutorIA's backend funcionando" });

@@ -21,6 +21,11 @@ function renderizarProgreso(datos) {
   const monedasEl = document.getElementById("progreso-monedas");
   if (monedasEl) monedasEl.textContent = datos.monedas ?? 0;
 
+  // El interruptor de español refleja lo que dice el servidor
+  if (typeof pintarInterruptorEspanol === "function") {
+    pintarInterruptorEspanol(datos.ayudaEspanol !== false);
+  }
+
   const info = TEXTO_TENDENCIA[datos.tendencia] || TEXTO_TENDENCIA["sin-datos"];
   tendenciaTextoEl.textContent = info.texto;
   tendenciaIconoEl.className = `fa-solid ${info.icono}`;
@@ -43,7 +48,7 @@ function renderizarMetaDiaria(actividadesHoy, metaDiaria) {
   relleno.style.width = `${porcentaje}%`;
   texto.textContent =
     actividadesHoy >= metaDiaria
-      ? "🎯 Daily goal completed!"
+      ? "Daily goal completed!"
       : `Daily goal: ${actividadesHoy} / ${metaDiaria}`;
 
   contenedor.classList.remove("oculto");

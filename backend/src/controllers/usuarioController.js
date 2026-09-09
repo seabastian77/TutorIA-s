@@ -77,7 +77,7 @@ const UsuarioController = {
     try {
       const { rows: urows } = await pool.query(
         `SELECT puntos, racha_dias, racha_maxima, nivel_mcer, actividades_hoy,
-                monedas, escudos, pistas, vidas, liga
+                monedas, escudos, pistas, vidas, liga, ayuda_es
            FROM usuarios WHERE id = $1`,
         [req.usuario.id],
       );
@@ -111,10 +111,34 @@ const UsuarioController = {
         pistas: usuario.pistas || 0,
         vidas: usuario.vidas || 0,
         liga: usuario.liga || "bronce",
+        ayudaEspanol: usuario.ayuda_es !== false,
       });
     } catch (error) {
       console.error("Error en /usuario/progreso:", error);
       res.status(500).json({ error: "No se pudo obtener el progreso" });
+    }
+  },
+
+  /** Guarda el interruptor de ayuda en español. */
+  async preferencias(req, res) {
+    try {
+      const { ayudaEspanol } = req.body;
+
+      if (typeof ayudaEspanol !== "boolean") {
+        return res
+          .status(400)
+          .json({ error: "ayudaEspanol tiene que ser true o false" });
+      }
+
+      const { rows } = await pool.query(
+        "UPDATE usuarios SET ayuda_es = $1 WHERE id = $2 RETURNING ayuda_es",
+        [ayudaEspanol, req.usuario.id],
+      );
+
+      res.json({ ok: true, ayudaEspanol: rows[0].ayuda_es !== false });
+    } catch (error) {
+      console.error("Error en /usuario/preferencias:", error);
+      res.status(500).json({ error: "No se pudo guardar la preferencia" });
     }
   },
 

@@ -4,10 +4,11 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const MODELO = "openai/gpt-oss-120b";
 
-async function generarPreguntaNivel(nivelObjetivo, temasVistos = []) {
+async function generarPreguntaNivel(nivelObjetivo, temasVistos = [], opciones = {}) {
+  const { tema = null } = opciones;
   const prompt = `Eres un generador de preguntas para evaluar el nivel de inglés de un estudiante hispanohablante, según el Marco Común Europeo de Referencia (MCER).
 
-Genera UNA sola pregunta de opción múltiple en inglés, apropiada para nivel ${nivelObjetivo}.
+Genera UNA sola pregunta de opción múltiple en inglés, apropiada para nivel ${nivelObjetivo}.${tema ? `\nLa pregunta debe ser sobre este tema concreto: ${tema}.` : ""}
 Debe tener exactamente 4 opciones, y "respuestaCorrecta" es el índice (0 a 3) de la opción correcta.
 No repitas estos temas ya usados: ${temasVistos.length ? temasVistos.join(", ") : "ninguno todavía"}.
 
@@ -23,8 +24,9 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, con este f
   return JSON.parse(respuesta.choices[0].message.content);
 }
 
-async function generarPreguntaEscrita(nivelObjetivo, temasVistos = []) {
-  const prompt = `Genera un ejercicio de completar frase en inglés para nivel ${nivelObjetivo} (MCER), pensado para un estudiante hispanohablante.
+async function generarPreguntaEscrita(nivelObjetivo, temasVistos = [], opciones = {}) {
+  const { tema = null } = opciones;
+  const prompt = `Genera un ejercicio de completar frase en inglés para nivel ${nivelObjetivo} (MCER), pensado para un estudiante hispanohablante.${tema ? `\nEl ejercicio debe ser sobre este tema concreto: ${tema}.` : ""}
 No repitas estos temas: ${temasVistos.length ? temasVistos.join(", ") : "ninguno todavía"}.
 
 Responde SOLO con JSON: {"frase": "oración con ___ donde va la palabra o frase que el estudiante debe completar", "tema": "tema evaluado"}`;
@@ -38,7 +40,8 @@ Responde SOLO con JSON: {"frase": "oración con ___ donde va la palabra o frase 
   return JSON.parse(respuesta.choices[0].message.content);
 }
 
-async function evaluarRespuestaEscrita(frase, respuestaUsuario) {
+async function evaluarRespuestaEscrita(frase, respuestaUsuario, opciones = {}) {
+  const { ayudaEs = true } = opciones;
   const prompt = `Eres un profesor de inglés evaluando la respuesta de un estudiante hispanohablante.
 
 Ejercicio: "${frase}"
@@ -46,7 +49,7 @@ Respuesta del estudiante: "${respuestaUsuario}"
 
 Evalúa si la respuesta es gramaticalmente correcta y tiene sentido (acepta variaciones válidas, no exijas una única respuesta exacta).
 
-Responde SOLO con JSON: {"correcto": true o false, "explicacion": "explicación breve en español de por qué está bien o mal, y cuál sería una respuesta correcta si falló"}`;
+Responde SOLO con JSON: {"correcto": true o false, "explicacion": "explicación breve ${ayudaEs ? "EN ESPAÑOL" : "EN INGLÉS SENCILLO"} de por qué está bien o mal, y cuál sería una respuesta correcta si falló"}`;
 
   const respuesta = await groq.chat.completions.create({
     model: MODELO,

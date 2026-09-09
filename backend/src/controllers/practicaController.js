@@ -5,6 +5,7 @@ const {
 } = require("../services/iaService");
 const EjercicioModel = require("../models/ejercicioModel");
 const pool = require("../config/db");
+const { obtenerPerfil } = require("../utils/perfil");
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 
@@ -43,12 +44,17 @@ const PracticaController = {
       const nivel = NIVELES[indice];
       const tipo = Math.random() < 0.6 ? "opcion_multiple" : "escrita";
 
+      // El tema lo elige el usuario en la pantalla previa; si no eligió, va libre
+      const tema = typeof req.body?.tema === "string"
+        ? req.body.tema.slice(0, 80)
+        : null;
+
       if (tipo === "opcion_multiple") {
-        const pregunta = await generarPreguntaNivel(nivel, temasRecientes);
-        return res.json({ tipo, nivel, contenido: pregunta });
+        const pregunta = await generarPreguntaNivel(nivel, temasRecientes, { tema });
+        return res.json({ tipo, nivel, tema, contenido: pregunta });
       } else {
-        const ejercicio = await generarPreguntaEscrita(nivel, temasRecientes);
-        return res.json({ tipo, nivel, contenido: ejercicio });
+        const ejercicio = await generarPreguntaEscrita(nivel, temasRecientes, { tema });
+        return res.json({ tipo, nivel, tema, contenido: ejercicio });
       }
     } catch (error) {
       console.error("Error en /practica/pregunta:", error);
@@ -65,9 +71,11 @@ const PracticaController = {
       if (tipo === "opcion_multiple") {
         correcto = respuestaUsuario === contenido.respuestaCorrecta;
       } else {
+        const { ayudaEs } = await obtenerPerfil(req.usuario.id);
         const evaluacion = await evaluarRespuestaEscrita(
           contenido.frase,
           respuestaUsuario,
+          { ayudaEs },
         );
         correcto = evaluacion.correcto;
         explicacion = evaluacion.explicacion;
