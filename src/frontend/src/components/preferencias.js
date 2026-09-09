@@ -1,7 +1,4 @@
-/**
- * Interruptor de ayuda en español. El valor real vive en el servidor
- * (columna ayuda_es); aquí solo se refleja y se manda al cambiarlo.
- */
+/** Interruptor de ayuda en español; el valor real vive en el servidor. */
 
 function pintarInterruptorEspanol(activo) {
   const contenedor = document.getElementById("ayuda-espanol");

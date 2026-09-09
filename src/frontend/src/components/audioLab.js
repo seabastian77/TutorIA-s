@@ -43,9 +43,7 @@ function mostrarMenuAudio() {
   document.getElementById("audio-estado").textContent = "";
 }
 
-// ============================================================
-// DICTADO
-// ============================================================
+// Dictado
 
 async function nuevoDictado() {
   document.getElementById("audio-menu").classList.add("oculto");
@@ -122,9 +120,7 @@ async function comprobarDictado() {
   }
 }
 
-// ============================================================
-// COMPRENSIÓN AUDITIVA
-// ============================================================
+// Comprensión auditiva
 
 async function nuevaComprension() {
   document.getElementById("audio-menu").classList.add("oculto");

@@ -1,8 +1,7 @@
 const pool = require("../config/db");
 const { extraerPalabraVocabulario } = require("../services/iaService");
 
-// Se usa desde practicaController, nivelController y escenaController.
-// Si falla algo aquí, NUNCA debe tumbar la respuesta principal del endpoint que la llama.
+// Los errores aquí nunca deben tumbar la respuesta del endpoint que la llama
 async function guardarPalabraSiFalla(usuarioId, tipo, contenido) {
   try {
     const vocab = await extraerPalabraVocabulario({ contenido, tipo });

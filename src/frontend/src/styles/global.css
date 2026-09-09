@@ -1,7 +1,4 @@
-/* ============================================================
-   TutorIA's — Bento
-   Fondo negro, bloques de color sólidos, tipografía grande.
-   ============================================================ */
+/* TutorIA's — Bento */
 
 :root {
   --negro: #0e0e10;
@@ -52,9 +49,7 @@ body {
 
 h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
-/* ============================================================
-   AUTENTICACIÓN
-   ============================================================ */
+/* AUTENTICACIÓN */
 
 .pantalla-auth {
   min-height: 100vh;
@@ -145,7 +140,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris);
 }
 
-/* --- Pestañas --- */
+/* Pestañas */
 
 .pestanas {
   display: flex;
@@ -182,7 +177,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .pagina { display: none; }
 .pagina.activa { display: block; }
 
-/* --- Campos --- */
+/* Campos */
 
 .campo { margin-bottom: 16px; }
 
@@ -234,9 +229,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris-tenue);
 }
 
-/* ============================================================
-   BOTONES
-   ============================================================ */
+/* BOTONES */
 
 .btn-principal {
   width: 100%;
@@ -285,9 +278,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--blanco);
 }
 
-/* ============================================================
-   PANTALLA PRINCIPAL (bento)
-   ============================================================ */
+/* PANTALLA PRINCIPAL (bento) */
 
 .pantalla-principal {
   min-height: 100vh;
@@ -353,7 +344,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 #saludo-usuario .saludo-tenue { color: var(--gris); }
 
-/* --- Chips de progreso --- */
+/* Chips de progreso */
 
 .progreso-usuario {
   display: flex;
@@ -386,7 +377,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 #progreso-tendencia-wrap.tendencia-mala i { color: var(--rojo); }
 #progreso-tendencia-wrap.tendencia-neutra i { color: var(--gris); }
 
-/* --- Meta diaria --- */
+/* Meta diaria */
 
 .meta-diaria {
   width: 100%;
@@ -419,7 +410,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris-tenue);
 }
 
-/* --- Rejilla bento --- */
+/* Rejilla bento */
 
 .bento {
   display: grid;
@@ -511,7 +502,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 }
 .btn-logros:hover { filter: none; border-color: var(--amarillo); }
 
-/* --- Tip del día --- */
+/* Tip del día */
 
 .tarjeta-tip {
   display: flex;
@@ -577,9 +568,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris-tenue);
 }
 
-/* ============================================================
-   TARJETAS DE CONTENIDO (nivel, práctica, voz, escena, vocab)
-   ============================================================ */
+/* TARJETAS DE CONTENIDO (nivel, práctica, voz, escena, vocab) */
 
 .tarjeta-nivel,
 .tarjeta-voz {
@@ -622,7 +611,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   line-height: 1.3;
 }
 
-/* --- Opciones --- */
+/* Opciones */
 
 .nivel-opciones {
   display: flex;
@@ -683,7 +672,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   background: var(--rojo);
 }
 
-/* --- Respuesta abierta --- */
+/* Respuesta abierta */
 
 #nivel-respuesta-abierta textarea,
 #practica-respuesta-input {
@@ -715,7 +704,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris);
 }
 
-/* --- Resultado del diagnóstico --- */
+/* Resultado del diagnóstico */
 
 .resultado-nivel {
   font-size: clamp(72px, 14vw, 128px);
@@ -772,9 +761,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   transition: width 0.5s ease;
 }
 
-/* ============================================================
-   VOZ Y ESCENA
-   ============================================================ */
+/* VOZ Y ESCENA */
 
 .voz-aviso {
   margin-bottom: 20px;
@@ -882,9 +869,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   line-height: 1.35;
 }
 
-/* ============================================================
-   LOGROS
-   ============================================================ */
+/* LOGROS */
 
 .logros-lista {
   width: 100%;
@@ -966,9 +951,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris-tenue);
 }
 
-/* ============================================================
-   VOCABULARIO
-   ============================================================ */
+/* VOCABULARIO */
 
 #vocab-controles { display: flex; gap: 10px; }
 #vocab-controles .btn-principal,
@@ -976,9 +959,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 #btn-vocab-sabia { background: var(--verde); color: var(--verde-tinta); }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
+/* RESPONSIVE */
 
 @media (max-width: 1020px) {
   .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1021,9 +1002,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   #vocab-controles { flex-direction: column; }
 }
 
-/* ============================================================
-   TIENDA Y LIGA SEMANAL
-   ============================================================ */
+/* TIENDA Y LIGA SEMANAL */
 
 .cabecera-seccion {
   display: flex;
@@ -1052,7 +1031,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   font-weight: 700;
 }
 
-/* --- Inventario --- */
+/* Inventario */
 
 .inventario {
   display: grid;
@@ -1092,7 +1071,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris-tenue);
 }
 
-/* --- Artículos de la tienda --- */
+/* Artículos de la tienda */
 
 .tienda-lista {
   display: flex;
@@ -1176,7 +1155,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .tienda-estado-ok { color: var(--verde); }
 .tienda-estado-error { color: var(--rojo); }
 
-/* --- Liga --- */
+/* Liga */
 
 .liga-cabecera {
   display: flex;
@@ -1317,7 +1296,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   background: rgba(33, 192, 138, 0.3);
 }
 
-/* --- Celdas nuevas del bento --- */
+/* Celdas nuevas del bento */
 
 #btn-liga { grid-column: span 2; }
 #btn-tienda { grid-column: span 2; }
@@ -1349,11 +1328,9 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   .liga-fila { padding: 12px 14px; gap: 11px; }
 }
 
-/* ============================================================
-   TANDA 2 — CONTENIDO CON IA
-   ============================================================ */
+/* TANDA 2 — CONTENIDO CON IA */
 
-/* --- Interruptor de ayuda en español --- */
+/* Interruptor de ayuda en español */
 
 .ayuda-espanol {
   display: inline-flex;
@@ -1416,7 +1393,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   background: var(--verde-tinta);
 }
 
-/* --- Selección de tema en la práctica --- */
+/* Selección de tema en la práctica */
 
 .practica-temas {
   display: flex;
@@ -1510,7 +1487,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--amarillo);
 }
 
-/* --- Roleplay --- */
+/* Roleplay */
 
 .escenarios {
   display: grid;
@@ -1641,7 +1618,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--rosa-tinta);
 }
 
-/* --- Biblioteca --- */
+/* Biblioteca */
 
 .biblioteca-lista {
   display: grid;
@@ -1729,7 +1706,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   box-shadow: 0 1px 0 var(--arena);
 }
 
-/* --- Globo de traducción --- */
+/* Globo de traducción */
 
 .popover-palabra {
   position: absolute;
@@ -1790,7 +1767,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris);
 }
 
-/* --- Preguntas de comprensión (biblioteca y audio) --- */
+/* Preguntas de comprensión (biblioteca y audio) */
 
 .pregunta-bloque {
   margin-top: 20px;
@@ -1828,7 +1805,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .opcion-nivel:disabled { cursor: default; }
 
-/* --- Laboratorio de audio --- */
+/* Laboratorio de audio */
 
 .audio-menu {
   display: grid;
@@ -1927,7 +1904,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   color: var(--gris);
 }
 
-/* --- Celdas nuevas del bento --- */
+/* Celdas nuevas del bento */
 
 #btn-roleplay { grid-column: span 2; }
 #btn-biblioteca { grid-column: span 2; }

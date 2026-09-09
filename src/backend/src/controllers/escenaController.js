@@ -31,8 +31,7 @@ const EscenaController = {
         transcripcion,
       });
 
-      // Queda registrado en el historial de conversaciones (también cuenta
-      // para los logros de "conversación") y si salió mal, capturamos la palabra
+      // Registra la conversación y captura la palabra fallada
       await pool.query(
         `INSERT INTO conversaciones (usuario_id, mensaje_usuario, respuesta_ia, correcciones)
          VALUES ($1, $2, $3, $4)`,

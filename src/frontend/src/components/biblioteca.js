@@ -82,11 +82,7 @@ async function abrirLectura(slug) {
   }
 }
 
-/**
- * Pinta el texto separando cada palabra en su propio elemento para que
- * se pueda tocar y pedir la traducción. Se usa textContent siempre:
- * el texto viene de la IA y nunca debe interpretarse como HTML.
- */
+/** Pinta el texto con cada palabra en su propio elemento, para poder tocarla. */
 function pintarTextoConPalabras(texto) {
   const cuerpo = document.getElementById("lectura-cuerpo");
   cuerpo.innerHTML = "";

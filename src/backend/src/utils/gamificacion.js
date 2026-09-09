@@ -21,15 +21,7 @@ function diasEntre(desdeISO, hastaISO) {
   return Math.round((b - a) / (1000 * 60 * 60 * 24));
 }
 
-/**
- * Registra una actividad del usuario: suma XP y monedas, mueve la racha
- * (gastando escudos si hizo falta) y alimenta la liga de la semana.
- *
- * @param {number} usuarioId
- * @param {number} puntosGanados  XP base de la actividad
- * @param {object} opciones
- * @param {boolean} opciones.perfecto  true si no cometió ningún error
- */
+/** Registra una actividad: suma XP y monedas, mueve la racha y alimenta la liga. */
 async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
   const { perfecto = false } = opciones;
 
@@ -87,8 +79,7 @@ async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
   const puntos = (usuario.puntos || 0) + xpGanado;
   const rachaMaxima = Math.max(usuario.racha_maxima || 0, racha);
 
-  // Monedas: una por actividad, premio al cerrar la meta del día,
-  // y otro premio cada vez que la racha cruza un múltiplo de 7.
+  // Monedas por actividad, por meta diaria y por cada siete días de racha
   let monedasGanadas = MONEDAS_POR_ACTIVIDAD;
   const metaCompletada = actividadesHoy === META_DIARIA;
   if (metaCompletada) monedasGanadas += MONEDAS_POR_META_DIARIA;

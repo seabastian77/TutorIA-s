@@ -60,9 +60,7 @@ Responde SOLO con JSON: {"correcto": true o false, "explicacion": "explicación 
   return JSON.parse(respuesta.choices[0].message.content);
 }
 
-// ============================================================
-// Diagnóstico Inmersivo — historia adaptativa
-// ============================================================
+// Diagnóstico inmersivo: historia adaptativa
 
 async function generarEscenaDiagnostico({
   nivel,
@@ -160,9 +158,7 @@ Responde ÚNICAMENTE con el texto del párrafo, sin comillas ni JSON.`;
   return completion.choices[0].message.content.trim();
 }
 
-// ============================================================
-// Práctica de voz — conversación hablada con la IA
-// ============================================================
+// Práctica de voz
 
 async function generarRespuestaConversacion({
   historial,
@@ -204,10 +200,7 @@ Responde ÚNICAMENTE con un JSON válido, sin texto adicional, con esta forma ex
   return JSON.parse(completion.choices[0].message.content);
 }
 
-// ============================================================
-// Modo Escena — guiones originales tipo película para pronunciación
-// (contenido 100% generado por IA, nunca diálogos de películas reales)
-// ============================================================
+// Modo escena: guiones originales generados por IA
 
 async function generarEscenaGuion({ nivel }) {
   const prompt = `Create an ORIGINAL short movie-style monologue scene for English pronunciation practice.
@@ -261,9 +254,7 @@ puntuacion is 0 to 100 based on how close the transcription is to the target lin
   return JSON.parse(completion.choices[0].message.content);
 }
 
-// ============================================================
-// Vocabulario — extrae la palabra clave cuando el estudiante falla
-// ============================================================
+// Vocabulario: extrae la palabra clave cuando el estudiante falla
 
 async function extraerPalabraVocabulario({ contenido, tipo }) {
   const texto =

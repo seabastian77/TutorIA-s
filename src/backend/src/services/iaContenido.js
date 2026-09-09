@@ -1,8 +1,4 @@
-// ============================================================
-// TutorIA's — servicios de IA para los módulos de contenido:
-// roleplay, biblioteca de lecturas y laboratorio de audio.
-// Se mantiene aparte de iaService.js para no engordar ese archivo.
-// ============================================================
+// Servicios de IA para roleplay, biblioteca y laboratorio de audio
 
 const Groq = require("groq-sdk");
 
@@ -25,11 +21,9 @@ async function pedirJSON(prompt) {
   return JSON.parse(completion.choices[0].message.content);
 }
 
-// ============================================================
-// ROLEPLAY — simuladores de situaciones reales
-// ============================================================
+// Roleplay
 
-// El catálogo vive en el servidor: el cliente solo manda el id.
+// Catálogo de situaciones disponibles
 const ESCENARIOS = {
   cafe: {
     id: "cafe",
@@ -145,12 +139,9 @@ Reply ONLY with valid JSON:
   return pedirJSON(prompt);
 }
 
-// ============================================================
-// BIBLIOTECA — lecturas originales con preguntas de comprensión
-// ============================================================
+// Biblioteca
 
-// Temas fijos por nivel: dan un catálogo estable y permiten cachear
-// cada lectura en la base de datos por (nivel, slug).
+// Temas fijos que permiten cachear cada lectura por nivel y slug
 const TEMAS_LECTURA = [
   {
     slug: "un-dia-cualquiera",
@@ -251,9 +242,7 @@ Reply ONLY with valid JSON:
   return pedirJSON(prompt);
 }
 
-// ============================================================
-// LABORATORIO DE AUDIO — dictados y comprensión auditiva
-// ============================================================
+// Laboratorio de audio
 
 async function generarDictado({ nivel }) {
   const largo =
@@ -304,17 +293,14 @@ Reply ONLY with valid JSON:
 
 module.exports = {
   instruccionAyuda,
-  // roleplay
   listarEscenarios,
   obtenerEscenario,
   generarAperturaRoleplay,
   generarRespuestaRoleplay,
-  // biblioteca
   listarTemasLectura,
   obtenerTemaLectura,
   generarLectura,
   traducirPalabra,
-  // audio
   generarDictado,
   generarComprensionAudio,
 };

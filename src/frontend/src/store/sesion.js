@@ -1,5 +1,4 @@
-// src/store/sesion.js
-// Manejo simple de estado global de sesión usando localStorage
+// Estado de sesión guardado en localStorage
 
 const Sesion = {
   guardar({ usuario, token }) {

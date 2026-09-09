@@ -40,10 +40,7 @@ const BibliotecaController = {
     }
   },
 
-  /**
-   * Abre una lectura. Si ya existe para ese nivel y tema, se sirve de la
-   * base de datos; si no, se genera con IA una sola vez y se guarda.
-   */
+  /** Abre una lectura: la sirve de la base, o la genera con IA la primera vez. */
   async lectura(req, res) {
     try {
       const { slug } = req.params;

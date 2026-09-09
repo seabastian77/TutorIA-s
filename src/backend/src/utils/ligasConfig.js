@@ -1,7 +1,4 @@
-// ============================================================
-// Reglas y fechas de la liga semanal. Sin base de datos, para que
-// se puedan probar sin levantar nada.
-// ============================================================
+// Reglas y fechas de la liga semanal
 
 // De menor a mayor. Subir o bajar es moverse un escalón en esta lista.
 const LIGAS = ["bronce", "plata", "oro", "zafiro", "rubi", "diamante"];
@@ -19,10 +16,7 @@ const TAMANO_GRUPO = 30; // personas por tabla de clasificación
 const SUBEN = 7; // los 7 primeros ascienden
 const BAJAN = 5; // los 5 últimos descienden
 
-/**
- * Devuelve el lunes de la semana de una fecha, como 'YYYY-MM-DD'.
- * Todas las semanas de la liga arrancan el lunes.
- */
+/** Devuelve el lunes de la semana de una fecha, como 'YYYY-MM-DD'. */
 function lunesDeLaSemana(fecha = new Date()) {
   const d = new Date(
     Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()),

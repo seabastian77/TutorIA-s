@@ -1,7 +1,4 @@
-// ============================================================
-// Comparación de dictados. Puro texto: sin base de datos ni IA,
-// para que se pueda probar sin levantar nada.
-// ============================================================
+// Comparación de dictados, sin dependencias de base de datos ni IA
 
 /** Quita puntuación y tildes para comparar lo que escribió el usuario. */
 function normalizar(texto) {
@@ -14,14 +11,7 @@ function normalizar(texto) {
     .trim();
 }
 
-/**
- * Compara el dictado palabra por palabra contra la frase original.
- * Devuelve cada palabra esperada marcada como acertada o fallada,
- * que es lo que el frontend pinta en verde y rojo.
- *
- * Una palabra que el usuario escribió una sola vez no puede acertar
- * dos posiciones distintas: por eso se van consumiendo de la lista.
- */
+/** Compara el dictado palabra por palabra contra la frase original. */
 function compararDictado(fraseOriginal, escrito) {
   const esperadas = normalizar(fraseOriginal).split(" ").filter(Boolean);
   const dichas = normalizar(escrito).split(" ").filter(Boolean);

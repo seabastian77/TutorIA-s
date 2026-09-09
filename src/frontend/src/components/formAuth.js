@@ -16,9 +16,7 @@ function inicializarFormAuth() {
     errorBox.classList.remove("visible");
   }
 
-  // Mismo patrón usado en ConectaProfe: páginas con clase .pagina,
-  // solo la que tiene .activa se muestra. La búsqueda queda acotada
-  // al contenedor de auth con querySelector, igual que calEl() allá.
+  // Solo la página con clase .activa se muestra
   function cambiarPestana(id) {
     limpiarError();
 

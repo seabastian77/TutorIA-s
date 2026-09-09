@@ -1,8 +1,7 @@
 let ejercicioActual = null;
 let temaElegido = null;
 
-// Catálogo de temas. Vive en el frontend porque es solo una pista
-// que se le pasa a la IA; el backend lo acepta como texto libre.
+// Catálogo de temas: es solo una pista que se le pasa a la IA
 const TEMAS_PRACTICA = [
   {
     grupo: "Grammar",

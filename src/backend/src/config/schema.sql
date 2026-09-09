@@ -1,9 +1,4 @@
--- ============================================================
--- TutorIA's — esquema completo de la base de datos
--- Este archivo es la ÚNICA fuente de verdad del esquema.
--- Para una base nueva: ejecutar este archivo entero.
--- Para una base que ya existe: ejecutar migracion-gamificacion.sql
--- ============================================================
+-- Esquema completo de la base de datos de TutorIA's
 
 CREATE TABLE IF NOT EXISTS usuarios (
     id SERIAL PRIMARY KEY,
@@ -57,9 +52,7 @@ CREATE TABLE IF NOT EXISTS diagnosticos_nivel (
     fecha TIMESTAMP DEFAULT NOW()
 );
 
--- ------------------------------------------------------------
 -- Gamificación
--- ------------------------------------------------------------
 
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS puntos INTEGER DEFAULT 0;
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS racha_dias INTEGER DEFAULT 0;

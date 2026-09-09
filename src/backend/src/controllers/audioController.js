@@ -37,8 +37,7 @@ const AudioController = {
       res.json({
         ejercicioId: rows[0].id,
         nivel,
-        // El navegador necesita el texto para leerlo en voz alta.
-        // El frontend no lo muestra hasta que el usuario responde.
+        // El navegador necesita el texto para leerlo en voz alta
         frase: generado.frase,
         pista: generado.pista || null,
       });

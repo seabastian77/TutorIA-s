@@ -20,9 +20,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors({ origin: "*" }));
 
-// Manejo de CORS a mano, SIN ningún patrón de ruta (nada de "*" como path),
-// para no depender de cómo Express interprete ese símbolo por versión.
-// Esto se ejecuta para TODAS las peticiones, a cualquier ruta.
+// Cabeceras CORS para todas las peticiones
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");

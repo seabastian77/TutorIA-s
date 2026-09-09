@@ -1,5 +1,3 @@
-// src/utils/validaciones.js
-
 function correoValido(correo) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
 }

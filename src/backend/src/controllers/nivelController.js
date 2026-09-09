@@ -48,7 +48,7 @@ const DiagnosticoController = {
         nivel: NIVELES_VALIDOS.includes(nivel) ? nivel : "B1",
       });
 
-      // Si le fue mal, aprovechamos y guardamos la palabra en su vocabulario
+      // Guarda la palabra en su vocabulario si la respuesta salió mal
       if ((evaluacion.puntuacion || 0) < 60) {
         guardarPalabraSiFalla(req.usuario.id, "escrita", {
           frase: pregunta,
@@ -63,8 +63,7 @@ const DiagnosticoController = {
     }
   },
 
-  // El frontend llama esto cuando el usuario falla una pregunta de
-  // opción múltiple del diagnóstico, para capturar la palabra clave
+  // Captura la palabra clave cuando falla una pregunta de opción múltiple
   async falloOpcion(req, res) {
     try {
       const { pregunta, opciones, respuestaCorrecta, tema } = req.body;

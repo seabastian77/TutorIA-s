@@ -1,4 +1,3 @@
-// src/utils/respuestas.js
 // Helpers para respuestas HTTP consistentes
 
 function exito(res, datos, status = 200) {

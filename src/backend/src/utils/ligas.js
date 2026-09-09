@@ -12,10 +12,7 @@ const {
   bajarLiga,
 } = require("./ligasConfig");
 
-/**
- * Busca un grupo de esa liga y semana que todavía tenga cupo.
- * Si todos están llenos, abre uno nuevo.
- */
+/** Busca un grupo con cupo en esa liga y semana, o abre uno nuevo. */
 async function elegirGrupoConCupo(semana, liga) {
   const { rows } = await pool.query(
     `SELECT grupo, COUNT(*)::int AS total
@@ -41,10 +38,7 @@ async function elegirGrupoConCupo(semana, liga) {
   return (maxRows[0]?.maximo || 0) + 1;
 }
 
-/**
- * Calcula en qué puesto quedó el usuario la semana pasada y decide
- * si sube, baja o se queda. Devuelve la liga que le toca ahora.
- */
+/** Decide si el usuario sube, baja o se queda, según su puesto de la semana pasada. */
 async function ligaTrasCierreDeSemana(usuarioId, semanaActual, ligaGuardada) {
   const anterior = semanaAnterior(semanaActual);
 
@@ -88,11 +82,7 @@ async function ligaTrasCierreDeSemana(usuarioId, semanaActual, ligaGuardada) {
   return { liga: fila.liga, movimiento: "se-queda", posicion };
 }
 
-/**
- * Garantiza que el usuario tenga fila en la liga de ESTA semana.
- * Si es la primera vez de la semana, aplica el ascenso o descenso
- * que le corresponde según cómo le fue la semana pasada.
- */
+/** Garantiza la fila de la semana en curso, aplicando el ascenso o descenso. */
 async function asegurarFilaSemana(usuarioId) {
   const semana = lunesDeLaSemana();
 

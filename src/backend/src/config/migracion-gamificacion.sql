@@ -1,10 +1,6 @@
--- ============================================================
--- TutorIA's — Migración 1: gamificación completa
--- Ejecutar UNA sola vez sobre la base de datos de Railway (pgAdmin).
--- Es segura de repetir: todo usa IF NOT EXISTS.
--- ============================================================
+-- Migración 1: columnas y tablas de la gamificación
 
--- Columna que faltaba y rompía la racha y la meta diaria
+-- Progreso de la meta diaria
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS actividades_hoy INTEGER DEFAULT 0;
 
 -- Economía interna
@@ -17,8 +13,7 @@ ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS vidas INTEGER DEFAULT 5;
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS racha_maxima INTEGER DEFAULT 0;
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS liga VARCHAR(20) DEFAULT 'bronce';
 
--- Una fila por usuario y por semana: es lo que permite calcular
--- la clasificación y los ascensos sin perder el historial.
+-- Una fila por usuario y semana: sostiene la clasificación y los ascensos
 CREATE TABLE IF NOT EXISTS liga_semanal (
     id SERIAL PRIMARY KEY,
     usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
@@ -32,7 +27,7 @@ CREATE TABLE IF NOT EXISTS liga_semanal (
 CREATE INDEX IF NOT EXISTS idx_liga_semanal_tabla
     ON liga_semanal (semana, liga, grupo, xp DESC);
 
--- Registro de compras, para poder auditar la economía después
+-- Registro de compras de la tienda
 CREATE TABLE IF NOT EXISTS compras_tienda (
     id SERIAL PRIMARY KEY,
     usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,

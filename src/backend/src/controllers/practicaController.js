@@ -95,8 +95,7 @@ const PracticaController = {
         guardarPalabraSiFalla(req.usuario.id, tipo, contenido);
       }
 
-      // "Leccion perfecta": cinco aciertos seguidos, contando este.
-      // Se mira el historial ya guardado, asi no hace falta estado en memoria.
+      // Bonus por cinco aciertos seguidos, contando el actual
       let perfecto = false;
       if (correcto) {
         const { rows: ultimos } = await pool.query(

@@ -1,4 +1,4 @@
-// Servicios de los módulos de contenido: roleplay, biblioteca y laboratorio de audio.
+// Servicios de roleplay, biblioteca y laboratorio de audio
 const URL_BASE_CONTENIDO =
   window.TUTORIAS_API_URL || "http://localhost:3000/api";
 

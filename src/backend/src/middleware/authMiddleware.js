@@ -1,4 +1,3 @@
-// src/middleware/authMiddleware.js
 const AuthService = require('../services/authService');
 const UserModel = require('../models/userModel');
 

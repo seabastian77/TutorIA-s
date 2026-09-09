@@ -1,14 +1,9 @@
--- ============================================================
--- TutorIA's — Migración 2: contenido con IA
--- Ejecutar UNA sola vez sobre la base de datos de Railway (pgAdmin).
--- Es segura de repetir: todo usa IF NOT EXISTS.
--- ============================================================
+-- Migración 2: tablas de lecturas y roleplay, e interruptor de ayuda en español
 
 -- Interruptor de ayuda en español (por defecto encendido)
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS ayuda_es BOOLEAN DEFAULT true;
 
--- Biblioteca: los cuentos se generan una vez por nivel y tema,
--- y se reutilizan. Así no se gasta IA cada vez que alguien lee.
+-- Lecturas generadas una vez por nivel y tema, reutilizadas entre usuarios
 CREATE TABLE IF NOT EXISTS lecturas (
     id SERIAL PRIMARY KEY,
     nivel VARCHAR(2) NOT NULL,

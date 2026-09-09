@@ -1,5 +1,4 @@
-// src/config/db.js
-// Conexión a PostgreSQL (misma base usada en ConectaProfe / Railway)
+// Conexión a PostgreSQL
 require('dotenv').config();
 const { Pool } = require('pg');
 

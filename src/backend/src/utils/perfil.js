@@ -1,10 +1,6 @@
 const pool = require("../config/db");
 
-/**
- * Lee lo que los módulos de contenido necesitan del usuario:
- * su nivel MCER y si tiene encendida la ayuda en español.
- * Devuelve valores por defecto si algo falta, para no romper nunca.
- */
+/** Lee el nivel MCER del usuario y si tiene activada la ayuda en español. */
 async function obtenerPerfil(usuarioId) {
   const { rows } = await pool.query(
     "SELECT nivel_mcer, ayuda_es FROM usuarios WHERE id = $1",

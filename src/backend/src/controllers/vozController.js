@@ -1,4 +1,3 @@
-// backend/src/controllers/vozController.js
 const { generarRespuestaConversacion } = require("../services/iaService");
 const { registrarActividad } = require("../utils/gamificacion");
 const pool = require("../config/db");

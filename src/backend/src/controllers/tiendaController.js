@@ -1,7 +1,6 @@
 const pool = require("../config/db");
 
-// Catálogo fijo del lado del servidor: el cliente nunca manda el precio.
-// `campo` es la columna de `usuarios` que se incrementa al comprar.
+// Catálogo del lado del servidor: el cliente solo manda el id del artículo
 const CATALOGO = [
   {
     id: "escudo",
@@ -112,8 +111,7 @@ const TiendaController = {
         });
       }
 
-      // Un solo UPDATE condicional: si dos peticiones llegan a la vez,
-      // la segunda no encuentra monedas y no descuenta dos veces.
+      // UPDATE condicional: evita descontar dos veces con peticiones simultáneas
       const nuevoValor = Math.min(
         cuenta[articulo.campo] + articulo.cantidad,
         articulo.maximo,
