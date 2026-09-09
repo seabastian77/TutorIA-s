@@ -90,6 +90,7 @@ Los prompts están concentrados en dos archivos:
 
 - `services/iaService.js` — diagnóstico de nivel, práctica, voz y escenas
 - `services/iaContenido.js` — roleplay, lecturas y laboratorio de audio
+- `services/juegosContenido.js` — palabras para los minijuegos
 
 Todos piden a Groq una respuesta en JSON (`response_format: json_object`) y la
 parsean. El nivel MCER del estudiante y el interruptor de ayuda en español se
@@ -104,12 +105,23 @@ la primera vez que alguien abre una lectura de un nivel se guarda en la tabla
 
 `utils/gamificacion.js` es el único sitio donde se suma XP y se mueve la
 racha. Todos los módulos (práctica, diagnóstico, voz, escena, roleplay,
-lecturas, audio) llaman a la misma función `registrarActividad`, así que las
-reglas viven en un solo lugar.
+lecturas, audio, minijuegos) llaman a la misma función `registrarActividad`, así
+que las reglas viven en un solo lugar.
 
 `utils/ligas.js` maneja la competencia semanal. La semana arranca el lunes; una
 fila por usuario y semana en `liga_semanal` sostiene la clasificación y permite
 calcular ascensos sin perder el historial.
+
+## Minijuegos
+
+`utils/juegosLogica.js` no toca la base ni la IA: arma la sopa de letras,
+resuelve el estado del ahorcado y comprueba las selecciones del tablero. Al ser
+funciones puras se pueden probar con Jest sin levantar nada.
+
+Las partidas se guardan en un `Map` en memoria del servidor con media hora de
+vida. No se crean tablas nuevas: lo único que llega a la base es el XP al
+terminar y el descuento de la pista que se gasta. Así el cliente nunca recibe la
+palabra del ahorcado ni las coordenadas de la sopa hasta que la partida acaba.
 
 ## Despliegue
 

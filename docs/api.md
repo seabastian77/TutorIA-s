@@ -128,6 +128,27 @@ El dictado se corrige contra la frase guardada en la base, nunca contra lo que
 mande el cliente. La comparación es palabra por palabra, ignorando mayúsculas,
 tildes y puntuación.
 
+## Minijuegos
+
+| Método | Ruta | Qué hace |
+|---|---|---|
+| POST | `/juegos/ahorcado/nueva` | Empieza una partida. Devuelve la pista en español y el largo |
+| POST | `/juegos/ahorcado/letra` | Body: `partidaId`, `letra` |
+| POST | `/juegos/ahorcado/pista` | Gasta una pista de la tienda y descubre una letra |
+| POST | `/juegos/sopa/nueva` | Tablero de 10×10 con seis palabras escondidas |
+| POST | `/juegos/sopa/hallazgo` | Body: `partidaId`, `fila`, `columna`, `filaFin`, `columnaFin` |
+| POST | `/juegos/sopa/terminar` | Cierra la partida, reparte XP y revela lo que faltó |
+| POST | `/juegos/emparejar/nueva` | Dos columnas barajadas: palabras y traducciones |
+| POST | `/juegos/emparejar/par` | Body: `partidaId`, `izquierdaId`, `derechaId` |
+
+Las palabras salen del vocabulario que el propio estudiante ha ido fallando; si
+no tiene suficientes, las completa la IA y, si la IA no responde, una lista fija
+por nivel.
+
+Las partidas viven en memoria del servidor durante media hora. El ahorcado nunca
+manda la palabra hasta que la partida termina, y en el emparejamiento cada lado
+lleva un identificador distinto para que la pareja no se pueda deducir.
+
 ## Salud
 
 | Método | Ruta | Qué hace |

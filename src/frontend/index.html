@@ -313,6 +313,24 @@
           <span class="bento-nota">Spend your coins on shields and hints</span>
         </span>
       </button>
+
+      <button id="btn-juegos" class="btn-principal btn-juegos">
+        <span class="bento-fila-icono">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="4" />
+            <circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none" />
+            <circle cx="15.5" cy="8.5" r="1.3" fill="currentColor" stroke="none" />
+            <circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none" />
+            <circle cx="8.5" cy="15.5" r="1.3" fill="currentColor" stroke="none" />
+            <circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none" />
+          </svg>
+          <span class="bento-etiqueta">GAMES</span>
+        </span>
+        <span class="bento-texto">
+          <span class="bento-titulo">Word Games</span>
+          <span class="bento-nota">Hangman, word search and matching, built from the words you keep missing</span>
+        </span>
+      </button>
     </div>
 
     <div class="tarjeta-tip">
@@ -628,6 +646,113 @@
     <button id="btn-salir-audio" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
   </div>
 
+  <!-- Vista: minijuegos de vocabulario -->
+  <div id="vista-juegos" class="pantalla-principal oculto">
+
+    <div id="juegos-menu">
+      <h2>Word Games</h2>
+      <p>Three quick games built from the words you are learning.</p>
+
+      <div class="juegos-lista">
+        <button id="btn-juego-ahorcado" class="juego-tarjeta juego-ahorcado">
+          <i class="fa-solid fa-font"></i>
+          <span class="modo-titulo">Hangman</span>
+          <span class="modo-nota">Guess the English word from its meaning in Spanish</span>
+        </button>
+        <button id="btn-juego-sopa" class="juego-tarjeta juego-sopa">
+          <i class="fa-solid fa-table-cells"></i>
+          <span class="modo-titulo">Word Search</span>
+          <span class="modo-nota">Find six hidden words before the clock runs out</span>
+        </button>
+        <button id="btn-juego-emparejar" class="juego-tarjeta juego-emparejar">
+          <i class="fa-solid fa-shuffle"></i>
+          <span class="modo-titulo">Matching</span>
+          <span class="modo-nota">Match every English word with its translation</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="juego-ahorcado" class="oculto">
+      <div class="tarjeta-nivel">
+        <div class="nivel-progreso">Hangman</div>
+
+        <div class="ahorcado-zona">
+          <svg id="ahorcado-dibujo" width="140" height="160" viewBox="0 0 140 160" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+            <path d="M12 150h66" />
+            <path d="M40 150V12" />
+            <path d="M40 12h56" />
+            <path d="M96 12v20" />
+            <circle class="ahorcado-parte" data-parte="1" cx="96" cy="46" r="14" />
+            <path class="ahorcado-parte" data-parte="2" d="M96 60v40" />
+            <path class="ahorcado-parte" data-parte="3" d="M96 70L78 88" />
+            <path class="ahorcado-parte" data-parte="4" d="M96 70l18 18" />
+            <path class="ahorcado-parte" data-parte="5" d="M96 100l-17 26" />
+            <path class="ahorcado-parte" data-parte="6" d="M96 100l17 26" />
+          </svg>
+
+          <div class="ahorcado-datos">
+            <p id="ahorcado-pista" class="nivel-narrativa"></p>
+            <p id="ahorcado-intentos" class="ahorcado-intentos"></p>
+          </div>
+        </div>
+
+        <div id="ahorcado-palabra" class="ahorcado-palabra"></div>
+        <div id="ahorcado-teclado" class="ahorcado-teclado"></div>
+
+        <button id="btn-pista-ahorcado" class="btn-secundario"><span>Reveal a letter (<span id="ahorcado-pistas">0</span> hints left)</span></button>
+
+        <div id="ahorcado-resultado" class="nivel-feedback oculto"></div>
+      </div>
+
+      <div class="audio-botones" style="margin-top:14px;">
+        <button id="btn-otro-ahorcado" class="btn-secundario">Another word</button>
+        <button id="btn-menu-juegos" class="btn-secundario">Change game</button>
+      </div>
+    </div>
+
+    <div id="juego-sopa" class="oculto">
+      <div class="tarjeta-nivel">
+        <div class="cabecera-seccion">
+          <div class="nivel-progreso">Word Search</div>
+          <div id="sopa-reloj" class="sopa-reloj">2:00</div>
+        </div>
+
+        <div id="sopa-grilla" class="sopa-grilla"></div>
+        <div id="sopa-palabras" class="sopa-palabras"></div>
+        <div id="sopa-resultado" class="nivel-feedback oculto"></div>
+      </div>
+
+      <div class="audio-botones" style="margin-top:14px;">
+        <button id="btn-otra-sopa" class="btn-secundario">Another grid</button>
+        <button id="btn-menu-juegos-2" class="btn-secundario">Change game</button>
+      </div>
+    </div>
+
+    <div id="juego-emparejar" class="oculto">
+      <div class="tarjeta-nivel">
+        <div class="cabecera-seccion">
+          <div class="nivel-progreso">Matching</div>
+          <div id="emparejar-marcador" class="sopa-reloj">0 / 6</div>
+        </div>
+
+        <div class="emparejar-columnas">
+          <div id="emparejar-izquierda" class="emparejar-columna"></div>
+          <div id="emparejar-derecha" class="emparejar-columna"></div>
+        </div>
+
+        <div id="emparejar-resultado" class="nivel-feedback oculto"></div>
+      </div>
+
+      <div class="audio-botones" style="margin-top:14px;">
+        <button id="btn-otro-emparejar" class="btn-secundario">Another round</button>
+        <button id="btn-menu-juegos-3" class="btn-secundario">Change game</button>
+      </div>
+    </div>
+
+    <p id="juegos-estado" class="tienda-estado"></p>
+    <button id="btn-salir-juegos" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+  </div>
+
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/store/sesion.js"></script>
@@ -642,6 +767,7 @@
   <script src="src/services/tiendaApi.js"></script>
   <script src="src/services/ligaApi.js"></script>
   <script src="src/services/contenidoApi.js"></script>
+  <script src="src/services/juegosApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
@@ -656,5 +782,6 @@
   <script src="src/components/roleplay.js"></script>
   <script src="src/components/biblioteca.js"></script>
   <script src="src/components/audioLab.js"></script>
+  <script src="src/components/juegos.js"></script>
 </body>
 </html>

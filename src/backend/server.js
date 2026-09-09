@@ -14,6 +14,7 @@ const ligaRoutes = require("./src/routes/ligaRoutes");
 const roleplayRoutes = require("./src/routes/roleplayRoutes");
 const bibliotecaRoutes = require("./src/routes/bibliotecaRoutes");
 const audioRoutes = require("./src/routes/audioRoutes");
+const juegosRoutes = require("./src/routes/juegosRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,6 +49,7 @@ app.use("/api/liga", ligaRoutes);
 app.use("/api/roleplay", roleplayRoutes);
 app.use("/api/biblioteca", bibliotecaRoutes);
 app.use("/api/audio", audioRoutes);
+app.use("/api/juegos", juegosRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ estado: "ok", mensaje: "TutorIA's backend funcionando" });

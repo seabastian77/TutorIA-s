@@ -36,6 +36,10 @@ pronunciación.
 **Mi vocabulario.** Las palabras que fallas se guardan solas y vuelven con
 repetición espaciada.
 
+**Minijuegos.** El ahorcado con la pista en español, una sopa de letras a
+contrarreloj y un juego de emparejar palabra y traducción. Los tres se arman con
+las palabras que tú vienes fallando.
+
 **Gamificación.** XP con bonus por rachas de aciertos, monedas, tienda con
 escudos que salvan tu racha, once insignias y ligas semanales de 30 personas
 donde suben los siete primeros.
@@ -120,7 +124,8 @@ constante `window.TUTORIAS_API_URL` al final del archivo para que apunte a
 npm test
 ```
 
-Cubren la comparación de dictados y el cálculo de semanas de la liga.
+Cubren la comparación de dictados, el marcado de pronunciación palabra por
+palabra, el cálculo de semanas de la liga y la lógica de los minijuegos.
 
 ---
 

@@ -2099,3 +2099,262 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   .vocab-zona { min-height: 260px; }
   .vocab-tarjeta { min-height: 260px; padding: 26px 20px; }
 }
+
+/* Minijuegos: menú */
+
+.juegos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.juego-tarjeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 26px;
+  min-height: 176px;
+  border-radius: var(--radio);
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-display);
+  transition: filter 0.16s ease, transform 0.12s ease;
+}
+
+.juego-tarjeta:hover { filter: brightness(1.06); transform: translateY(-2px); }
+.juego-tarjeta i { font-size: 24px; margin-bottom: 18px; }
+
+.juego-ahorcado { background: var(--lila); color: var(--lila-tinta); }
+.juego-sopa { background: var(--arena); color: var(--arena-tinta); }
+.juego-emparejar { background: var(--verde); color: var(--verde-tinta); }
+
+/* Minijuegos: el ahorcado */
+
+.ahorcado-zona {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin: 8px 0 22px;
+}
+
+#ahorcado-dibujo { color: var(--gris); flex-shrink: 0; }
+
+/* Cada parte del muñeco aparece cuando el error correspondiente ya ocurrió */
+.ahorcado-parte {
+  opacity: 0;
+  color: var(--rojo);
+  transition: opacity 0.25s ease;
+}
+
+.ahorcado-parte.visible { opacity: 1; }
+
+.ahorcado-datos { flex: 1 1 200px; }
+
+.ahorcado-intentos {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gris-tenue);
+}
+
+.ahorcado-palabra {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.hueco {
+  width: 42px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px 10px 0 0;
+  background: var(--panel-alto);
+  border-bottom: 3px solid var(--gris-tenue);
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: border-color 0.18s ease;
+}
+
+.hueco-lleno { border-bottom-color: var(--verde); color: var(--verde); }
+
+.ahorcado-teclado {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(42px, 1fr));
+  gap: 7px;
+}
+
+.tecla {
+  height: 44px;
+  border-radius: var(--radio-chico);
+  border: 1.5px solid var(--borde);
+  background: var(--panel-alto);
+  color: var(--blanco);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.14s ease, opacity 0.14s ease;
+}
+
+.tecla:hover:not(:disabled) { border-color: var(--lila); }
+.tecla:disabled { cursor: default; }
+.tecla-usada { opacity: 0.28; }
+
+#btn-pista-ahorcado { margin-top: 18px; }
+
+/* Minijuegos: la sopa de letras */
+
+.sopa-reloj {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--arena);
+}
+
+.reloj-corto { color: var(--rojo); }
+
+.sopa-grilla {
+  display: grid;
+  grid-template-columns: repeat(var(--sopa-columnas, 10), minmax(0, 1fr));
+  gap: 4px;
+  margin: 18px 0;
+  touch-action: none;
+  user-select: none;
+}
+
+.sopa-celda {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--panel-alto);
+  border: 1.5px solid var(--borde);
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 2.2vw, 16px);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.celda-activa { border-color: var(--arena); background: rgba(234, 217, 176, 0.16); }
+
+.celda-hallada {
+  border-color: var(--verde);
+  background: rgba(33, 192, 138, 0.18);
+  color: #7fe4bd;
+}
+
+.celda-perdida {
+  border-color: var(--rojo);
+  background: rgba(255, 77, 94, 0.14);
+  color: #ff9aa5;
+}
+
+.sopa-palabras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.sopa-palabra {
+  padding: 10px 13px;
+  border-radius: var(--radio-chico);
+  background: var(--negro);
+  border: 1.5px solid var(--borde);
+}
+
+.sopa-palabra strong {
+  display: block;
+  font-size: 15px;
+  text-transform: capitalize;
+}
+
+.sopa-palabra span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--gris-tenue);
+}
+
+.palabra-hallada { border-color: var(--verde); }
+.palabra-hallada strong { text-decoration: line-through; color: var(--verde); }
+.palabra-perdida { border-color: var(--rojo); }
+.palabra-perdida strong { color: var(--rojo); }
+
+/* Minijuegos: emparejar palabra y traducción */
+
+.emparejar-columnas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.emparejar-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.carta-par {
+  min-height: 54px;
+  padding: 12px 15px;
+  border-radius: var(--radio-chico);
+  border: 1.5px solid var(--borde);
+  background: var(--panel-alto);
+  color: var(--blanco);
+  font-family: var(--font-display);
+  font-size: 15px;
+  cursor: pointer;
+  transition: border-color 0.14s ease, opacity 0.2s ease;
+}
+
+.carta-par:hover:not(:disabled) { border-color: var(--verde); }
+.carta-elegida { border-color: var(--verde); background: rgba(33, 192, 138, 0.14); }
+.carta-fallada { border-color: var(--rojo); background: rgba(255, 77, 94, 0.14); }
+
+.carta-hecha {
+  opacity: 0.32;
+  cursor: default;
+  border-color: var(--verde);
+}
+
+/* Resultado de cualquiera de los tres juegos */
+
+.feedback-correcto { border-left-color: var(--verde); color: var(--blanco); }
+.feedback-incorrecto { border-left-color: var(--rojo); color: var(--blanco); }
+
+/* La celda de los juegos ocupa una fila entera del bento */
+
+#btn-juegos { grid-column: span 4; min-height: 152px; }
+.btn-juegos { background: var(--blanco); color: var(--negro); }
+.btn-juegos:hover { filter: brightness(0.94); }
+
+@media (max-width: 1020px) {
+  #btn-juegos { grid-column: span 2; }
+}
+
+@media (max-width: 620px) {
+  #btn-juegos { grid-column: span 1; min-height: 148px; }
+
+  .juegos-lista { grid-template-columns: minmax(0, 1fr); }
+  .ahorcado-zona { justify-content: center; }
+  .hueco { width: 32px; height: 44px; font-size: 22px; }
+  .ahorcado-teclado { grid-template-columns: repeat(auto-fit, minmax(34px, 1fr)); }
+  .tecla { height: 38px; font-size: 12px; }
+  .emparejar-columnas { gap: 8px; }
+  .carta-par { font-size: 13px; padding: 10px 12px; }
+}
