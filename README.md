@@ -11,7 +11,7 @@ te pone a practicar lo que necesitas, te escucha hablar y te corrige.
 
 **Diagnóstico de nivel.** Ocho escenas encadenadas donde la dificultad se
 ajusta según respondes, mezclando opción múltiple y respuesta abierta. Al final
-te da tu nivel MCER (A1 a C2) y una puntuación por habilidad.
+te da tu nivel MCER (A1 a b2) y una puntuación por habilidad.
 
 **Práctica adaptativa.** Ejercicios ilimitados generados por IA. Eliges qué
 estudiar hoy entre 18 temas: gramática, vocabulario o situaciones de la vida
