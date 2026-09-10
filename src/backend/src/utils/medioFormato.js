@@ -36,17 +36,43 @@ function normalizarVideo(video) {
   };
 }
 
-/** Saca el JSON de la respuesta aunque el modelo lo envuelva en texto o en vallas. */
+/**
+ * Saca el primer objeto JSON completo de la respuesta. Cuenta las llaves en vez
+ * de cortar en la última, porque el modelo a veces manda dos objetos seguidos o
+ * deja texto suelto detrás.
+ */
 function extraerJSON(texto) {
   const limpio = (texto || "").replace(/```json/gi, "").replace(/```/g, "").trim();
   const inicio = limpio.indexOf("{");
-  const fin = limpio.lastIndexOf("}");
 
-  if (inicio === -1 || fin === -1) {
+  if (inicio === -1) {
     throw new Error("El modelo de visión no devolvió JSON");
   }
 
-  return JSON.parse(limpio.slice(inicio, fin + 1));
+  let profundidad = 0;
+  let dentroDeTexto = false;
+  let escapado = false;
+
+  for (let i = inicio; i < limpio.length; i++) {
+    const caracter = limpio[i];
+
+    // Las llaves que van dentro de una cadena no cuentan
+    if (escapado) {
+      escapado = false;
+    } else if (caracter === "\\") {
+      escapado = true;
+    } else if (caracter === '"') {
+      dentroDeTexto = !dentroDeTexto;
+    } else if (!dentroDeTexto) {
+      if (caracter === "{") profundidad += 1;
+      else if (caracter === "}") {
+        profundidad -= 1;
+        if (profundidad === 0) return JSON.parse(limpio.slice(inicio, i + 1));
+      }
+    }
+  }
+
+  throw new Error("El modelo de visión no devolvió JSON completo");
 }
 
 module.exports = { normalizarFoto, normalizarVideo, extraerJSON };

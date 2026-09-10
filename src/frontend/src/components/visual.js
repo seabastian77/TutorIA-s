@@ -154,7 +154,11 @@ async function comprobarVisual() {
     resultado.classList.add("oculto");
     entrada.disabled = false;
     boton.disabled = false;
-    avisoVisual("Could not check your answer. Try again in a moment.");
+    avisoVisual(
+      err.codigo === "limite_ia"
+        ? "The tutor is busy right now. Wait a few seconds and press Check again."
+        : "Could not check your answer. Try again in a moment.",
+    );
   }
 }
 

@@ -170,21 +170,34 @@ const VisualController = {
       const { nivel, ayudaEs } = await obtenerPerfil(req.usuario.id);
       const elegido = buscarTema(modo, tema);
 
-      const evaluacion =
-        modo === "reaccionar"
-          ? await evaluarReaccion({
-              urlImagen: medio.url,
-              reaccion: texto,
-              situacion: elegido?.situacion || "an everyday situation",
-              nivel,
-              ayudaEs,
-            })
-          : await evaluarDescripcion({
-              urlImagen: medio.url,
-              descripcion: texto,
-              nivel,
-              ayudaEs,
-            });
+      let evaluacion;
+      try {
+        evaluacion =
+          modo === "reaccionar"
+            ? await evaluarReaccion({
+                urlImagen: medio.url,
+                reaccion: texto,
+                situacion: elegido?.situacion || "an everyday situation",
+                nivel,
+                ayudaEs,
+              })
+            : await evaluarDescripcion({
+                urlImagen: medio.url,
+                descripcion: texto,
+                nivel,
+                ayudaEs,
+              });
+      } catch (error) {
+        // El plan gratis de Groq limita los tokens por minuto: eso no es un fallo nuestro
+        if (error.status === 429) {
+          reportarError("Groq rechazó la evaluación por límite de tokens", error);
+          return res.status(429).json({
+            error: "El tutor está ocupado. Espera unos segundos y vuelve a intentar.",
+            codigo: "limite_ia",
+          });
+        }
+        throw error;
+      }
 
       const precision = Math.max(0, Math.min(100, Number(evaluacion.precision) || 0));
       const perfecto = precision >= 90;

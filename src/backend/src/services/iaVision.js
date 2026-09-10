@@ -7,6 +7,10 @@ const { extraerJSON } = require("../utils/medioFormato");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const MODELO_VISION = "qwen/qwen3.6-27b";
 
+// El plan gratis de Groq limita los tokens de salida por minuto: sin este tope
+// rechaza la petición antes de mirar la foto
+const MAX_TOKENS = 450;
+
 async function mirarYResponder(urlImagen, prompt) {
   const completion = await groq.chat.completions.create({
     model: MODELO_VISION,
@@ -19,6 +23,8 @@ async function mirarYResponder(urlImagen, prompt) {
         ],
       },
     ],
+    max_tokens: MAX_TOKENS,
+    temperature: 0.3,
   });
 
   return extraerJSON(completion.choices[0].message.content);
@@ -33,15 +39,16 @@ They wrote: "${descripcion}"
 Judge only what can actually be seen in the photo. Be encouraging but honest.
 
 "precision" is 0-100: how well their description matches what is really in the image.
-"acertado" lists what they got right. "falto" lists important things in the photo they did not mention.
-"correcciones" lists their grammar or vocabulary mistakes, each with the fixed version.
-"frasesUtiles" gives three natural English phrases at ${nivel} level they could have used for this photo.
+"acertado" lists at most 3 things they got right, a few words each.
+"falto" lists at most 3 important things in the photo they did not mention, a few words each.
+"correcciones" lists at most 3 of their grammar or vocabulary mistakes, each with the fixed version.
+"frasesUtiles" gives three short natural English phrases at ${nivel} level they could have used.
 ${instruccionAyuda(ayudaEs)} That applies to "resumen" and to the "porque" of each correction.
 
-Reply ONLY with valid JSON:
+Do not explain your reasoning. Reply with ONE JSON object and nothing else:
 {
   "precision": 0,
-  "resumen": "one or two sentences of feedback",
+  "resumen": "one short sentence of feedback",
   "acertado": ["..."],
   "falto": ["..."],
   "correcciones": [{"escribio": "...", "mejor": "...", "porque": "..."}],
@@ -63,15 +70,15 @@ Judge two things separately: whether their reaction makes sense for what is happ
 
 "adecuada" is true when the reaction fits the situation, even if the English has mistakes.
 "precision" is 0-100 considering both things together.
-"correcciones" lists their grammar or vocabulary mistakes, each with the fixed version.
+"correcciones" lists at most 3 of their grammar or vocabulary mistakes, each with the fixed version.
 "mejorRespuesta" is one natural thing a native speaker would say in that exact moment, at ${nivel} level.
 ${instruccionAyuda(ayudaEs)} That applies to "resumen" and to the "porque" of each correction.
 
-Reply ONLY with valid JSON:
+Do not explain your reasoning. Reply with ONE JSON object and nothing else:
 {
   "adecuada": true,
   "precision": 0,
-  "resumen": "one or two sentences of feedback",
+  "resumen": "one short sentence of feedback",
   "correcciones": [{"escribio": "...", "mejor": "...", "porque": "..."}],
   "mejorRespuesta": "..."
 }`;

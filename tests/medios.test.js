@@ -104,4 +104,34 @@ describe("extraerJSON", () => {
     expect(() => extraerJSON("")).toThrow();
     expect(() => extraerJSON(null)).toThrow();
   });
+
+  test("si el modelo manda dos objetos se queda con el primero", () => {
+    const texto = '{"precision": 70}\n{"precision": 99}';
+    expect(extraerJSON(texto)).toEqual({ precision: 70 });
+  });
+
+  test("aguanta texto suelto detrás del JSON", () => {
+    const texto = '{"precision": 55} Espero que esto te sirva.';
+    expect(extraerJSON(texto)).toEqual({ precision: 55 });
+  });
+
+  test("no se confunde con las llaves que van dentro de una cadena", () => {
+    const texto = '{"resumen": "usa {esto} así", "precision": 40}';
+    expect(extraerJSON(texto)).toEqual({
+      resumen: "usa {esto} así",
+      precision: 40,
+    });
+  });
+
+  test("lee objetos anidados completos", () => {
+    const texto = '{"a": {"b": {"c": 1}}, "d": 2}';
+    expect(extraerJSON(texto)).toEqual({ a: { b: { c: 1 } }, d: 2 });
+  });
+
+  test("un JSON cortado a la mitad avisa en vez de romper raro", () => {
+    // Pasa cuando el modelo se queda sin tokens de salida
+    expect(() => extraerJSON('{"precision": 70, "resumen": "se cor')).toThrow(
+      "no devolvió JSON completo",
+    );
+  });
 });
