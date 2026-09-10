@@ -6,6 +6,7 @@ const { reportarError } = require("./errores");
 async function guardarPalabraSiFalla(usuarioId, tipo, contenido) {
   try {
     const vocab = await extraerPalabraVocabulario({ contenido, tipo });
+    if (!vocab || !(vocab.palabra || "").trim()) return;
 
     const existente = await pool.query(
       "SELECT id FROM vocabulario_usuario WHERE usuario_id = $1 AND LOWER(palabra) = LOWER($2)",

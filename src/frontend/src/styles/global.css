@@ -2358,3 +2358,234 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   .emparejar-columnas { gap: 8px; }
   .carta-par { font-size: 13px; padding: 10px 12px; }
 }
+
+/* Tarjeta de entrada a los ejercicios con imagen */
+
+.tarjeta-entrada {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  border-radius: var(--radio);
+  background: var(--panel);
+  border: 1.5px solid var(--borde);
+  color: var(--blanco);
+  font-family: var(--font-display);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, transform 0.12s ease;
+}
+
+.tarjeta-entrada:hover { border-color: var(--cian); transform: translateY(-2px); }
+
+.tarjeta-entrada i {
+  font-size: 20px;
+  color: var(--cian);
+  flex-shrink: 0;
+  width: 26px;
+  text-align: center;
+}
+
+.entrada-texto { display: block; }
+
+.entrada-titulo {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.entrada-nota {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--gris);
+}
+
+/* Ejercicios con imagen */
+
+.visual-temas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.tema-visual {
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 18px;
+  border-radius: var(--radio-chico);
+  background: var(--panel-alto);
+  border: 1.5px solid var(--borde);
+  color: var(--blanco);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.14s ease, transform 0.12s ease;
+}
+
+.tema-visual:hover { border-color: var(--cian); transform: translateY(-2px); }
+.tema-visual i { font-size: 20px; color: var(--cian); }
+
+/* El ejercicio se alinea al mismo ancho que las tarjetas del resto de la app */
+#visual-ejercicio {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.visual-marco {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radio);
+  overflow: hidden;
+  background: var(--panel-alto);
+  border: 1.5px solid var(--borde);
+}
+
+/* Mientras la foto viaja, el marco late para que se note que algo pasa */
+.visual-marco.cargando { animation: latido 1.3s ease-in-out infinite; }
+
+@keyframes latido {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+#visual-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.visual-credito {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-tenue);
+}
+
+.visual-credito a { color: var(--gris); text-decoration: underline; }
+
+#visual-entrada {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radio-chico);
+  background: var(--negro);
+  border: 1.5px solid var(--borde);
+  color: var(--blanco);
+  font-family: var(--font-display);
+  font-size: 15px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.16s ease;
+}
+
+#visual-entrada:focus { border-color: var(--cian); }
+#visual-entrada:disabled { opacity: 0.6; }
+
+.visual-marcador {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--blanco);
+  margin-bottom: 8px;
+}
+
+.visual-subtitulo-lista {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gris-tenue);
+}
+
+.visual-lista {
+  margin: 6px 0 0 18px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.lista-bien li { color: var(--verde); }
+.lista-mal li { color: #ff9aa5; }
+.lista-frases li { color: var(--gris); }
+
+.visual-correccion {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.visual-correccion s { color: var(--rojo); }
+.visual-correccion strong { color: var(--verde); }
+
+.visual-mejor {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radio-chico);
+  background: var(--panel-alto);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--blanco);
+}
+
+/* Video de ambiente detrás del modo escena */
+
+.escena-video {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.escena-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sin el velo el texto de la escena no se lee sobre el video */
+.escena-velo {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 14, 16, 0.78);
+}
+
+.escena-video-credito {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-tenue);
+}
+
+.escena-video-credito a { color: var(--gris); text-decoration: underline; }
+
+#vista-escena > *:not(#escena-video) { position: relative; z-index: 1; }
+
+@media (max-width: 620px) {
+  .visual-temas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .visual-marco { aspect-ratio: 4 / 3; }
+  .tarjeta-entrada { padding: 15px 16px; }
+}

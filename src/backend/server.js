@@ -27,6 +27,7 @@ const roleplayRoutes = require("./src/routes/roleplayRoutes");
 const bibliotecaRoutes = require("./src/routes/bibliotecaRoutes");
 const audioRoutes = require("./src/routes/audioRoutes");
 const juegosRoutes = require("./src/routes/juegosRoutes");
+const visualRoutes = require("./src/routes/visualRoutes");
 const { ejecutarMigraciones } = require("./src/config/migraciones");
 
 const app = express();
@@ -63,6 +64,7 @@ app.use("/api/roleplay", roleplayRoutes);
 app.use("/api/biblioteca", bibliotecaRoutes);
 app.use("/api/audio", audioRoutes);
 app.use("/api/juegos", juegosRoutes);
+app.use("/api/visual", visualRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ estado: "ok", mensaje: "TutorIA's backend funcionando" });

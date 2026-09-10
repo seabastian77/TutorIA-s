@@ -381,6 +381,15 @@
 
     <div id="practica-temas" class="practica-temas">
       <h2>What do you want to practise today?</h2>
+
+      <button id="btn-visual-describir" class="tarjeta-entrada">
+        <i class="fa-solid fa-image"></i>
+        <span class="entrada-texto">
+          <span class="entrada-titulo">Describe a photo</span>
+          <span class="entrada-nota">Look at a real scene and write what is happening</span>
+        </span>
+      </button>
+
       <div id="practica-grupos" class="practica-grupos"></div>
     </div>
 
@@ -414,6 +423,13 @@
 
   <!-- Vista: modo escena — guiones originales para pronunciación -->
   <div id="vista-escena" class="pantalla-principal oculto">
+
+    <div id="escena-video" class="escena-video oculto">
+      <video id="escena-video-fuente" autoplay muted loop playsinline></video>
+      <div class="escena-velo"></div>
+      <p id="escena-video-credito" class="escena-video-credito"></p>
+    </div>
+
     <div class="tarjeta-voz" id="escena-tarjeta">
       <div id="escena-situacion" class="nivel-narrativa">Loading scene...</div>
       <h3 id="escena-linea-texto"></h3>
@@ -509,6 +525,15 @@
     <div id="roleplay-seleccion">
       <h2>Real Situations</h2>
       <p>Pick a situation and talk your way through it.</p>
+
+      <button id="btn-visual-reaccionar" class="tarjeta-entrada">
+        <i class="fa-solid fa-camera-retro"></i>
+        <span class="entrada-texto">
+          <span class="entrada-titulo">React to the scene</span>
+          <span class="entrada-nota">See the moment in a photo and write what you would say</span>
+        </span>
+      </button>
+
       <div id="roleplay-escenarios" class="escenarios"></div>
     </div>
 
@@ -753,6 +778,41 @@
     <button id="btn-salir-juegos" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
   </div>
 
+  <!-- Vista: ejercicios con imagen -->
+  <div id="vista-visual" class="pantalla-principal oculto">
+
+    <div class="cabecera-seccion">
+      <h2 id="visual-titulo">Describe the photo</h2>
+    </div>
+    <p id="visual-subtitulo"></p>
+
+    <div id="visual-temas">
+      <div id="visual-lista-temas" class="visual-temas"></div>
+    </div>
+
+    <div id="visual-ejercicio" class="oculto">
+      <div id="visual-marco" class="visual-marco cargando">
+        <img id="visual-imagen" alt="" />
+      </div>
+      <p id="visual-credito" class="visual-credito"></p>
+
+      <div class="tarjeta-nivel" style="margin-top:16px;">
+        <div id="visual-instruccion" class="nivel-progreso"></div>
+        <textarea id="visual-entrada" rows="4" placeholder="Write in English what you see..."></textarea>
+        <button id="btn-comprobar-visual" class="btn-principal" style="margin-top:14px;">Check my answer</button>
+        <div id="visual-resultado" class="nivel-feedback oculto"></div>
+      </div>
+
+      <div class="audio-botones" style="margin-top:14px;">
+        <button id="btn-otra-visual" class="btn-secundario">Another photo</button>
+        <button id="btn-cambiar-tema-visual" class="btn-secundario">Change topic</button>
+      </div>
+    </div>
+
+    <p id="visual-estado" class="tienda-estado"></p>
+    <button id="btn-salir-visual" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+  </div>
+
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/store/sesion.js"></script>
@@ -768,6 +828,7 @@
   <script src="src/services/ligaApi.js"></script>
   <script src="src/services/contenidoApi.js"></script>
   <script src="src/services/juegosApi.js"></script>
+  <script src="src/services/visualApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
@@ -783,5 +844,6 @@
   <script src="src/components/biblioteca.js"></script>
   <script src="src/components/audioLab.js"></script>
   <script src="src/components/juegos.js"></script>
+  <script src="src/components/visual.js"></script>
 </body>
 </html>

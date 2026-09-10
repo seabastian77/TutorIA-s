@@ -22,10 +22,46 @@ async function iniciarEscena() {
 
   try {
     escenaActual = await EscenaAPI.obtenerEscena();
+    pintarVideoEscena(escenaActual.video);
     mostrarLineaActual();
   } catch (err) {
     document.getElementById("escena-situacion").textContent =
       "Could not load the scene. Try again.";
+  }
+}
+
+/** Pone el video de ambiente detrás de la escena; sin video la vista queda igual. */
+function pintarVideoEscena(video) {
+  const capa = document.getElementById("escena-video");
+  const fuente = document.getElementById("escena-video-fuente");
+  const credito = document.getElementById("escena-video-credito");
+  if (!capa || !fuente) return;
+
+  if (!video || !video.url) {
+    capa.classList.add("oculto");
+    fuente.pause();
+    return;
+  }
+
+  fuente.src = video.url;
+  fuente.play().catch(() => {});
+  capa.classList.remove("oculto");
+
+  credito.innerHTML = "";
+  if (video.autor) {
+    const autor = document.createElement("a");
+    autor.href = video.autorUrl || "https://www.pexels.com";
+    autor.target = "_blank";
+    autor.rel = "noopener";
+    autor.textContent = video.autor;
+
+    const sitio = document.createElement("a");
+    sitio.href = "https://www.pexels.com";
+    sitio.target = "_blank";
+    sitio.rel = "noopener";
+    sitio.textContent = "Pexels";
+
+    credito.append("Video by ", autor, " on ", sitio);
   }
 }
 
@@ -202,6 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSalirEscena.addEventListener("click", () => {
       if (reconocimientoEscena && escuchandoEscena) reconocimientoEscena.stop();
       window.speechSynthesis.cancel();
+      pintarVideoEscena(null);
       document.getElementById("vista-escena").classList.add("oculto");
       document.getElementById("vista-principal").classList.remove("oculto");
     });

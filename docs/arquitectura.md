@@ -123,6 +123,23 @@ vida. No se crean tablas nuevas: lo único que llega a la base es el XP al
 terminar y el descuento de la pista que se gasta. Así el cliente nunca recibe la
 palabra del ahorcado ni las coordenadas de la sopa hasta que la partida acaba.
 
+## Ejercicios con imagen
+
+Groq no genera imágenes, solo las entiende. Por eso las fotos vienen de **Pexels**
+(licencia libre, gratis) y Groq pone el modelo de visión que las evalúa.
+
+`services/medios.js` habla con Pexels y guarda todo lo que trae en la tabla
+`medios`. La caché es lo que hace viable el plan gratuito: cada consulta se pide
+una vez y sirve para siempre, en vez de gastar una petición por ejercicio.
+
+`services/iaVision.js` manda al modelo la imagen y lo que escribió el estudiante.
+Como el modelo a veces envuelve el JSON en texto, `utils/medioFormato.js` lo
+extrae; esas funciones son puras y por eso se pueden probar con Jest.
+
+En el modo escena el video es solo ambiente: los videos de stock no traen
+diálogo, así que el guion lo sigue generando la IA y se escucha con la voz del
+navegador. El archivo se sirve desde el CDN de Pexels, nunca desde Railway.
+
 ## Migraciones automáticas
 
 `config/migraciones.js` corre al arrancar el servidor, antes de atender la

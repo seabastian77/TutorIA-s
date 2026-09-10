@@ -36,6 +36,10 @@ pronunciación.
 **Mi vocabulario.** Las palabras que fallas se guardan solas y vuelven con
 repetición espaciada.
 
+**Ejercicios con imagen.** Fotos reales de escenas cotidianas: escribes qué está
+pasando y un modelo de visión compara tu descripción con lo que de verdad se ve.
+En las situaciones reales, además, te dice si tu reacción encajaba con el momento.
+
 **Minijuegos.** El ahorcado con la pista en español, una sopa de letras a
 contrarreloj y un juego de emparejar palabra y traducción. Los tres se arman con
 las palabras que tú vienes fallando.
@@ -53,7 +57,8 @@ donde suben los siete primeros.
 | Frontend | HTML, CSS y JavaScript vanilla — sin framework ni build |
 | Backend | Node.js + Express |
 | Base de datos | PostgreSQL |
-| IA | Groq — `openai/gpt-oss-120b` |
+| IA | Groq — `openai/gpt-oss-120b` y `qwen/qwen3.6-27b` para las imágenes |
+| Fotos y video | Pexels (licencia libre, con atribución) |
 | Voz | Web Speech API del navegador |
 | Despliegue | Railway |
 
@@ -104,6 +109,7 @@ DATABASE_URL=postgresql://usuario:clave@host:puerto/basededatos
 JWT_SECRET=una_clave_larga_y_secreta
 GROQ_API_KEY=tu_clave_de_groq
 SENTRY_DSN=          # opcional: sin él, el backend corre igual
+PEXELS_API_KEY=      # opcional: sin él, los ejercicios con imagen no aparecen
 ```
 
 No hace falta crear las tablas a mano. Al arrancar, el backend corre solo
@@ -126,7 +132,8 @@ npm test
 ```
 
 Cubren la comparación de dictados, el marcado de pronunciación palabra por
-palabra, el cálculo de semanas de la liga y la lógica de los minijuegos.
+palabra, el cálculo de semanas de la liga, la lógica de los minijuegos y el
+formato de los medios que llegan de Pexels y del modelo de visión.
 
 ---
 

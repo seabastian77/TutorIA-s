@@ -70,7 +70,7 @@ el historial real de la tabla `ejercicios`.
 
 | Método | Ruta | Qué hace |
 |---|---|---|
-| POST | `/escena/nueva` | Guion original generado por IA |
+| POST | `/escena/nueva` | Guion original generado por IA, con un video de ambiente |
 | POST | `/escena/evaluar-linea` | Compara la transcripción con la línea objetivo |
 
 ## Vocabulario
@@ -148,6 +148,26 @@ por nivel.
 Las partidas viven en memoria del servidor durante media hora. El ahorcado nunca
 manda la palabra hasta que la partida termina, y en el emparejamiento cada lado
 lleva un identificador distinto para que la pareja no se pueda deducir.
+
+## Ejercicios con imagen
+
+| Método | Ruta | Qué hace |
+|---|---|---|
+| GET | `/visual/temas` | Los dos catálogos y si la función está disponible |
+| POST | `/visual/ejercicio` | Body: `modo` (`describir` o `reaccionar`), `tema` |
+| POST | `/visual/responder` | Body: `ejercicioId`, `texto` |
+
+Las fotos salen de Pexels y quedan cacheadas en la tabla `medios`, así una misma
+consulta gasta una sola petición contra su API. La evaluación la hace el modelo
+de visión de Groq **contra la imagen guardada en la base**, nunca contra una URL
+que mande el cliente.
+
+Sin `PEXELS_API_KEY` configurada, `/visual/temas` responde `disponible: false` y
+`/visual/ejercicio` devuelve `503` con el código `sin_medios`. El resto de la
+aplicación funciona igual.
+
+La licencia de Pexels obliga a mostrar el nombre del autor y un enlace al sitio:
+por eso los tres endpoints devuelven `autor` y `autorUrl`.
 
 ## Salud
 
