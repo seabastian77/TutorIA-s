@@ -7,6 +7,7 @@ const {
 } = require("../services/iaContenido");
 const { registrarActividad } = require("../utils/gamificacion");
 const { obtenerPerfil } = require("../utils/perfil");
+const { reportarError } = require("../utils/errores");
 
 const BibliotecaController = {
   /** Catálogo: los temas fijos, marcando cuáles ya leyó el usuario. */
@@ -35,7 +36,7 @@ const BibliotecaController = {
 
       res.json({ nivel, temas });
     } catch (error) {
-      console.error("Error en /biblioteca/catalogo:", error);
+      reportarError("Error en /biblioteca/catalogo", error);
       res.status(500).json({ error: "No se pudo cargar la biblioteca" });
     }
   },
@@ -102,7 +103,7 @@ const BibliotecaController = {
         preguntas: quitarRespuestas(l.preguntas),
       });
     } catch (error) {
-      console.error("Error en /biblioteca/lectura:", error);
+      reportarError("Error en /biblioteca/lectura", error);
       res.status(500).json({ error: "No se pudo abrir la lectura" });
     }
   },
@@ -146,12 +147,12 @@ const BibliotecaController = {
         }
       } catch (error) {
         // Guardar el vocabulario nunca debe tumbar la traducción
-        console.error("No se pudo guardar la palabra tocada:", error);
+        reportarError("No se pudo guardar la palabra tocada", error);
       }
 
       res.json(resultado);
     } catch (error) {
-      console.error("Error en /biblioteca/traducir:", error);
+      reportarError("Error en /biblioteca/traducir", error);
       res.status(500).json({ error: "No se pudo traducir la palabra" });
     }
   },
@@ -213,7 +214,7 @@ const BibliotecaController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /biblioteca/responder:", error);
+      reportarError("Error en /biblioteca/responder", error);
       res.status(500).json({ error: "No se pudieron revisar tus respuestas" });
     }
   },

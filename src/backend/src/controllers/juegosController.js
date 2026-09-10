@@ -1,6 +1,7 @@
 const pool = require("../config/db");
 const { obtenerPerfil } = require("../utils/perfil");
 const { registrarActividad } = require("../utils/gamificacion");
+const { reportarError } = require("../utils/errores");
 const {
   barajar,
   limpiarPalabra,
@@ -87,7 +88,7 @@ async function reunirPalabras(usuarioId, nivel, cantidad) {
   try {
     (await palabrasDelUsuario(usuarioId, cantidad)).forEach(agregar);
   } catch (error) {
-    console.error("No se pudo leer el vocabulario del usuario:", error);
+    reportarError("No se pudo leer el vocabulario del usuario", error);
   }
 
   if (lista.length < cantidad) {
@@ -99,7 +100,7 @@ async function reunirPalabras(usuarioId, nivel, cantidad) {
       });
       barajar(generadas).forEach(agregar);
     } catch (error) {
-      console.error("La IA no pudo generar palabras para el juego:", error);
+      reportarError("La IA no pudo generar palabras para el juego", error);
     }
   }
 
@@ -182,7 +183,7 @@ const JuegosController = {
         ...vistaAhorcado(partida),
       });
     } catch (error) {
-      console.error("Error en /juegos/ahorcado/nueva:", error);
+      reportarError("Error en /juegos/ahorcado/nueva", error);
       res.status(500).json({ error: "No se pudo empezar el ahorcado" });
     }
   },
@@ -218,7 +219,7 @@ const JuegosController = {
       const cierre = await cerrarAhorcado(partida);
       res.json({ acerto: partida.palabra.includes(elegida), ...vista, ...cierre });
     } catch (error) {
-      console.error("Error en /juegos/ahorcado/letra:", error);
+      reportarError("Error en /juegos/ahorcado/letra", error);
       res.status(500).json({ error: "No se pudo revisar la letra" });
     }
   },
@@ -273,7 +274,7 @@ const JuegosController = {
       const cierre = await cerrarAhorcado(partida);
       res.json({ ...respuesta, ...cierre });
     } catch (error) {
-      console.error("Error en /juegos/ahorcado/pista:", error);
+      reportarError("Error en /juegos/ahorcado/pista", error);
       res.status(500).json({ error: "No se pudo usar la pista" });
     }
   },
@@ -321,7 +322,7 @@ const JuegosController = {
         })),
       });
     } catch (error) {
-      console.error("Error en /juegos/sopa/nueva:", error);
+      reportarError("Error en /juegos/sopa/nueva", error);
       res.status(500).json({ error: "No se pudo empezar la sopa de letras" });
     }
   },
@@ -377,7 +378,7 @@ const JuegosController = {
         total: partida.colocadas.length,
       });
     } catch (error) {
-      console.error("Error en /juegos/sopa/hallazgo:", error);
+      reportarError("Error en /juegos/sopa/hallazgo", error);
       res.status(500).json({ error: "No se pudo revisar la selección" });
     }
   },
@@ -424,7 +425,7 @@ const JuegosController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /juegos/sopa/terminar:", error);
+      reportarError("Error en /juegos/sopa/terminar", error);
       res.status(500).json({ error: "No se pudo cerrar la sopa de letras" });
     }
   },
@@ -478,7 +479,7 @@ const JuegosController = {
         ),
       });
     } catch (error) {
-      console.error("Error en /juegos/emparejar/nueva:", error);
+      reportarError("Error en /juegos/emparejar/nueva", error);
       res.status(500).json({ error: "No se pudo empezar el emparejamiento" });
     }
   },
@@ -541,7 +542,7 @@ const JuegosController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /juegos/emparejar/par:", error);
+      reportarError("Error en /juegos/emparejar/par", error);
       res.status(500).json({ error: "No se pudo revisar la pareja" });
     }
   },

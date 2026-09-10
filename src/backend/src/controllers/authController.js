@@ -1,4 +1,5 @@
 const AuthService = require("../services/authService");
+const { reportarError } = require("../utils/errores");
 
 const AuthController = {
   async registrar(req, res) {
@@ -23,7 +24,7 @@ const AuthController = {
       });
       res.status(201).json({ usuario, token });
     } catch (error) {
-      console.error("Error en /registro:", error);
+      reportarError("Error en /registro", error);
       res
         .status(error.status || 500)
         .json({ error: error.message || "Error en el servidor" });
@@ -46,7 +47,7 @@ const AuthController = {
       });
       res.json({ usuario, token });
     } catch (error) {
-      console.error("Error en /login:", error);
+      reportarError("Error en /login", error);
       res
         .status(error.status || 500)
         .json({ error: error.message || "Error en el servidor" });

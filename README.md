@@ -103,10 +103,11 @@ PORT=3000
 DATABASE_URL=postgresql://usuario:clave@host:puerto/basededatos
 JWT_SECRET=una_clave_larga_y_secreta
 GROQ_API_KEY=tu_clave_de_groq
+SENTRY_DSN=          # opcional: sin él, el backend corre igual
 ```
 
-Crea las tablas ejecutando `src/backend/src/config/schema.sql` sobre tu base, y
-arranca:
+No hace falta crear las tablas a mano. Al arrancar, el backend corre solo
+`schema.sql` y todas las migraciones de `src/backend/src/config/`:
 
 ```bash
 npm run dev

@@ -1,4 +1,16 @@
 require("dotenv").config();
+
+const Sentry = require("@sentry/node");
+
+// Sentry se inicia antes que nada y solo si hay DSN: sin él el backend corre igual
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV || "production",
+    tracesSampleRate: 0,
+  });
+}
+
 const express = require("express");
 const cors = require("cors");
 
@@ -15,6 +27,7 @@ const roleplayRoutes = require("./src/routes/roleplayRoutes");
 const bibliotecaRoutes = require("./src/routes/bibliotecaRoutes");
 const audioRoutes = require("./src/routes/audioRoutes");
 const juegosRoutes = require("./src/routes/juegosRoutes");
+const { ejecutarMigraciones } = require("./src/config/migraciones");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,6 +72,22 @@ app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
 });
 
-app.listen(PORT, () => {
-  console.log(`TutorIA's backend corriendo en el puerto ${PORT}`);
-});
+// El manejador de errores de Sentry va de último, después de todas las rutas
+if (process.env.SENTRY_DSN) {
+  Sentry.setupExpressErrorHandler(app);
+}
+
+/** Pone la base al día y solo entonces empieza a atender peticiones. */
+async function arrancar() {
+  try {
+    await ejecutarMigraciones();
+  } catch (error) {
+    console.error("No se pudieron correr las migraciones:", error.message);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`TutorIA's backend corriendo en el puerto ${PORT}`);
+  });
+}
+
+arrancar();

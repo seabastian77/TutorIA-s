@@ -123,6 +123,29 @@ vida. No se crean tablas nuevas: lo único que llega a la base es el XP al
 terminar y el descuento de la pista que se gasta. Así el cliente nunca recibe la
 palabra del ahorcado ni las coordenadas de la sopa hasta que la partida acaba.
 
+## Migraciones automáticas
+
+`config/migraciones.js` corre al arrancar el servidor, antes de atender la
+primera petición: ejecuta `schema.sql` y después cada `migracion-*.sql` en orden
+alfabético, cada archivo dentro de su propia transacción.
+
+Todos los `.sql` usan `IF NOT EXISTS`, así que volver a correrlos no cambia lo
+que ya existe ni borra datos. La base se pone al día sola en cada despliegue y
+no puede quedar desfasada del código.
+
+Si una migración falla, el servidor arranca igual y deja el error en el log y en
+Sentry: es preferible una app degradada a una app caída.
+
+## Errores en producción
+
+`utils/errores.js` expone `reportarError`, que deja el error en el log y se lo
+manda a Sentry. Los controladores capturan sus propios errores y devuelven 500,
+así que sin este paso Sentry nunca los vería: el manejador de Express solo
+alcanza los errores que nadie atrapó.
+
+Sentry se enciende únicamente si existe `SENTRY_DSN`. Sin esa variable,
+`captureException` no hace nada y el backend se comporta igual que antes.
+
 ## Despliegue
 
 Todo vive en un mismo proyecto de Railway con tres servicios: el backend, el

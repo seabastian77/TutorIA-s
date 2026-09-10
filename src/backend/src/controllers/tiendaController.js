@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+const { reportarError } = require("../utils/errores");
 
 // Catálogo del lado del servidor: el cliente solo manda el id del artículo
 const CATALOGO = [
@@ -75,7 +76,7 @@ const TiendaController = {
       const cuenta = await leerCuenta(req.usuario.id);
       res.json({ articulos: catalogoPublico(), ...cuenta });
     } catch (error) {
-      console.error("Error en /tienda/catalogo:", error);
+      reportarError("Error en /tienda/catalogo", error);
       res.status(500).json({ error: "No se pudo cargar la tienda" });
     }
   },
@@ -147,7 +148,7 @@ const TiendaController = {
         vidas: rows[0].vidas,
       });
     } catch (error) {
-      console.error("Error en /tienda/comprar:", error);
+      reportarError("Error en /tienda/comprar", error);
       res.status(500).json({ error: "No se pudo completar la compra" });
     }
   },

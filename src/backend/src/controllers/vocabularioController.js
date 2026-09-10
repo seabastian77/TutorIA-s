@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+const { reportarError } = require("../utils/errores");
 
 // Repetición espaciada clásica: entre más dominas la palabra, más tarda en volver a aparecer
 const INTERVALOS_DIAS = [1, 2, 4, 7, 14, 30];
@@ -16,7 +17,7 @@ const VocabularioController = {
       );
       res.json({ palabras: rows });
     } catch (error) {
-      console.error("Error en /vocabulario/repaso:", error);
+      reportarError("Error en /vocabulario/repaso", error);
       res.status(500).json({ error: "No se pudo cargar tu vocabulario" });
     }
   },
@@ -53,7 +54,7 @@ const VocabularioController = {
         proximoRepasoEnDias: diasSiguiente,
       });
     } catch (error) {
-      console.error("Error en /vocabulario/responder:", error);
+      reportarError("Error en /vocabulario/responder", error);
       res.status(500).json({ error: "No se pudo actualizar la palabra" });
     }
   },

@@ -1,5 +1,6 @@
 const pool = require("../config/db");
 const { extraerPalabraVocabulario } = require("../services/iaService");
+const { reportarError } = require("./errores");
 
 // Los errores aquí nunca deben tumbar la respuesta del endpoint que la llama
 async function guardarPalabraSiFalla(usuarioId, tipo, contenido) {
@@ -19,7 +20,7 @@ async function guardarPalabraSiFalla(usuarioId, tipo, contenido) {
       );
     }
   } catch (error) {
-    console.error("No se pudo guardar la palabra en el vocabulario:", error);
+    reportarError("No se pudo guardar la palabra en el vocabulario", error);
   }
 }
 

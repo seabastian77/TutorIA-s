@@ -6,6 +6,7 @@ const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const pool = require("../config/db");
 const { compararPronunciacion } = require("../utils/textoDictado");
+const { reportarError } = require("../utils/errores");
 
 const EscenaController = {
   async nueva(req, res) {
@@ -14,7 +15,7 @@ const EscenaController = {
       const escena = await generarEscenaGuion({ nivel });
       res.json(escena);
     } catch (error) {
-      console.error("Error en /escena/nueva:", error);
+      reportarError("Error en /escena/nueva", error);
       res.status(500).json({ error: "No se pudo generar la escena" });
     }
   },
@@ -84,7 +85,7 @@ const EscenaController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /escena/evaluar-linea:", error);
+      reportarError("Error en /escena/evaluar-linea", error);
       res.status(500).json({ error: "No se pudo evaluar tu línea" });
     }
   },

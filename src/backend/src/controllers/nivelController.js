@@ -6,6 +6,7 @@ const {
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const pool = require("../config/db");
+const { reportarError } = require("../utils/errores");
 
 const NIVELES_VALIDOS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 const HABILIDADES = ["vocabulario", "gramatica", "comprension", "fluidez"];
@@ -27,7 +28,7 @@ const DiagnosticoController = {
 
       res.json({ ...escena, habilidad });
     } catch (error) {
-      console.error("Error en /nivel/escena:", error);
+      reportarError("Error en /nivel/escena", error);
       res
         .status(500)
         .json({ error: "No se pudo generar la escena. Intenta de nuevo." });
@@ -58,7 +59,7 @@ const DiagnosticoController = {
 
       res.json(evaluacion);
     } catch (error) {
-      console.error("Error en /nivel/evaluar-abierta:", error);
+      reportarError("Error en /nivel/evaluar-abierta", error);
       res.status(500).json({ error: "No se pudo evaluar tu respuesta." });
     }
   },
@@ -81,7 +82,7 @@ const DiagnosticoController = {
 
       res.json({ ok: true });
     } catch (error) {
-      console.error("Error en /nivel/fallo-opcion:", error);
+      reportarError("Error en /nivel/fallo-opcion", error);
       res.status(500).json({ error: "No se pudo registrar" });
     }
   },
@@ -163,7 +164,7 @@ const DiagnosticoController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /nivel/finalizar:", error);
+      reportarError("Error en /nivel/finalizar", error);
       res.status(500).json({ error: "No se pudo guardar el diagnóstico" });
     }
   },

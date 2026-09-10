@@ -8,6 +8,7 @@ const {
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const { obtenerPerfil } = require("../utils/perfil");
+const { reportarError } = require("../utils/errores");
 
 const MAX_HISTORIAL = 12; // turnos que se aceptan del cliente
 
@@ -16,7 +17,7 @@ const RoleplayController = {
     try {
       res.json({ escenarios: listarEscenarios() });
     } catch (error) {
-      console.error("Error en /roleplay/escenarios:", error);
+      reportarError("Error en /roleplay/escenarios", error);
       res.status(500).json({ error: "No se pudieron cargar las situaciones" });
     }
   },
@@ -51,7 +52,7 @@ const RoleplayController = {
         sugerencias: apertura.sugerencias || [],
       });
     } catch (error) {
-      console.error("Error en /roleplay/iniciar:", error);
+      reportarError("Error en /roleplay/iniciar", error);
       res.status(500).json({ error: "No se pudo iniciar la situación" });
     }
   },
@@ -128,7 +129,7 @@ const RoleplayController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /roleplay/responder:", error);
+      reportarError("Error en /roleplay/responder", error);
       res.status(500).json({ error: "No se pudo continuar la conversación" });
     }
   },

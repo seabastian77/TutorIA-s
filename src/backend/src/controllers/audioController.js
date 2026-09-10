@@ -7,6 +7,7 @@ const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const { obtenerPerfil } = require("../utils/perfil");
 const { compararDictado } = require("../utils/textoDictado");
+const { reportarError } = require("../utils/errores");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
@@ -42,7 +43,7 @@ const AudioController = {
         pista: generado.pista || null,
       });
     } catch (error) {
-      console.error("Error en /audio/dictado:", error);
+      reportarError("Error en /audio/dictado", error);
       res.status(500).json({ error: "No se pudo preparar el dictado" });
     }
   },
@@ -106,7 +107,7 @@ const AudioController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /audio/responder-dictado:", error);
+      reportarError("Error en /audio/responder-dictado", error);
       res.status(500).json({ error: "No se pudo revisar tu dictado" });
     }
   },
@@ -147,7 +148,7 @@ const AudioController = {
         ),
       });
     } catch (error) {
-      console.error("Error en /audio/comprension:", error);
+      reportarError("Error en /audio/comprension", error);
       res.status(500).json({ error: "No se pudo preparar el audio" });
     }
   },
@@ -206,7 +207,7 @@ const AudioController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /audio/responder-comprension:", error);
+      reportarError("Error en /audio/responder-comprension", error);
       res.status(500).json({ error: "No se pudieron revisar tus respuestas" });
     }
   },

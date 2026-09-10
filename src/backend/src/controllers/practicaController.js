@@ -8,6 +8,7 @@ const pool = require("../config/db");
 const { obtenerPerfil } = require("../utils/perfil");
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
+const { reportarError } = require("../utils/errores");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
@@ -57,7 +58,7 @@ const PracticaController = {
         return res.json({ tipo, nivel, tema, contenido: ejercicio });
       }
     } catch (error) {
-      console.error("Error en /practica/pregunta:", error);
+      reportarError("Error en /practica/pregunta", error);
       res.status(500).json({ error: "No se pudo generar el ejercicio" });
     }
   },
@@ -127,7 +128,7 @@ const PracticaController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /practica/responder:", error);
+      reportarError("Error en /practica/responder", error);
       res.status(500).json({ error: "No se pudo evaluar la respuesta" });
     }
   },

@@ -1,6 +1,7 @@
 const { generarRespuestaConversacion } = require("../services/iaService");
 const { registrarActividad } = require("../utils/gamificacion");
 const pool = require("../config/db");
+const { reportarError } = require("../utils/errores");
 
 const VozController = {
   async responder(req, res) {
@@ -45,7 +46,7 @@ const VozController = {
         metaCompletada: gamificacion.metaCompletada,
       });
     } catch (error) {
-      console.error("Error en /voz/responder:", error);
+      reportarError("Error en /voz/responder", error);
       res.status(500).json({ error: "No se pudo procesar tu mensaje" });
     }
   },

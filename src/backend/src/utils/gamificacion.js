@@ -1,5 +1,6 @@
 const pool = require("../config/db");
 const { sumarXpSemanal } = require("./ligas");
+const { reportarError } = require("./errores");
 
 const META_DIARIA = 5; // actividades para completar el día
 const XP_LECCION_PERFECTA = 5; // bonus por acertar sin fallar
@@ -105,7 +106,7 @@ async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
   try {
     await sumarXpSemanal(usuarioId, xpGanado);
   } catch (error) {
-    console.error("No se pudo sumar XP a la liga semanal:", error);
+    reportarError("No se pudo sumar XP a la liga semanal", error);
   }
 
   return {

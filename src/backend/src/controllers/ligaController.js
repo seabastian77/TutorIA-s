@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+const { reportarError } = require("../utils/errores");
 const {
   NOMBRES_LIGA,
   TAMANO_GRUPO,
@@ -68,7 +69,7 @@ const LigaController = {
         clasificacion,
       });
     } catch (error) {
-      console.error("Error en /liga/clasificacion:", error);
+      reportarError("Error en /liga/clasificacion", error);
       res.status(500).json({ error: "No se pudo cargar la clasificación" });
     }
   },

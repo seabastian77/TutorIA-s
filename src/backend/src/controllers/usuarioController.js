@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+const { reportarError } = require("../utils/errores");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
 const META_DIARIA = 5; // actividades por día para completar la meta
@@ -114,7 +115,7 @@ const UsuarioController = {
         ayudaEspanol: usuario.ayuda_es !== false,
       });
     } catch (error) {
-      console.error("Error en /usuario/progreso:", error);
+      reportarError("Error en /usuario/progreso", error);
       res.status(500).json({ error: "No se pudo obtener el progreso" });
     }
   },
@@ -137,7 +138,7 @@ const UsuarioController = {
 
       res.json({ ok: true, ayudaEspanol: rows[0].ayuda_es !== false });
     } catch (error) {
-      console.error("Error en /usuario/preferencias:", error);
+      reportarError("Error en /usuario/preferencias", error);
       res.status(500).json({ error: "No se pudo guardar la preferencia" });
     }
   },
@@ -225,7 +226,7 @@ const UsuarioController = {
 
       res.json({ logros });
     } catch (error) {
-      console.error("Error en /usuario/logros:", error);
+      reportarError("Error en /usuario/logros", error);
       res.status(500).json({ error: "No se pudieron cargar los logros" });
     }
   },
