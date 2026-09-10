@@ -2,6 +2,7 @@
 
 const Groq = require("groq-sdk");
 const { barajar } = require("../utils/juegosLogica");
+const { instruccionVariedad } = require("../utils/variedad");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const MODELO = "openai/gpt-oss-120b";
@@ -31,6 +32,34 @@ const RESPALDO = {
     { palabra: "kitchen", traduccion: "cocina" },
     { palabra: "morning", traduccion: "mañana" },
     { palabra: "brother", traduccion: "hermano" },
+    { palabra: "beach", traduccion: "playa" },
+    { palabra: "cloud", traduccion: "nube" },
+    { palabra: "horse", traduccion: "caballo" },
+    { palabra: "spoon", traduccion: "cuchara" },
+    { palabra: "shirt", traduccion: "camisa" },
+    { palabra: "clock", traduccion: "reloj" },
+    { palabra: "train", traduccion: "tren" },
+    { palabra: "river", traduccion: "río" },
+    { palabra: "cheese", traduccion: "queso" },
+    { palabra: "winter", traduccion: "invierno" },
+    { palabra: "letter", traduccion: "carta" },
+    { palabra: "flower", traduccion: "flor" },
+    { palabra: "island", traduccion: "isla" },
+    { palabra: "basket", traduccion: "canasta" },
+    { palabra: "pillow", traduccion: "almohada" },
+    { palabra: "mirror", traduccion: "espejo" },
+    { palabra: "carpet", traduccion: "alfombra" },
+    { palabra: "ticket", traduccion: "boleto" },
+    { palabra: "pocket", traduccion: "bolsillo" },
+    { palabra: "forest", traduccion: "bosque" },
+    { palabra: "candle", traduccion: "vela" },
+    { palabra: "bridge", traduccion: "puente" },
+    { palabra: "yellow", traduccion: "amarillo" },
+    { palabra: "hungry", traduccion: "hambriento" },
+    { palabra: "garden", traduccion: "jardín" },
+    { palabra: "tired", traduccion: "cansado" },
+    { palabra: "cheap", traduccion: "barato" },
+    { palabra: "heavy", traduccion: "pesado" },
   ],
   B: [
     { palabra: "advice", traduccion: "consejo" },
@@ -53,6 +82,31 @@ const RESPALDO = {
     { palabra: "budget", traduccion: "presupuesto" },
     { palabra: "confident", traduccion: "seguro de sí mismo" },
     { palabra: "effort", traduccion: "esfuerzo" },
+    { palabra: "afford", traduccion: "permitirse" },
+    { palabra: "attempt", traduccion: "intento" },
+    { palabra: "behave", traduccion: "comportarse" },
+    { palabra: "capable", traduccion: "capaz" },
+    { palabra: "crowd", traduccion: "multitud" },
+    { palabra: "delay", traduccion: "retraso" },
+    { palabra: "eager", traduccion: "ansioso" },
+    { palabra: "fluent", traduccion: "fluido" },
+    { palabra: "gather", traduccion: "reunir" },
+    { palabra: "honest", traduccion: "honesto" },
+    { palabra: "injury", traduccion: "lesión" },
+    { palabra: "mention", traduccion: "mencionar" },
+    { palabra: "notice", traduccion: "notar" },
+    { palabra: "obvious", traduccion: "obvio" },
+    { palabra: "polite", traduccion: "educado" },
+    { palabra: "reduce", traduccion: "reducir" },
+    { palabra: "shortage", traduccion: "escasez" },
+    { palabra: "suggest", traduccion: "sugerir" },
+    { palabra: "valuable", traduccion: "valioso" },
+    { palabra: "afraid", traduccion: "asustado" },
+    { palabra: "benefit", traduccion: "beneficio" },
+    { palabra: "careless", traduccion: "descuidado" },
+    { palabra: "borrowed", traduccion: "prestado" },
+    { palabra: "harmful", traduccion: "dañino" },
+    { palabra: "average", traduccion: "promedio" },
   ],
   C: [
     { palabra: "ambiguous", traduccion: "ambiguo" },
@@ -75,6 +129,31 @@ const RESPALDO = {
     { palabra: "unveil", traduccion: "desvelar" },
     { palabra: "viable", traduccion: "viable" },
     { palabra: "widespread", traduccion: "generalizado" },
+    { palabra: "adverse", traduccion: "adverso" },
+    { palabra: "coherent", traduccion: "coherente" },
+    { palabra: "entail", traduccion: "conllevar" },
+    { palabra: "foster", traduccion: "fomentar" },
+    { palabra: "gauge", traduccion: "medir" },
+    { palabra: "hamper", traduccion: "entorpecer" },
+    { palabra: "inherent", traduccion: "inherente" },
+    { palabra: "lucrative", traduccion: "lucrativo" },
+    { palabra: "notable", traduccion: "notable" },
+    { palabra: "outset", traduccion: "inicio" },
+    { palabra: "pervasive", traduccion: "omnipresente" },
+    { palabra: "rigorous", traduccion: "riguroso" },
+    { palabra: "staunch", traduccion: "firme" },
+    { palabra: "tangible", traduccion: "tangible" },
+    { palabra: "undermine", traduccion: "socavar" },
+    { palabra: "versatile", traduccion: "versátil" },
+    { palabra: "yield", traduccion: "ceder" },
+    { palabra: "discreet", traduccion: "discreto" },
+    { palabra: "eloquent", traduccion: "elocuente" },
+    { palabra: "prudent", traduccion: "prudente" },
+    { palabra: "sceptical", traduccion: "escéptico" },
+    { palabra: "candid", traduccion: "franco" },
+    { palabra: "resilient", traduccion: "resiliente" },
+    { palabra: "obsolete", traduccion: "obsoleto" },
+    { palabra: "arduous", traduccion: "arduo" },
   ],
 };
 
@@ -90,7 +169,7 @@ function palabrasDeRespaldo(nivel) {
 }
 
 /** Pide a la IA palabras del nivel del estudiante con su traducción al español. */
-async function generarPalabras({ nivel, cantidad }) {
+async function generarPalabras({ nivel, cantidad, evitar = [] }) {
   const cuantas = Math.min(Math.max(cantidad || 6, 1), 12);
 
   const prompt = `Give ${cuantas} English words for a word game, aimed at a Spanish-speaking learner at CEFR level ${nivel}.
@@ -101,6 +180,8 @@ Rules for every word:
 - useful everyday vocabulary at ${nivel} level, not easier and not harder
 - all ${cuantas} words must be different from each other
 
+${instruccionVariedad(evitar)}
+
 For each word give a short translation into Spanish.
 
 Reply ONLY with valid JSON:
@@ -110,6 +191,8 @@ Reply ONLY with valid JSON:
     model: MODELO,
     messages: [{ role: "user", content: prompt }],
     response_format: { type: "json_object" },
+    // Temperatura alta a propósito: aquí lo que se busca es que no repita
+    temperature: 1.1,
   });
 
   const datos = JSON.parse(completion.choices[0].message.content);

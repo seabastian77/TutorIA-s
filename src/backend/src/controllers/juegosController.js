@@ -4,6 +4,7 @@ const { registrarActividad } = require("../utils/gamificacion");
 const { reportarError } = require("../utils/errores");
 const {
   barajar,
+  cupoDelVocabulario,
   limpiarPalabra,
   estadoAhorcado,
   letraParaRevelar,
@@ -85,18 +86,22 @@ async function reunirPalabras(usuarioId, nivel, cantidad) {
     lista.push({ palabra: clave, traduccion });
   };
 
-  try {
-    (await palabrasDelUsuario(usuarioId, cantidad)).forEach(agregar);
-  } catch (error) {
-    reportarError("No se pudo leer el vocabulario del usuario", error);
+  const cupo = cupoDelVocabulario(cantidad);
+  if (cupo > 0) {
+    try {
+      (await palabrasDelUsuario(usuarioId, cupo)).forEach(agregar);
+    } catch (error) {
+      reportarError("No se pudo leer el vocabulario del usuario", error);
+    }
   }
 
   if (lista.length < cantidad) {
     try {
-      // Se piden de más y se barajan para que el ahorcado no repita palabra
+      // Se piden de más y se barajan; las ya elegidas van como lista a evitar
       const generadas = await generarPalabras({
         nivel,
         cantidad: Math.max(cantidad - lista.length, 6),
+        evitar: lista.map((p) => p.palabra),
       });
       barajar(generadas).forEach(agregar);
     } catch (error) {

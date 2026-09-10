@@ -169,8 +169,19 @@ function casillasDe(colocada) {
   }));
 }
 
+/**
+ * Decide cuántas palabras pueden salir del vocabulario del propio usuario.
+ * El número se echa a suerte hasta la mitad: si siempre saliera el máximo, un
+ * estudiante con pocas palabras guardadas vería siempre las mismas.
+ */
+function cupoDelVocabulario(cantidad) {
+  const tope = cantidad <= 1 ? 1 : Math.floor(cantidad / 2);
+  return Math.floor(Math.random() * (tope + 1));
+}
+
 module.exports = {
   DIRECCIONES,
+  cupoDelVocabulario,
   barajar,
   limpiarPalabra,
   estadoAhorcado,

@@ -1,6 +1,7 @@
 // Servicios de IA para roleplay, biblioteca y laboratorio de audio
 
 const Groq = require("groq-sdk");
+const { instruccionVariedad } = require("../utils/variedad");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const MODELO = "openai/gpt-oss-120b";
@@ -255,6 +256,8 @@ async function generarDictado({ nivel }) {
   const prompt = `Write ONE English sentence for a dictation exercise, for a Spanish-speaking learner at CEFR level ${nivel}.
 Length: ${largo}. Natural, everyday English. No proper nouns, no numbers written as digits, no abbreviations.
 It will be read aloud by a speech synthesiser, so avoid anything ambiguous to hear.
+
+${instruccionVariedad()}
 
 Also give a short hint about what the sentence is about, without revealing the words.
 

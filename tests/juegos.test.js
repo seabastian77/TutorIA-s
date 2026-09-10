@@ -1,5 +1,6 @@
 const {
   barajar,
+  cupoDelVocabulario,
   limpiarPalabra,
   estadoAhorcado,
   letraParaRevelar,
@@ -32,6 +33,29 @@ describe("barajar", () => {
     const original = ["a", "b", "c"];
     barajar(original);
     expect(original).toEqual(["a", "b", "c"]);
+  });
+});
+
+describe("cupoDelVocabulario", () => {
+  test("nunca pasa de la mitad de las palabras pedidas", () => {
+    for (let i = 0; i < 200; i++) {
+      expect(cupoDelVocabulario(6)).toBeLessThanOrEqual(3);
+      expect(cupoDelVocabulario(6)).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  test("con una sola palabra sale 0 o 1", () => {
+    const salidas = new Set();
+    for (let i = 0; i < 200; i++) salidas.add(cupoDelVocabulario(1));
+    expect([...salidas].sort()).toEqual([0, 1]);
+  });
+
+  test("varía entre partidas en vez de dar siempre el tope", () => {
+    // Si diera siempre el máximo, un vocabulario pequeño saldría entero cada vez
+    const salidas = new Set();
+    for (let i = 0; i < 200; i++) salidas.add(cupoDelVocabulario(6));
+    expect(salidas.size).toBeGreaterThan(1);
+    expect(salidas.has(0)).toBe(true);
   });
 });
 

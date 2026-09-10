@@ -1,4 +1,5 @@
 const Groq = require("groq-sdk");
+const { instruccionVariedadEs } = require("../utils/variedad");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -11,6 +12,7 @@ async function generarPreguntaNivel(nivelObjetivo, temasVistos = [], opciones = 
 Genera UNA sola pregunta de opción múltiple en inglés, apropiada para nivel ${nivelObjetivo}.${tema ? `\nLa pregunta debe ser sobre este tema concreto: ${tema}.` : ""}
 Debe tener exactamente 4 opciones, y "respuestaCorrecta" es el índice (0 a 3) de la opción correcta.
 No repitas estos temas ya usados: ${temasVistos.length ? temasVistos.join(", ") : "ninguno todavía"}.
+${instruccionVariedadEs()}
 
 Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, con este formato exacto:
 {"pregunta": "...", "opciones": ["...", "...", "...", "..."], "respuestaCorrecta": 0, "tema": "..."}`;
@@ -19,6 +21,8 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, con este f
     model: MODELO,
     messages: [{ role: "user", content: prompt }],
     response_format: { type: "json_object" },
+    // Temperatura alta a propósito: si no, propone siempre los mismos ejercicios
+    temperature: 1,
   });
 
   return JSON.parse(respuesta.choices[0].message.content);
@@ -28,6 +32,7 @@ async function generarPreguntaEscrita(nivelObjetivo, temasVistos = [], opciones 
   const { tema = null } = opciones;
   const prompt = `Genera un ejercicio de completar frase en inglés para nivel ${nivelObjetivo} (MCER), pensado para un estudiante hispanohablante.${tema ? `\nEl ejercicio debe ser sobre este tema concreto: ${tema}.` : ""}
 No repitas estos temas: ${temasVistos.length ? temasVistos.join(", ") : "ninguno todavía"}.
+${instruccionVariedadEs()}
 
 Responde SOLO con JSON: {"frase": "oración con ___ donde va la palabra o frase que el estudiante debe completar", "tema": "tema evaluado"}`;
 
@@ -35,6 +40,8 @@ Responde SOLO con JSON: {"frase": "oración con ___ donde va la palabra o frase 
     model: MODELO,
     messages: [{ role: "user", content: prompt }],
     response_format: { type: "json_object" },
+    // Temperatura alta a propósito: si no, propone siempre los mismos ejercicios
+    temperature: 1,
   });
 
   return JSON.parse(respuesta.choices[0].message.content);
