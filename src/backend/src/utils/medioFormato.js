@@ -1,5 +1,3 @@
-// Da forma a lo que devuelven Pexels y el modelo de visión, sin tocar la base ni la red
-
 /** Deja una foto de Pexels con la misma forma que guarda la tabla medios. */
 function normalizarFoto(foto) {
   if (!foto) return null;
