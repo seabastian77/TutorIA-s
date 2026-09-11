@@ -23,7 +23,7 @@ const MAX_ERRORES = 6;
 const TAMANO_SOPA = 10;
 const PALABRAS_SOPA = 6;
 const PARES_EMPAREJAR = 6;
-const SEGUNDOS_SOPA = 120;
+const SEGUNDOS_SOPA = 360;
 const VIDA_PARTIDA = 30 * 60 * 1000;
 
 // Las partidas viven en memoria: son cortas y así el juego no toca la base de datos
