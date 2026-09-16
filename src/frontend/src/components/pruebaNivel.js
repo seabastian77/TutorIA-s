@@ -6,17 +6,32 @@ let turnoActual = 0;
 let historialNarrativo = [];
 let historialResultados = []; // [{ habilidad, puntuacion }]
 let escenaVigente = null;
+let pruebaAbandonada = false;
 
 function iniciarPruebaNivel() {
   indiceNivelActual = 2;
   turnoActual = 0;
   historialNarrativo = [];
   historialResultados = [];
+  pruebaAbandonada = false;
 
   document.getElementById("vista-principal").classList.add("oculto");
   document.getElementById("vista-nivel").classList.remove("oculto");
 
   cargarSiguienteEscena();
+}
+
+/** Corta el diagnóstico a medias y devuelve al menú sin guardar nada. */
+function salirDelDiagnostico() {
+  const hayProgreso = turnoActual > 0;
+  if (hayProgreso && !confirm("If you leave now you lose this diagnostic and start over. Leave anyway?"))
+    return;
+
+  pruebaAbandonada = true;
+  escenaVigente = null;
+  document.getElementById("vista-nivel").classList.add("oculto");
+  document.getElementById("vista-principal").classList.remove("oculto");
+  if (typeof cargarProgreso === "function") cargarProgreso();
 }
 
 async function cargarSiguienteEscena() {
@@ -46,6 +61,9 @@ async function cargarSiguienteEscena() {
       historialNarrativo,
     });
 
+    // Si el usuario salió mientras la escena venía en camino, no se pinta nada
+    if (pruebaAbandonada) return;
+
     escenaVigente = escena;
     historialNarrativo.push(escena.narrativa);
 
@@ -65,6 +83,7 @@ async function cargarSiguienteEscena() {
       btnEnviar.onclick = responderAbierta;
     }
   } catch (err) {
+    if (pruebaAbandonada) return;
     textoPregunta.textContent =
       "Hubo un error generando la historia. Intenta de nuevo.";
   }
@@ -220,6 +239,9 @@ async function finalizarDiagnostico() {
 document.addEventListener("DOMContentLoaded", () => {
   const btnIniciar = document.getElementById("btn-iniciar-nivel");
   if (btnIniciar) btnIniciar.addEventListener("click", iniciarPruebaNivel);
+
+  const btnSalir = document.getElementById("btn-salir-nivel");
+  if (btnSalir) btnSalir.addEventListener("click", salirDelDiagnostico);
 
   const btnContinuar = document.getElementById("btn-continuar-resultado");
   if (btnContinuar) {
