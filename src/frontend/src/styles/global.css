@@ -2912,3 +2912,243 @@ button,
 /* El texto de apoyo dentro de estas tarjetas usa el gris, no una opacidad */
 .juego-ahorcado .modo-nota, .juego-sopa .modo-nota, .juego-emparejar .modo-nota,
 .modo-dictado .modo-nota, .modo-comprension .modo-nota { color: var(--gris); opacity: 1; }
+
+/* ============================================================
+   TUTI — el mentor que acompaña al estudiante
+   ============================================================ */
+
+.mentor {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: min(23rem, calc(100vw - 40px));
+}
+
+/* La burbuja es un botón: tocarla lleva al módulo que aconseja */
+.mentor-burbuja {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: var(--radio);
+  background: var(--panel-alto);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra-2);
+  font-family: var(--font-display);
+  cursor: pointer;
+  translate: 0;
+  transition: translate 0.3s var(--curva), box-shadow 0.3s var(--curva), opacity 0.25s ease;
+  animation: mentor-entra 0.5s var(--curva) both;
+}
+
+@keyframes mentor-entra {
+  from { opacity: 0; translate: 0 14px; }
+}
+
+.mentor-burbuja:hover { translate: 0 -3px; }
+
+.mentor-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mentor-nombre {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cian);
+}
+
+.mentor-cerrar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin: -4px -6px -4px 0;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--gris-tenue);
+  cursor: pointer;
+}
+
+.mentor-cerrar:hover { background: var(--gris-oscuro); color: var(--blanco); }
+
+/* El aspa se ve pequeña pero se toca en un área de 44px, como el resto de la app */
+.mentor-cerrar::before {
+  content: "";
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  translate: -9px -9px;
+}
+
+.mentor-cerrar { position: relative; }
+
+.mentor-titulo {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--blanco);
+}
+
+.mentor-texto {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gris);
+}
+
+/* La acción se lee como un enlace, para que se note que la burbuja lleva a algún lado */
+.mentor-accion {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--cian);
+}
+
+.mentor-accion::after { content: " →"; }
+
+/* El avatar es el ancla: siempre visible, aunque la burbuja esté guardada */
+.mentor-avatar {
+  flex-shrink: 0;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  padding: 6px;
+  border-radius: 50%;
+  background: var(--cian-tinta);
+  border: 1px solid var(--cian-borde);
+  box-shadow: var(--sombra-1);
+  cursor: pointer;
+  scale: 1;
+  transition: scale 0.3s var(--curva), box-shadow 0.3s var(--curva);
+}
+
+.mentor-avatar:hover { scale: 1.06; box-shadow: var(--sombra-2); }
+.mentor-ave { width: 100%; height: 100%; display: block; }
+
+/* Aviso rojo cuando hay algo urgente y la burbuja está guardada */
+.mentor-punto {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--rojo);
+  border: 2px solid var(--panel-alto);
+  opacity: 0;
+  scale: 0.4;
+  transition: opacity 0.3s ease, scale 0.3s var(--curva);
+}
+
+.mentor-punto.visible { opacity: 1; scale: 1; }
+
+/* Guardado: solo queda el loro en la esquina */
+.mentor.encogido .mentor-burbuja {
+  opacity: 0;
+  pointer-events: none;
+  translate: 12px 0;
+  position: absolute;
+  right: 74px;
+  bottom: 0;
+}
+
+/* ─────────── vida propia del loro ─────────── */
+
+.mentor-flota { transform-origin: 36px 60px; animation: mentor-flotar 3.6s ease-in-out infinite; }
+@keyframes mentor-flotar {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -2.5px; }
+}
+
+.mentor-parpados { opacity: 0; animation: mentor-parpadear 5.2s ease-in-out infinite; }
+@keyframes mentor-parpadear {
+  0%, 92%, 100% { opacity: 0; }
+  94%, 96% { opacity: 1; }
+}
+
+.mentor-ala { transform-origin: 21px 37px; animation: mentor-alear 4.4s ease-in-out infinite; }
+@keyframes mentor-alear {
+  0%, 70%, 100% { rotate: 0deg; }
+  78% { rotate: -16deg; }
+  86% { rotate: 3deg; }
+}
+
+.mentor-nota { opacity: 0; transform-origin: 55px 24px; }
+
+/* Contento: la nota musical asoma de vez en cuando */
+.mentor[data-animo="feliz"] .mentor-nota { animation: mentor-cantar 6s ease-in-out infinite; }
+@keyframes mentor-cantar {
+  0%, 74%, 100% { opacity: 0; translate: 0 0; }
+  82% { opacity: 1; translate: 2px -5px; }
+  92% { opacity: 0; translate: 4px -9px; }
+}
+
+/* Animando: se inclina hacia el estudiante, como quien insiste con cariño */
+.mentor[data-animo="animando"] .mentor-flota { animation: mentor-insistir 2.8s ease-in-out infinite; }
+@keyframes mentor-insistir {
+  0%, 100% { rotate: -3deg; }
+  50% { rotate: 3deg; }
+}
+
+/* Preocupado: cejas caídas y un vaivén lento */
+.mentor[data-animo="preocupado"] .mentor-ceja { translate: 0 3px; transform-origin: 36px 26px; scale: 1 -1; }
+.mentor[data-animo="preocupado"] .mentor-flota { animation: mentor-dudar 3.2s ease-in-out infinite; }
+@keyframes mentor-dudar {
+  0%, 100% { translate: -1.5px 0; }
+  50% { translate: 1.5px 0; }
+}
+.mentor[data-animo="preocupado"] .mentor-avatar { background: var(--rojo-tinta); border-color: #fecdd3; }
+.mentor[data-animo="preocupado"] .mentor-nombre,
+.mentor[data-animo="preocupado"] .mentor-accion { color: var(--rojo); }
+
+/* Celebrando: brinca y agita el ala */
+.mentor[data-animo="celebrando"] .mentor-flota { animation: mentor-brincar 1.5s var(--curva) infinite; }
+@keyframes mentor-brincar {
+  0%, 60%, 100% { translate: 0 0; }
+  72% { translate: 0 -6px; }
+  84% { translate: 0 1px; }
+}
+.mentor[data-animo="celebrando"] .mentor-ala { animation: mentor-alear 1.1s ease-in-out infinite; }
+.mentor[data-animo="celebrando"] .mentor-avatar { background: var(--verde-tinta); border-color: var(--verde-borde); }
+.mentor[data-animo="celebrando"] .mentor-nombre,
+.mentor[data-animo="celebrando"] .mentor-accion { color: var(--verde); }
+
+/* En pantalla angosta la burbuja ocupa el ancho y el loro se recuesta al lado */
+@media (max-width: 40rem) {
+  .mentor {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    max-width: none;
+    align-items: flex-end;
+  }
+  .mentor-avatar { width: 56px; height: 56px; }
+  .mentor.encogido { left: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mentor-burbuja,
+  .mentor-flota,
+  .mentor-parpados,
+  .mentor-ala,
+  .mentor-nota,
+  .mentor[data-animo="feliz"] .mentor-nota,
+  .mentor[data-animo="animando"] .mentor-flota,
+  .mentor[data-animo="preocupado"] .mentor-flota,
+  .mentor[data-animo="celebrando"] .mentor-flota,
+  .mentor[data-animo="celebrando"] .mentor-ala { animation: none; }
+  .mentor-burbuja, .mentor-avatar, .mentor-punto { transition-duration: 0.01s; }
+}

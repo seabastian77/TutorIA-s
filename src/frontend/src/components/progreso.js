@@ -61,6 +61,9 @@ async function cargarProgreso() {
   } catch (err) {
     console.error("No se pudo cargar el progreso:", err);
   }
+
+  // Cada regreso al menú es un buen momento para que el mentor revise qué toca
+  if (typeof iniciarMentor === "function") iniciarMentor();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
