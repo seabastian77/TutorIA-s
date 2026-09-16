@@ -306,6 +306,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .pantalla-principal {
   min-height: 100vh;
+  padding-bottom: 96px;
   max-width: 1240px;
   margin: 0 auto;
   padding: 24px 22px 40px;
@@ -3056,7 +3057,8 @@ button,
 .mentor-punto.visible { opacity: 1; scale: 1; }
 
 /* Guardado: solo queda el loro en la esquina */
-.mentor.encogido .mentor-burbuja {
+.mentor.encogido .mentor-burbuja,
+.mentor.fuera-del-menu .mentor-burbuja {
   opacity: 0;
   pointer-events: none;
   translate: 12px 0;
@@ -3136,7 +3138,7 @@ button,
     align-items: flex-end;
   }
   .mentor-avatar { width: 56px; height: 56px; }
-  .mentor.encogido { left: auto; }
+  .mentor.encogido, .mentor.fuera-del-menu { left: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3151,4 +3153,149 @@ button,
   .mentor[data-animo="celebrando"] .mentor-flota,
   .mentor[data-animo="celebrando"] .mentor-ala { animation: none; }
   .mentor-burbuja, .mentor-avatar, .mentor-punto { transition-duration: 0.01s; }
+}
+
+/* ============================================================
+   MI PROGRESO — las gráficas del historial
+   ============================================================ */
+
+.historial { display: flex; flex-direction: column; gap: 22px; }
+
+/* Fila de cifras: los cinco números que encabezan la pantalla */
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: var(--paso, 14px);
+}
+
+.cifra {
+  padding: 16px 18px;
+  border-radius: var(--radio);
+  background: var(--azul-tinta);
+  border: 1px solid var(--azul-borde);
+}
+
+.cifra-valor {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--blanco);
+}
+
+.cifra-sufijo { font-size: 16px; font-weight: 700; color: var(--gris); }
+
+.cifra-etq {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris);
+}
+
+.bloque-grafica {
+  padding: 20px 22px;
+  border-radius: var(--radio);
+  background: var(--panel-alto);
+  border: 1px solid var(--borde);
+}
+
+.bloque-titulo { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; color: var(--blanco); }
+.bloque-nota { margin-top: 3px; font-size: 13px; line-height: 1.5; color: var(--gris); }
+.grafica { width: 100%; height: auto; margin-top: 16px; overflow: visible; }
+.grafica-aviso { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--gris); }
+
+.resumen-ia {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radio-chico);
+  background: var(--amarillo-tinta);
+  border: 1px solid var(--amarillo-borde);
+  font-size: 14px;
+  line-height: 1.6;
+  color: #4a3a1a;
+}
+
+/* ─────────── las marcas: el dato es lo único que pinta fuerte ─────────── */
+
+.rejilla { stroke: var(--borde); stroke-width: 1; }
+.eje-txt { font: 600 12px var(--font-display); fill: var(--gris); }
+.eje-txt.tenue { fill: var(--borde); }
+.dato-etq { font: 800 13px var(--font-display); fill: var(--blanco); }
+.dato-etq.sube { fill: var(--verde); }
+.dato-etq.baja { fill: var(--rojo); }
+
+.linea-dato { fill: none; stroke: var(--azul); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.barra-dato { fill: var(--azul); transition: fill 0.2s ease; }
+.union { stroke: var(--azul-borde); stroke-width: 3; stroke-linecap: round; }
+
+/* El aro del color de la superficie separa los puntos donde se cruzan */
+.punto-aro { fill: var(--panel-alto); }
+.punto-dato { fill: var(--azul); }
+.punto-antes { fill: #94a3b8; }
+
+/* Objetivo de toque y foco: las gráficas se recorren con el teclado */
+.punto, .columna, .mancuerna { cursor: default; outline: none; }
+.columna:hover .barra-dato { fill: #3730a3; }
+.punto:focus-visible .punto-aro,
+.columna:focus-visible .barra-dato,
+.mancuerna:focus-visible .punto-aro { outline: 3px solid var(--azul); outline-offset: 2px; }
+
+/* ─────────── la misma información en tabla ─────────── */
+
+#btn-tabla-datos { align-self: flex-start; }
+
+.tabla-datos {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabla-datos caption {
+  text-align: left;
+  padding-bottom: 8px;
+  font-weight: 800;
+  color: var(--blanco);
+}
+
+.tabla-datos th, .tabla-datos td {
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla-datos th {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gris);
+}
+
+.tabla-datos td { color: var(--blanco); }
+.tabla-datos tbody tr:hover { background: var(--gris-oscuro); }
+
+/* El bloque de cifras de la barra superior ahora abre el historial */
+.progreso-usuario { cursor: pointer; border-radius: 999px; }
+.progreso-usuario:focus-visible { outline: 3px solid var(--azul); outline-offset: 4px; }
+
+@media (max-width: 40rem) {
+  .bloque-grafica { padding: 16px 14px; }
+  .cifra { padding: 13px 14px; }
+  .cifra-valor { font-size: 25px; }
+  .grafica { min-width: 0; }
+
+  /* El SVG se encoge con la pantalla: el texto sube en unidades del viewBox
+     para seguir leyéndose a tamaño real */
+  .eje-txt { font-size: 21px; }
+  .dato-etq { font-size: 23px; }
+  .eje-txt.alterna { display: none; }
+  .tabla-datos { font-size: 12px; }
+  .tabla-datos th, .tabla-datos td { padding: 8px 7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barra-dato { transition: none; }
 }

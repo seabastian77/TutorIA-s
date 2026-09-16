@@ -69,6 +69,7 @@ function montarMentor() {
   document.body.appendChild(caja.firstElementChild);
 
   document.getElementById("mentor-avatar").addEventListener("click", alternarMentor);
+  vigilarLaVista();
   document.getElementById("mentor-burbuja").addEventListener("click", seguirConsejo);
 
   const cerrar = document.getElementById("mentor-cerrar");
@@ -121,6 +122,25 @@ function ocultarBurbuja() {
   } catch (e) {
     // Si el navegador bloquea el almacenamiento, el mentor simplemente no recuerda
   }
+}
+
+/**
+ * Dentro de un módulo la burbuja se repliega para no taparlo; el loro se queda.
+ * Es distinto de cerrarla a mano, así que no pisa lo que el usuario eligió.
+ */
+function vigilarLaVista() {
+  const menu = document.getElementById("vista-principal");
+  const mentor = document.getElementById("mentor");
+  if (!menu || !mentor) return;
+
+  const ajustar = () =>
+    mentor.classList.toggle("fuera-del-menu", menu.classList.contains("oculto"));
+
+  new MutationObserver(ajustar).observe(menu, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  ajustar();
 }
 
 function alternarMentor() {

@@ -111,7 +111,7 @@
         <span class="logo-nombre">TutorIA<span class="logo-apostrofe">'s</span></span>
       </div>
 
-      <div id="progreso-usuario" class="progreso-usuario oculto">
+      <div id="progreso-usuario" class="progreso-usuario oculto" role="button" tabindex="0" title="See my progress">
         <div class="progreso-item">
           <i class="fa-solid fa-star"></i>
           <span id="progreso-puntos">0</span> pts
@@ -362,6 +362,13 @@
         <p class="tarjeta-tip-texto">"Practice makes perfect" — spend at least 10 minutes today reviewing your vocabulary on TutorIA's.</p>
       </div>
     </div>
+  </div>
+
+  <!-- Vista: historial y progreso -->
+  <div id="vista-historial" class="pantalla-principal oculto">
+    <h2 id="historial-titulo">My progress</h2>
+    <div id="historial-contenido" class="historial"></div>
+    <button id="btn-salir-historial" class="btn-secundario">Back to Home</button>
   </div>
 
   <!-- Vista: prueba de nivel (Diagnóstico Inmersivo) -->
@@ -849,6 +856,7 @@
   <script src="src/services/juegosApi.js"></script>
   <script src="src/services/visualApi.js"></script>
   <script src="src/services/mentorApi.js"></script>
+  <script src="src/services/historialApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
@@ -866,5 +874,6 @@
   <script src="src/components/juegos.js"></script>
   <script src="src/components/visual.js"></script>
   <script src="src/components/mentor.js"></script>
+  <script src="src/components/historial.js"></script>
 </body>
 </html>
