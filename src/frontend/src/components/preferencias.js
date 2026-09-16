@@ -28,6 +28,8 @@ async function cambiarAyudaEspanol(activo) {
   try {
     const datos = await PreferenciasAPI.guardarAyudaEspanol(activo);
     pintarInterruptorEspanol(datos.ayudaEspanol);
+    // El mentor habla en el mismo idioma: que cambie sin esperar a la próxima vuelta
+    if (typeof refrescarMentor === "function") refrescarMentor();
   } catch (err) {
     pintarInterruptorEspanol(!activo);
     const texto = document.getElementById("ayuda-espanol-texto");

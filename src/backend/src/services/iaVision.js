@@ -5,29 +5,53 @@ const { instruccionAyuda } = require("./iaContenido");
 const { extraerJSON } = require("../utils/medioFormato");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-const MODELO_VISION = "qwen/qwen3.6-27b";
+
+// Groq retira versiones viejas sin avisar: se prueban en orden y se recuerda la
+// que respondió, para que un cambio de catálogo no deje el módulo caído
+const MODELOS_VISION = ["qwen/qwen3.8-27b", "qwen/qwen3.6-27b"];
+let indiceModelo = 0;
 
 // El plan gratis de Groq limita los tokens de salida por minuto: sin este tope
 // rechaza la petición antes de mirar la foto
 const MAX_TOKENS = 450;
 
-async function mirarYResponder(urlImagen, prompt) {
-  const completion = await groq.chat.completions.create({
-    model: MODELO_VISION,
-    messages: [
-      {
-        role: "user",
-        content: [
-          { type: "text", text: prompt },
-          { type: "image_url", image_url: { url: urlImagen } },
-        ],
-      },
-    ],
-    max_tokens: MAX_TOKENS,
-    temperature: 0.3,
-  });
+/** Reconoce el 404 que Groq devuelve cuando el modelo ya no está en su catálogo. */
+function modeloNoExiste(error) {
+  const texto = String(error && error.message);
+  return error && error.status === 404 && texto.includes("model_not_found");
+}
 
-  return extraerJSON(completion.choices[0].message.content);
+async function mirarYResponder(urlImagen, prompt) {
+  const mensajes = [
+    {
+      role: "user",
+      content: [
+        { type: "text", text: prompt },
+        { type: "image_url", image_url: { url: urlImagen } },
+      ],
+    },
+  ];
+
+  let ultimoError;
+
+  for (let intento = 0; intento < MODELOS_VISION.length; intento++) {
+    const modelo = MODELOS_VISION[(indiceModelo + intento) % MODELOS_VISION.length];
+    try {
+      const completion = await groq.chat.completions.create({
+        model: modelo,
+        messages: mensajes,
+        max_tokens: MAX_TOKENS,
+        temperature: 0.3,
+      });
+      indiceModelo = MODELOS_VISION.indexOf(modelo);
+      return extraerJSON(completion.choices[0].message.content);
+    } catch (error) {
+      if (!modeloNoExiste(error)) throw error;
+      ultimoError = error;
+    }
+  }
+
+  throw ultimoError;
 }
 
 /** Compara lo que el estudiante describió contra lo que de verdad se ve en la foto. */
@@ -87,7 +111,8 @@ Do not explain your reasoning. Reply with ONE JSON object and nothing else:
 }
 
 module.exports = {
-  MODELO_VISION,
+  MODELOS_VISION,
+  modeloNoExiste,
   extraerJSON,
   evaluarDescripcion,
   evaluarReaccion,
