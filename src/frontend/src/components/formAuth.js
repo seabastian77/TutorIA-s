@@ -34,6 +34,13 @@ function inicializarFormAuth() {
     cambiarPestana("pagina-registro"),
   );
 
+  // El vigilante deja aquí el motivo cuando la sesión venció a mitad de camino
+  const aviso = sessionStorage.getItem("tutorias_aviso");
+  if (aviso) {
+    sessionStorage.removeItem("tutorias_aviso");
+    mostrarError(aviso);
+  }
+
   formLogin.addEventListener("submit", async (e) => {
     e.preventDefault();
     limpiarError();
