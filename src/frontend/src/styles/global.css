@@ -22,21 +22,21 @@
   --marca-tinta: #eaf2ff;
   --marca-realce: #ffc107;
   --amarillo: #b45309;
-  --amarillo-tinta: var(--amarillo-tinta);
+  --amarillo-tinta: #fffbeb;
   --azul: #1565c0;
   --azul-tinta: #e8f2fd;
-  --verde: var(--verde);
+  --verde: #047857;
   --verde-tinta: #ecfdf5;
   --lila: #7e22ce;
   --lila-tinta: #faf5ff;
   --cian: #0f766e;
   --cian-tinta: #f0fdfa;
-  --rosa: var(--rojo);
-  --rosa-tinta: var(--rojo-tinta);
+  --rosa: #be123c;
+  --rosa-tinta: #fff1f2;
   --arena: #b45309;
-  --arena-tinta: var(--amarillo-tinta);
-  --rojo: var(--rojo);
-  --rojo-tinta: var(--rojo-tinta);
+  --arena-tinta: #fffbeb;
+  --rojo: #be123c;
+  --rojo-tinta: #fff1f2;
   --fucsia: #a21caf;
   --fucsia-tinta: #fdf4ff;
   --cielo: #0369a1;
@@ -46,12 +46,12 @@
 
   /* Bordes claros de cada tono, para separar la tarjeta del fondo */
   --naranja-borde: #fed7aa;
-  --amarillo-borde: var(--amarillo-borde);
+  --amarillo-borde: #fde68a;
   --azul-borde: #b9dcfa;
-  --verde-borde: var(--verde-borde);
+  --verde-borde: #a7f3d0;
   --lila-borde: #e9d5ff;
   --cian-borde: #99f6e4;
-  --rosa-borde: var(--rosa-borde);
+  --rosa-borde: #fecdd3;
   --fucsia-borde: #f5d0fe;
 
   --font-display: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
