@@ -9,7 +9,7 @@
   --panel-alto: #ffffff;
   --borde: #e8eaf0;
   --borde-campo: #8b92a1;
-  --blanco: #1b1e28;
+  --blanco: #0f1b33;
   --gris: #565c6b;
   --gris-tenue: #6b7280;
   --gris-oscuro: #f1f2f6;
@@ -18,33 +18,40 @@
      Su pareja -tinta es el tinte 50 que le sirve de fondo. */
   --naranja: #c2410c;
   --naranja-tinta: #fff7ed;
+  --marca-fondo: #0a1b3d;
+  --marca-tinta: #eaf2ff;
+  --marca-realce: #ffc107;
   --amarillo: #b45309;
-  --amarillo-tinta: #fffbeb;
-  --azul: #4338ca;
-  --azul-tinta: #eef2ff;
-  --verde: #047857;
+  --amarillo-tinta: var(--amarillo-tinta);
+  --azul: #1565c0;
+  --azul-tinta: #e8f2fd;
+  --verde: var(--verde);
   --verde-tinta: #ecfdf5;
   --lila: #7e22ce;
   --lila-tinta: #faf5ff;
   --cian: #0f766e;
   --cian-tinta: #f0fdfa;
-  --rosa: #be123c;
-  --rosa-tinta: #fff1f2;
+  --rosa: var(--rojo);
+  --rosa-tinta: var(--rojo-tinta);
   --arena: #b45309;
-  --arena-tinta: #fffbeb;
-  --rojo: #be123c;
-  --rojo-tinta: #fff1f2;
+  --arena-tinta: var(--amarillo-tinta);
+  --rojo: var(--rojo);
+  --rojo-tinta: var(--rojo-tinta);
   --fucsia: #a21caf;
   --fucsia-tinta: #fdf4ff;
+  --cielo: #0369a1;
+  --cielo-tinta: #f0f9ff;
+  --cielo-borde: #bae6fd;
+  --tinta-calida: #4a3a1a;
 
   /* Bordes claros de cada tono, para separar la tarjeta del fondo */
   --naranja-borde: #fed7aa;
-  --amarillo-borde: #fde68a;
-  --azul-borde: #c7d2fe;
-  --verde-borde: #a7f3d0;
+  --amarillo-borde: var(--amarillo-borde);
+  --azul-borde: #b9dcfa;
+  --verde-borde: var(--verde-borde);
   --lila-borde: #e9d5ff;
   --cian-borde: #99f6e4;
-  --rosa-borde: #fecdd3;
+  --rosa-borde: var(--rosa-borde);
   --fucsia-borde: #f5d0fe;
 
   --font-display: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
@@ -53,8 +60,8 @@
   --radio: 20px;
   --radio-chico: 13px;
 
-  --sombra-1: 0 1px 2px rgb(27 30 40 / 0.04), 0 4px 12px rgb(27 30 40 / 0.05);
-  --sombra-2: 0 2px 6px rgb(27 30 40 / 0.06), 0 14px 32px rgb(27 30 40 / 0.10);
+  --sombra-1: 0 1px 2px rgb(15 27 51 / 0.04), 0 4px 12px rgb(15 27 51 / 0.05);
+  --sombra-2: 0 2px 6px rgb(15 27 51 / 0.06), 0 14px 32px rgb(15 27 51 / 0.10);
   --curva: cubic-bezier(0.22, 0.85, 0.3, 1);
 }
 
@@ -85,8 +92,8 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .auth-lado-izquierdo {
   flex: 1 1 0;
   border-radius: 26px;
-  background: var(--naranja);
-  color: var(--naranja-tinta);
+  background: var(--marca-fondo);
+  color: var(--marca-tinta);
   padding: 46px;
   display: flex;
   flex-direction: column;
@@ -102,7 +109,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   width: 380px;
   height: 380px;
   border-radius: 999px;
-  border: 44px solid rgba(26, 13, 8, 0.09);
+  border: 44px solid rgba(255, 255, 255, 0.07);
   pointer-events: none;
 }
 
@@ -118,7 +125,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .auth-frase span { display: block; }
 .auth-frase-destacada { display: block; }
-.auth-frase-glow { color: var(--naranja-tinta); }
+.auth-frase-glow { color: var(--marca-realce); }
 
 .auth-subfrase {
   position: relative;
@@ -126,7 +133,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   font-size: 17px;
   line-height: 1.6;
   max-width: 400px;
-  color: var(--naranja-tinta);
+  color: var(--marca-tinta);
 }
 
 .auth-lado-derecho {
@@ -231,16 +238,16 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 }
 
 .campo input::placeholder { color: var(--gris-tenue); }
-.campo input:focus { border-color: var(--naranja); }
+.campo input:focus { border-color: var(--azul); }
 
 .mensaje-error {
   display: none;
   margin-bottom: 16px;
   padding: 13px 16px;
   border-radius: var(--radio-chico);
-  background: #fff1f2;
-  border: 1px solid #fecdd3;
-  color: #be123c;
+  background: var(--rojo-tinta);
+  border: 1px solid var(--rosa-borde);
+  color: var(--rojo);
   font-size: 14px;
 }
 
@@ -265,8 +272,8 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   padding: 0 22px;
   border: none;
   border-radius: var(--radio-chico);
-  background: var(--naranja);
-  color: var(--naranja-tinta);
+  background: var(--azul);
+  color: #ffffff;
   font-family: var(--font-display);
   font-size: 15px;
   font-weight: 700;
@@ -354,7 +361,22 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .logo-nombre { white-space: nowrap; }
 .logo-apostrofe { color: var(--azul); }
 
-/* Sobre el panel naranja el logo se invierte, si no el ícono desaparece */
+/* El logo real reemplaza la marca que antes se dibujaba con SVG */
+.logo-img {
+  display: block;
+  width: 180px;
+  height: auto;
+  max-width: 100%;
+}
+
+.logo-auth {
+  display: block;
+  width: min(320px, 76%);
+  height: auto;
+  margin-bottom: 4px;
+}
+
+/* Sobre el panel del login el logo ya trae su propio fondo oscuro */
 .auth-lado-izquierdo .logo-cuadro {
   background: var(--naranja-tinta);
   color: var(--naranja);
@@ -406,9 +428,9 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .progreso-item:nth-child(2) i { color: var(--naranja); }
 .progreso-item:nth-child(3) i { color: var(--cian); }
 
-#progreso-tendencia-wrap.tendencia-buena { border-color: #a7f3d0; }
+#progreso-tendencia-wrap.tendencia-buena { border-color: var(--verde-borde); }
 #progreso-tendencia-wrap.tendencia-buena i { color: var(--verde); }
-#progreso-tendencia-wrap.tendencia-mala { border-color: #fda4af; }
+#progreso-tendencia-wrap.tendencia-mala { border-color: var(--rosa-borde); }
 #progreso-tendencia-wrap.tendencia-mala i { color: var(--rojo); }
 #progreso-tendencia-wrap.tendencia-neutra i { color: var(--gris); }
 
@@ -432,7 +454,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .meta-diaria-relleno {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #6366f1, #14b8a6);
+  background: linear-gradient(90deg, var(--azul), var(--verde));
   transition: width 0.4s ease;
 }
 
@@ -579,7 +601,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .bento #btn-iniciar-nivel { --tono: var(--azul);    --tono-fondo: var(--azul-tinta);    --tono-borde: var(--azul-borde); }
 .bento .btn-voz           { --tono: var(--rosa);    --tono-fondo: var(--rosa-tinta);    --tono-borde: var(--rosa-borde); }
 .bento #btn-practicar     { --tono: var(--amarillo);--tono-fondo: var(--amarillo-tinta);--tono-borde: var(--amarillo-borde); }
-.bento .btn-roleplay      { --tono: #0369a1;        --tono-fondo: #f0f9ff;              --tono-borde: #bae6fd; }
+.bento .btn-roleplay      { --tono: var(--cielo);   --tono-fondo: var(--cielo-tinta);   --tono-borde: var(--cielo-borde); }
 .bento .btn-escena        { --tono: var(--lila);    --tono-fondo: var(--lila-tinta);    --tono-borde: var(--lila-borde); }
 .bento .btn-vocab         { --tono: var(--verde);   --tono-fondo: var(--verde-tinta);   --tono-borde: var(--verde-borde); }
 .bento .btn-biblioteca    { --tono: var(--cian);    --tono-fondo: var(--cian-tinta);    --tono-borde: var(--cian-borde); }
@@ -645,7 +667,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .tarjeta-tip-texto {
   font-size: 14px;
   line-height: 1.6;
-  color: #4a3a1a;
+  color: var(--tinta-calida);
 }
 
 /* Los botones secundarios sueltos no deben estirarse a todo el ancho */
@@ -757,7 +779,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .nivel-opciones button.incorrecta {
   border-color: var(--rojo);
-  background: #fff1f2;
+  background: var(--rojo-tinta);
 }
 
 .nivel-opciones button::before {
@@ -874,8 +896,8 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   margin-bottom: 20px;
   padding: 14px 17px;
   border-radius: var(--radio-chico);
-  background: #fffbeb;
-  border: 1px solid #fde68a;
+  background: var(--amarillo-tinta);
+  border: 1px solid var(--amarillo-borde);
   font-size: 14px;
   line-height: 1.55;
   color: var(--amarillo);
@@ -917,9 +939,9 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .voz-burbuja-correccion {
   align-self: flex-start;
-  background: rgba(33, 192, 138, 0.1);
-  border: 1px solid rgba(33, 192, 138, 0.35);
-  color: #047857;
+  background: var(--verde-tinta);
+  border: 1px solid var(--verde-borde);
+  color: var(--verde);
   font-size: 14px;
 }
 
@@ -954,7 +976,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 }
 
 @keyframes latido-mic {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(190, 18, 60, 0.35); }
+  0%, 100% { box-shadow: 0 0 0 0 var(--rosa-borde); }
   50% { box-shadow: 0 0 0 18px rgba(190, 18, 60, 0); }
 }
 
@@ -1124,15 +1146,17 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   font-weight: 700;
 }
 
+.monedas-grandes i { color: var(--amarillo); }
+
 .monedas-grandes {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 10px 18px;
   border-radius: 999px;
-  background: var(--panel);
-  border: 1px solid var(--amarillo);
-  color: var(--amarillo);
+  background: var(--amarillo-tinta);
+  border: 1px solid var(--amarillo-borde);
+  color: var(--blanco);
   font-family: var(--font-mono);
   font-size: 18px;
   font-weight: 700;
@@ -1248,8 +1272,10 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .articulo-precio:hover:not(:disabled) { filter: brightness(1.08); }
 
 .articulo-precio:disabled {
-  background: var(--borde);
-  color: var(--gris-tenue);
+  background: var(--gris-oscuro);
+  border: 1px solid var(--borde);
+  /* Aunque no pueda comprarlo todavía, el precio tiene que poder leerlo */
+  color: var(--gris);
   cursor: not-allowed;
 }
 
@@ -1318,15 +1344,15 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 }
 
 .liga-aviso-sube {
-  background: rgba(33, 192, 138, 0.12);
-  border: 1px solid rgba(33, 192, 138, 0.4);
-  color: #047857;
+  background: var(--verde-tinta);
+  border: 1px solid var(--verde-borde);
+  color: var(--verde);
 }
 
 .liga-aviso-baja {
-  background: #fff1f2;
-  border: 1px solid #fecdd3;
-  color: #be123c;
+  background: var(--rojo-tinta);
+  border: 1px solid var(--rosa-borde);
+  color: var(--rojo);
 }
 
 .liga-tabla {
@@ -1400,7 +1426,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   content: "";
   flex: 1 1 auto;
   height: 1px;
-  background: rgba(33, 192, 138, 0.3);
+  background: var(--verde-borde);
 }
 
 /* Celdas nuevas del bento */
@@ -1583,7 +1609,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   display: inline-block;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #fef3c7;
+  background: var(--amarillo-borde);
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
@@ -1807,7 +1833,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 }
 
 .palabra:hover {
-  background: rgba(234, 217, 176, 0.22);
+  background: var(--arena-tinta);
   box-shadow: 0 1px 0 var(--arena);
 }
 
@@ -1821,7 +1847,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   border-radius: var(--radio-chico);
   background: var(--panel-alto);
   border: 1px solid var(--arena);
-  box-shadow: 0 20px 50px rgb(27 30 40 / 0.16);
+  box-shadow: var(--sombra-2);
 }
 
 .popover-cerrar {
@@ -1895,17 +1921,17 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .opcion-nivel.elegida {
   border-color: var(--amarillo);
-  background: #fffbeb;
+  background: var(--amarillo-tinta);
 }
 
 .opcion-nivel.correcta {
   border-color: var(--verde);
-  background: rgba(33, 192, 138, 0.14);
+  background: var(--verde-tinta);
 }
 
 .opcion-nivel.incorrecta {
   border-color: var(--rojo);
-  background: #fff1f2;
+  background: var(--rojo-tinta);
 }
 
 .opcion-nivel:disabled { cursor: default; }
@@ -1993,14 +2019,14 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .palabra-ok {
   background: rgba(33, 192, 138, 0.16);
-  color: #047857;
+  color: var(--verde);
 }
 
 .palabra-mal {
-  background: #ffe4e6;
-  color: #be123c;
+  background: var(--rosa-tinta);
+  color: var(--rojo);
   text-decoration: line-through;
-  text-decoration-color: #be123c;
+  text-decoration-color: var(--rojo);
 }
 
 .dictado-original {
@@ -2150,13 +2176,13 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .sello-si {
   background: rgba(33, 192, 138, 0.18);
   border: 1px solid var(--verde);
-  color: #047857;
+  color: var(--verde);
 }
 
 .sello-no {
-  background: #ffe4e6;
+  background: var(--rosa-tinta);
   border: 1px solid var(--rojo);
-  color: #be123c;
+  color: var(--rojo);
 }
 
 .vocab-ayuda {
@@ -2357,13 +2383,13 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .celda-hallada {
   border-color: var(--verde);
   background: rgba(33, 192, 138, 0.18);
-  color: #047857;
+  color: var(--verde);
 }
 
 .celda-perdida {
   border-color: var(--rojo);
-  background: #ffe4e6;
-  color: #be123c;
+  background: var(--rosa-tinta);
+  color: var(--rojo);
 }
 
 .sopa-palabras {
@@ -2426,8 +2452,8 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 }
 
 .carta-par:hover:not(:disabled) { border-color: var(--verde); }
-.carta-elegida { border-color: var(--verde); background: rgba(33, 192, 138, 0.14); }
-.carta-fallada { border-color: var(--rojo); background: #ffe4e6; }
+.carta-elegida { border-color: var(--verde); background: var(--verde-tinta); }
+.carta-fallada { border-color: var(--rojo); background: var(--rosa-tinta); }
 
 .carta-hecha {
   cursor: default;
@@ -2627,7 +2653,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 }
 
 .lista-bien li { color: var(--verde); }
-.lista-mal li { color: #be123c; }
+.lista-mal li { color: var(--rojo); }
 .lista-frases li { color: var(--gris); }
 
 .visual-correccion {
@@ -2873,9 +2899,9 @@ button,
 
 /* Las etiquetas del panel naranja del login viven sobre color, no sobre tinte */
 .auth-lado-izquierdo .bento-etiqueta {
-  color: var(--naranja);
-  background: var(--naranja-tinta);
-  border-color: var(--naranja-tinta);
+  color: var(--marca-fondo);
+  background: var(--marca-tinta);
+  border-color: var(--marca-tinta);
 }
 
 /* El botón de salir no se encoge ni en pantalla angosta */
@@ -3112,7 +3138,7 @@ button,
   0%, 100% { translate: -1.5px 0; }
   50% { translate: 1.5px 0; }
 }
-.mentor[data-animo="preocupado"] .mentor-avatar { background: var(--rojo-tinta); border-color: #fecdd3; }
+.mentor[data-animo="preocupado"] .mentor-avatar { background: var(--rojo-tinta); border-color: var(--rosa-borde); }
 .mentor[data-animo="preocupado"] .mentor-nombre,
 .mentor[data-animo="preocupado"] .mentor-accion { color: var(--rojo); }
 
@@ -3214,7 +3240,7 @@ button,
   border: 1px solid var(--amarillo-borde);
   font-size: 14px;
   line-height: 1.6;
-  color: #4a3a1a;
+  color: var(--tinta-calida);
 }
 
 /* ─────────── las marcas: el dato es lo único que pinta fuerte ─────────── */
@@ -3233,11 +3259,11 @@ button,
 /* El aro del color de la superficie separa los puntos donde se cruzan */
 .punto-aro { fill: var(--panel-alto); }
 .punto-dato { fill: var(--azul); }
-.punto-antes { fill: #94a3b8; }
+.punto-antes { fill: var(--gris-tenue); }
 
 /* Objetivo de toque y foco: las gráficas se recorren con el teclado */
 .punto, .columna, .mancuerna { cursor: default; outline: none; }
-.columna:hover .barra-dato { fill: #3730a3; }
+.columna:hover .barra-dato { fill: color-mix(in oklab, var(--azul) 78%, var(--blanco)); }
 .punto:focus-visible .punto-aro,
 .columna:focus-visible .barra-dato,
 .mancuerna:focus-visible .punto-aro { outline: 3px solid var(--azul); outline-offset: 2px; }
@@ -3298,4 +3324,122 @@ button,
 
 @media (prefers-reduced-motion: reduce) {
   .barra-dato { transition: none; }
+}
+
+/* ============================================================
+   MODO OSCURO — mismos nombres de variable, otros valores.
+   Cada par se midió contra su fondo: el texto nunca baja de 4.5:1
+   y cada tarjeta se distingue del lienzo.
+   ============================================================ */
+
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
+
+  --negro: #0a1424;
+  --panel: #101d33;
+  --panel-alto: #142440;
+  --borde: #263c60;
+  --borde-campo: #5b7099;
+  --blanco: #e9eefb;
+  --gris: #aebcd6;
+  --gris-tenue: #95a5c2;
+  --gris-oscuro: #17253d;
+
+  --marca-fondo: #0d1f42;
+  --marca-tinta: #eaf2ff;
+  --marca-realce: #ffc107;
+
+  /* Los acentos suben de tono: sobre oscuro un 700 no se lee */
+  --naranja: #ffa96b;
+  --naranja-tinta: #393032;
+  --naranja-borde: #6f5241;
+  --amarillo: #f9c74f;
+  --amarillo-tinta: #33332b;
+  --amarillo-borde: #645734;
+  --azul: #7bb8f7;
+  --azul-tinta: #20334d;
+  --azul-borde: #3a5a7f;
+  --verde: #5fd9a8;
+  --verde-tinta: #19373b;
+  --verde-borde: #2b6158;
+  --lila: #c39bf0;
+  --lila-tinta: #30304e;
+  --lila-borde: #5e5180;
+  --cian: #5ad4c8;
+  --cian-tinta: #183641;
+  --cian-borde: #2a6065;
+  --rosa: #ff8fa8;
+  --rosa-tinta: #3d2d3f;
+  --rosa-borde: #774b5f;
+  --rojo: #ff8fa8;
+  --rojo-tinta: #3d2d3f;
+  --arena: #f9c74f;
+  --arena-tinta: #33332b;
+  --fucsia: #e79bf0;
+  --fucsia-tinta: #352e4c;
+  --fucsia-borde: #684e7b;
+  --cielo: #7cc7f5;
+  --cielo-tinta: #1f344a;
+  --cielo-borde: #385c78;
+  --tinta-calida: #aebcd6;
+
+  --sombra-1: 0 1px 2px rgb(0 0 0 / 0.30), 0 4px 12px rgb(0 0 0 / 0.34);
+  --sombra-2: 0 2px 6px rgb(0 0 0 / 0.36), 0 14px 32px rgb(0 0 0 / 0.48);
+}
+
+/* El texto del tip vive sobre un tinte que cambia de claro a oscuro */
+:root[data-tema="oscuro"] .tarjeta-tip-texto,
+:root[data-tema="oscuro"] .resumen-ia { color: var(--gris); }
+
+/* El botón principal necesita tinta oscura cuando su fondo se aclara */
+:root[data-tema="oscuro"] .btn-principal { color: #08121f; }
+:root[data-tema="oscuro"] .bento .btn-principal { color: var(--blanco); }
+
+/* El velo del video ya era oscuro: en modo oscuro se refuerza */
+:root[data-tema="oscuro"] .escena-velo { background: rgba(4, 9, 18, 0.82); }
+
+/* El logo trae su propio contorno azul muy oscuro: sobre el lienzo oscuro
+   se le pone un halo claro para que no se pierda el borde */
+:root[data-tema="oscuro"] .logo-img {
+  filter: drop-shadow(0 0 1px rgba(233, 238, 251, 0.55));
+}
+
+/* La rejilla de las gráficas se apaga para que el dato mande */
+:root[data-tema="oscuro"] .rejilla { stroke: var(--borde); }
+:root[data-tema="oscuro"] .punto-antes { fill: var(--gris-tenue); }
+:root[data-tema="oscuro"] .columna:hover .barra-dato { fill: #a9d1fb; }
+
+/* ============================================================
+   EL INTERRUPTOR DE TEMA
+   ============================================================ */
+
+.btn-tema {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--gris-oscuro);
+  border: 1px solid var(--borde);
+  color: var(--gris);
+  cursor: pointer;
+  transition: color 0.25s ease, background 0.25s ease, translate 0.25s var(--curva);
+  translate: 0;
+}
+
+.btn-tema:hover { color: var(--blanco); background: var(--panel-alto); translate: 0 -2px; }
+.btn-tema svg { display: block; }
+
+/* Cada tema enseña el icono del otro: el que muestra a dónde vas */
+.btn-tema .ic-luna { display: none; }
+:root[data-tema="oscuro"] .btn-tema .ic-luna { display: block; }
+:root[data-tema="oscuro"] .btn-tema .ic-sol { display: none; }
+.btn-tema .ic-sol-rayos { transform-origin: 12px 12px; animation: tema-girar 14s linear infinite; }
+
+@keyframes tema-girar { to { rotate: 360deg; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-tema .ic-sol-rayos { animation: none; }
+  .btn-tema { transition: none; }
 }

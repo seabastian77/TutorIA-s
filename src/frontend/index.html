@@ -9,6 +9,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script>
+    // Antes de pintar nada, para que no haya un destello del tema contrario
+    (function () {
+      try {
+        var t = localStorage.getItem("tutorias_tema");
+        if (t !== "claro" && t !== "oscuro") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "oscuro" : "claro";
+        }
+        document.documentElement.dataset.tema = t;
+      } catch (e) {
+        document.documentElement.dataset.tema = "claro";
+      }
+    })();
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icono-32.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/icono-64.png" />
+  <link rel="apple-touch-icon" href="assets/icono-180.png" />
   <link rel="stylesheet" href="src/styles/global.css" />
 </head>
 <body>
@@ -18,16 +36,8 @@
 
     <!-- Panel naranja de marca -->
     <div class="auth-lado-izquierdo">
-      <div class="logo-marca">
-        <span class="logo-cuadro">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 4v16" />
-            <path d="M12 4a4 4 0 0 0-4 4 3 3 0 0 0-1 5.8V17a3 3 0 0 0 5 2.2" />
-            <path d="M12 4a4 4 0 0 1 4 4 3 3 0 0 1 1 5.8V17a3 3 0 0 1-5 2.2" />
-          </svg>
-        </span>
-        <span class="logo-nombre">TutorIA<span class="logo-apostrofe">'s</span></span>
-      </div>
+      <img src="assets/logo-tutorias-completo.png" alt="TutorIA's"
+           class="logo-auth" width="320" height="203" />
 
       <div class="auth-frase">
         <span>Speak</span>
@@ -100,16 +110,8 @@
   <div id="vista-principal" class="pantalla-principal oculto">
 
     <div class="barra-superior">
-      <div class="logo-marca">
-        <span class="logo-cuadro">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 4v16" />
-            <path d="M12 4a4 4 0 0 0-4 4 3 3 0 0 0-1 5.8V17a3 3 0 0 0 5 2.2" />
-            <path d="M12 4a4 4 0 0 1 4 4 3 3 0 0 1 1 5.8V17a3 3 0 0 1-5 2.2" />
-          </svg>
-        </span>
-        <span class="logo-nombre">TutorIA<span class="logo-apostrofe">'s</span></span>
-      </div>
+      <div class="logo-marca"><img src="assets/logo-tutorias.png" alt="TutorIA's"
+             class="logo-img" width="180" height="53" /></div>
 
       <div id="progreso-usuario" class="progreso-usuario oculto" role="button" tabindex="0" title="See my progress">
         <div class="progreso-item">
@@ -129,6 +131,25 @@
           <span id="progreso-tendencia-texto">—</span>
         </div>
       </div>
+
+      <button id="btn-tema" class="btn-tema" type="button" aria-pressed="false"
+              aria-label="Switch to dark mode" title="Switch to dark mode">
+        <svg class="ic-sol" width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2" />
+          <g class="ic-sol-rayos">
+            <path d="M12 2.6v2.2" /><path d="M12 19.2v2.2" />
+            <path d="M2.6 12h2.2" /><path d="M19.2 12h2.2" />
+            <path d="m5.4 5.4 1.6 1.6" /><path d="m17 17 1.6 1.6" />
+            <path d="m18.6 5.4-1.6 1.6" /><path d="m7 17-1.6 1.6" />
+          </g>
+        </svg>
+        <svg class="ic-luna" width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 14.5A8.2 8.2 0 0 1 9.5 4 8.2 8.2 0 1 0 20 14.5z" />
+        </svg>
+      </button>
 
       <button id="btn-cerrar-sesion" class="btn-secundario">Log Out</button>
     </div>
@@ -840,6 +861,7 @@
 
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/validaciones.js"></script>
+  <script src="src/store/tema.js"></script>
   <script src="src/store/sesion.js"></script>
   <script src="src/store/sesionVigilante.js"></script>
   <script src="src/services/authApi.js"></script>
