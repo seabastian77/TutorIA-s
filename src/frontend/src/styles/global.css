@@ -3275,23 +3275,7 @@ button,
   transition: background 0.2s ease, rotate 0.25s var(--curva);
 }
 .charla-cerrar svg { width: 20px; height: 20px; }
-.charla-cerrar:hover { background: rgba(255, 255, 255, 0.16); }
-#charla-cerrar:hover { rotate: 90deg; }
-
-/* La bocina: una sola tecla que alterna entre sonando y muda */
-#charla-voz { margin-right: 0; }
-#charla-voz .ic-muda, #charla-voz.muda .ic-suena { display: none; }
-#charla-voz.muda .ic-muda { display: block; }
-#charla-voz.muda { color: var(--marca-realce); }
-
-/* Mientras Tuti habla, las ondas de la bocina laten */
-.mentor-charla.hablando #charla-voz .onda-corta { animation: onda-suena 1.1s ease-in-out infinite; }
-.mentor-charla.hablando #charla-voz .onda-larga { animation: onda-suena 1.1s ease-in-out infinite 0.16s; }
-
-@keyframes onda-suena {
-  0%, 100% { opacity: 0.35; }
-  50% { opacity: 1; }
-}
+.charla-cerrar:hover { background: rgba(255, 255, 255, 0.16); rotate: 90deg; }
 
 .charla-mensajes {
   flex: 1 1 auto;
@@ -3321,6 +3305,8 @@ button,
   font-size: 14px;
   line-height: 1.5;
   overflow-wrap: anywhere;
+  /* Cuando Tuti lista frases, los renglones tienen que verse como renglones */
+  white-space: pre-line;
 }
 
 .charla-suyo .charla-globo {
@@ -3486,8 +3472,6 @@ button,
   .mentor-charla, .charla-turno { animation-duration: 0.01s; }
   .charla-punto { animation-duration: 1.3s; }
   .charla-mic.oyendo .charla-mic-halo { animation: none; }
-  .mentor-charla.hablando #charla-voz .onda-corta,
-  .mentor-charla.hablando #charla-voz .onda-larga { animation: none; opacity: 1; }
   .mentor-burbuja, .mentor-avatar, .mentor-punto,
   .mentor-charlar, .charla-cerrar, .charla-enviar, .charla-mic { transition-duration: 0.01s; }
 }

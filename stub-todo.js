@@ -113,6 +113,19 @@ Module.prototype.require = function (nombre) {
               // La charla con Tuti: el sistema va primero y el historial detrás
               if (contenido.includes("You are Tuti")) {
                 if (MODO === "limite") { const e = new Error("429 rate limit"); e.status = 429; throw e; }
+                // Como el modelo real cuando se le acaban los tokens razonando
+                if (MODO === "vacio") {
+                  return { choices: [{ message: { content: "" }, finish_reason: "length" }] };
+                }
+                const pide = [...messages].reverse().find((m) => m.role === "user");
+                if (pide && /frases|phrases/i.test(pide.content || "")) {
+                  return { choices: [{ message: { content:
+                    "Para pedir en un café te sirven estas:\n" +
+                    "Could I get a coffee, please? - ¿Me das un café, por favor?\n" +
+                    "To go, please. - Para llevar, por favor.\n" +
+                    "How much is it? - ¿Cuánto es?\n" +
+                    "Keep the change. - Quédate con el cambio." } }] };
+                }
                 const ultimo = [...messages].reverse().find((m) => m.role === "user");
                 return {
                   choices: [

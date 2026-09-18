@@ -70,7 +70,6 @@ const MEDIR_CONTROLES = () => {
         return [255, 255, 255];
       };
       const mic = document.getElementById("charla-mic");
-      const bocina = document.getElementById("charla-voz");
       const oyendo = mic.classList.contains("oyendo");
       return oyendo
         ? {
@@ -79,7 +78,6 @@ const MEDIR_CONTROLES = () => {
           }
         : {
             micQuietoBorde: ratio(num(getComputedStyle(mic).borderColor), fondo(mic)).toFixed(2),
-            bocina: ratio(num(getComputedStyle(bocina).color), fondo(bocina)).toFixed(2),
           };
 };
 
@@ -104,12 +102,11 @@ const MEDIR_CONTROLES = () => {
       await ESPERA(300);
     }
 
-    // Tuti saluda y lo lee en voz alta
+    // Tuti saluda por escrito: en la charla no habla nadie
     await p.click("#mentor-abrir-charla");
     await p.waitForSelector(".charla-suyo:not(.charla-pensando)");
     await ESPERA(250);
-    const saludo = await p.evaluate(() => window.__dichos[window.__dichos.length - 1]);
-    console.log(tema, "| Tuti saluda con:", saludo && saludo.voz, "|", saludo && saludo.lang);
+    console.log(tema, "| Tuti calla al saludar:", (await p.evaluate(() => window.__dichos.length)) === 0);
 
     // El micrófono: hablarle en vez de escribirle
     const tam = await p.locator("#charla-mic").boundingBox();
@@ -153,14 +150,9 @@ const MEDIR_CONTROLES = () => {
     });
     console.log(tema, "| escrito manda hablado:", escrito && escrito.hablado);
 
-    // Silenciar a Tuti
-    const antes = await p.evaluate(() => window.__dichos.length);
-    await p.click("#charla-voz");
-    await p.fill("#charla-entrada", "otra cosita");
-    await p.click("#charla-enviar");
-    await ESPERA(1400);
-    const despues = await p.evaluate(() => window.__dichos.length);
-    console.log(tema, "| callado no vuelve a hablar:", antes === despues);
+    // Ni al responder: la charla es solo texto
+    console.log(tema, "| nada sonó en toda la charla:", (await p.evaluate(() => window.__dichos.length)) === 0);
+    console.log(tema, "| ya no hay bocina:", (await p.locator("#charla-voz").count()) === 0);
 
     await p.screenshot({ path: `/tmp/voz-${tema}.png` });
 

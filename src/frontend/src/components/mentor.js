@@ -81,23 +81,6 @@ const CHARLA_HTML = `
       <strong id="charla-titulo">${MENTOR_NOMBRE}</strong>
       <span id="charla-estado" class="charla-estado">En línea</span>
     </span>
-    <button id="charla-voz" class="charla-cerrar" type="button" aria-pressed="true"
-            aria-label="Silenciar la voz de ${MENTOR_NOMBRE}" title="Silenciar a ${MENTOR_NOMBRE}">
-      <svg class="ic-suena" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linejoin="round"/>
-        <path class="onda-corta" d="M15.6 9.6a3.4 3.4 0 0 1 0 4.8" fill="none"
-              stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        <path class="onda-larga" d="M18.4 7a7.2 7.2 0 0 1 0 10" fill="none"
-              stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-      <svg class="ic-muda" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linejoin="round"/>
-        <path d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-    </button>
     <button id="charla-cerrar" class="charla-cerrar" type="button" aria-label="Cerrar la charla">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor"
@@ -268,15 +251,12 @@ async function iniciarMentor() {
    ============================================================ */
 
 const CHARLA_MEMORIA = "tutorias_charla";
-const CHARLA_VOZ_MEMORIA = "tutorias_charla_voz";
 const CHARLA_TURNOS = 8; // lo mismo que recuerda el backend
 const CHARLA_LARGO = 400;
 
 let charlaHistorial = [];
 let charlaOcupada = false;
 let charlaSaludada = false;
-let charlaIdioma = "es";
-let charlaConVoz = true;
 let charlaOyendo = false;
 let charlaReconocimiento = null;
 
@@ -289,7 +269,6 @@ function montarCharla() {
 
   document.getElementById("charla-cerrar").addEventListener("click", cerrarCharla);
   document.getElementById("charla-forma").addEventListener("submit", (e) => enviarCharla(e));
-  document.getElementById("charla-voz").addEventListener("click", alternarVozDeTuti);
   document.getElementById("charla-mic").addEventListener("click", alternarMicrofono);
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !document.getElementById("mentor-charla").classList.contains("oculto")) {
@@ -297,8 +276,6 @@ function montarCharla() {
     }
   });
 
-  charlaConVoz = leerPreferenciaDeVoz();
-  pintarBotonDeVoz();
   prepararMicrofono();
 
   charlaHistorial = leerCharlaGuardada();
@@ -383,11 +360,9 @@ async function abrirCharla() {
   charlaSaludada = true;
   const pensando = pintarEscribiendo();
   try {
-    const { texto, idioma } = await MentorAPI.saludo();
+    const { texto } = await MentorAPI.saludo();
     pensando.remove();
-    if (idioma) charlaIdioma = idioma;
     anotarTurno("tuti", texto);
-    hablarComoTuti(texto);
   } catch (err) {
     pensando.remove();
     anotarTurno("tuti", "¡Hola! Soy Tuti. ¿Cómo va tu inglés hoy?");
@@ -395,7 +370,6 @@ async function abrirCharla() {
 }
 
 function cerrarCharla() {
-  callarATuti();
   pararMicrofono();
   document.getElementById("mentor-charla").classList.add("oculto");
   document.getElementById("mentor").classList.remove("en-charla");
@@ -411,7 +385,6 @@ async function enviarCharla(evento, voz) {
   const mensaje = campo.value.trim().slice(0, CHARLA_LARGO);
   if (!mensaje) return;
 
-  callarATuti();
   charlaOcupada = true;
   campo.value = "";
   campo.disabled = true;
@@ -426,9 +399,7 @@ async function enviarCharla(evento, voz) {
   try {
     const respuesta = await MentorAPI.charlar(mensaje, historial, voz);
     pensando.remove();
-    if (respuesta.idioma) charlaIdioma = respuesta.idioma;
     anotarTurno("tuti", respuesta.texto);
-    hablarComoTuti(respuesta.texto);
   } catch (err) {
     pensando.remove();
     anotarTurno("tuti", "No pude responderte ahora mismo. Inténtalo otra vez en un momento.");
@@ -439,63 +410,6 @@ async function enviarCharla(evento, voz) {
     document.getElementById("charla-estado").textContent = "En línea";
     campo.focus();
   }
-}
-
-/* ─────────── la voz de Tuti ─────────── */
-
-function leerPreferenciaDeVoz() {
-  try {
-    return localStorage.getItem(CHARLA_VOZ_MEMORIA) !== "0";
-  } catch (e) {
-    return true;
-  }
-}
-
-/** Pone el botón de la bocina acorde con si Tuti suena o está mudo. */
-function pintarBotonDeVoz() {
-  const btn = document.getElementById("charla-voz");
-  if (!btn) return;
-  btn.classList.toggle("muda", !charlaConVoz);
-  btn.setAttribute("aria-pressed", String(charlaConVoz));
-  const etiqueta = charlaConVoz ? "Silenciar a Tuti" : "Dejar que Tuti hable";
-  btn.setAttribute("aria-label", etiqueta);
-  btn.setAttribute("title", etiqueta);
-}
-
-function alternarVozDeTuti() {
-  charlaConVoz = !charlaConVoz;
-  if (!charlaConVoz) callarATuti();
-  pintarBotonDeVoz();
-  try {
-    localStorage.setItem(CHARLA_VOZ_MEMORIA, charlaConVoz ? "1" : "0");
-  } catch (e) {
-    // Sin almacenamiento la preferencia dura lo que dure la página abierta
-  }
-}
-
-function callarATuti() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  const panel = document.getElementById("mentor-charla");
-  if (panel) panel.classList.remove("hablando");
-}
-
-/** Lee en voz alta la respuesta de Tuti, en el idioma en que la escribió. */
-function hablarComoTuti(texto) {
-  if (!charlaConVoz || !texto || !window.speechSynthesis) return;
-
-  window.speechSynthesis.cancel();
-  const mensaje = new SpeechSynthesisUtterance(texto);
-  mensaje.lang = charlaIdioma === "en" ? "en-US" : "es-MX";
-  mensaje.rate = 0.98;
-  mensaje.pitch = 1.05;
-  VozIngles.prepararVoz(mensaje, null, charlaIdioma);
-
-  const panel = document.getElementById("mentor-charla");
-  mensaje.onstart = () => panel && panel.classList.add("hablando");
-  mensaje.onend = () => panel && panel.classList.remove("hablando");
-  mensaje.onerror = () => panel && panel.classList.remove("hablando");
-
-  window.speechSynthesis.speak(mensaje);
 }
 
 /* ─────────── hablarle a Tuti por micrófono ─────────── */
@@ -539,7 +453,6 @@ function alternarMicrofono() {
   if (!charlaReconocimiento || charlaOcupada) return;
   if (charlaOyendo) return pararMicrofono();
 
-  callarATuti(); // que la voz de Tuti no se meta en el micrófono
   try {
     charlaReconocimiento.start();
   } catch (e) {
@@ -571,7 +484,6 @@ function pararMicrofono() {
 
 /** Al cerrar sesión la charla no puede quedar colgada en pantalla. */
 function olvidarCharla() {
-  callarATuti();
   pararMicrofono();
   charlaHistorial = [];
   charlaSaludada = false;

@@ -126,8 +126,8 @@ const MentorController = {
       // Si la IA no responde, Tuti no se queda mudo: contesta con el consejo de reglas
       if (error.status !== 429) reportarError("Error en la charla con el mentor", error);
       const disculpa = estado.ayudaEspanol
-        ? "Se me enredó la lengua un momento. Mientras tanto, te dejo esto: "
-        : "My words got tangled for a second. In the meantime, here's this: ";
+        ? "No alcancé a responderte eso ahora mismo, vuelve a escribírmelo en un momento. Mientras tanto: "
+        : "I couldn't answer that right now — write it to me again in a moment. In the meantime: ";
       res.json({ texto: disculpa + elegirConsejo(estado).texto, origen: "reglas", idioma });
     }
   },
