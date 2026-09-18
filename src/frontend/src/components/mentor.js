@@ -40,22 +40,69 @@ const MENTOR_CUERPO = `
 
 const MENTOR_HTML = `
 <div id="mentor" class="mentor oculto" data-animo="feliz">
-  <button id="mentor-burbuja" class="mentor-burbuja" type="button" aria-labelledby="mentor-titulo">
-    <span class="mentor-cabecera">
-      <span class="mentor-nombre">${MENTOR_NOMBRE}</span>
-      <span id="mentor-cerrar" class="mentor-cerrar" role="button" tabindex="0"
-            aria-label="Hide ${MENTOR_NOMBRE}">&times;</span>
-    </span>
-    <span id="mentor-titulo" class="mentor-titulo"></span>
-    <span id="mentor-texto" class="mentor-texto"></span>
-    <span id="mentor-accion" class="mentor-accion"></span>
-  </button>
+  <div class="mentor-columna">
+    <button id="mentor-burbuja" class="mentor-burbuja" type="button" aria-labelledby="mentor-titulo">
+      <span class="mentor-cabecera">
+        <span class="mentor-nombre">${MENTOR_NOMBRE}</span>
+        <span id="mentor-cerrar" class="mentor-cerrar" role="button" tabindex="0"
+              aria-label="Hide ${MENTOR_NOMBRE}">&times;</span>
+      </span>
+      <span id="mentor-titulo" class="mentor-titulo"></span>
+      <span id="mentor-texto" class="mentor-texto"></span>
+      <span id="mentor-accion" class="mentor-accion"></span>
+    </button>
+
+    <button id="mentor-abrir-charla" class="mentor-charlar" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-4.6A8 8 0 0 1 13 4a8 8 0 0 1 8 8z"
+              fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="9.5" cy="12" r="1.1" fill="currentColor"/>
+        <circle cx="13" cy="12" r="1.1" fill="currentColor"/>
+        <circle cx="16.5" cy="12" r="1.1" fill="currentColor"/>
+      </svg>
+      <span class="mentor-charlar-texto">Hablar con ${MENTOR_NOMBRE}</span>
+    </button>
+  </div>
 
   <button id="mentor-avatar" class="mentor-avatar" type="button"
           aria-label="Ask ${MENTOR_NOMBRE} what to do next">
     ${MENTOR_CUERPO}
     <span id="mentor-punto" class="mentor-punto" aria-hidden="true"></span>
   </button>
+</div>`;
+
+const CHARLA_HTML = `
+<div id="mentor-charla" class="mentor-charla oculto" role="dialog" aria-modal="false"
+     aria-labelledby="charla-titulo">
+  <header class="charla-barra">
+    <span class="charla-ave" aria-hidden="true">${MENTOR_CUERPO}</span>
+    <span class="charla-quien">
+      <strong id="charla-titulo">${MENTOR_NOMBRE}</strong>
+      <span id="charla-estado" class="charla-estado">En línea</span>
+    </span>
+    <button id="charla-cerrar" class="charla-cerrar" type="button" aria-label="Cerrar la charla">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <div id="charla-mensajes" class="charla-mensajes" role="log" aria-live="polite"
+       aria-label="Conversación con ${MENTOR_NOMBRE}"></div>
+
+  <form id="charla-forma" class="charla-forma">
+    <label class="sr-solo" for="charla-entrada">Escríbele a ${MENTOR_NOMBRE}</label>
+    <input id="charla-entrada" class="charla-entrada" type="text" autocomplete="off"
+           maxlength="400" placeholder="Escríbele a ${MENTOR_NOMBRE}...">
+    <button id="charla-enviar" class="charla-enviar" type="submit" aria-label="Enviar">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 12 4 4l6 8-6 8z" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </form>
 </div>`;
 
 let mentorConsejo = null;
@@ -71,6 +118,8 @@ function montarMentor() {
   document.getElementById("mentor-avatar").addEventListener("click", alternarMentor);
   vigilarLaVista();
   document.getElementById("mentor-burbuja").addEventListener("click", seguirConsejo);
+  document.getElementById("mentor-abrir-charla").addEventListener("click", abrirCharla);
+  montarCharla();
 
   const cerrar = document.getElementById("mentor-cerrar");
   cerrar.addEventListener("click", (e) => {
@@ -183,5 +232,181 @@ async function iniciarMentor() {
   await refrescarMentor();
 }
 
+/* ============================================================
+   La charla: conversar con Tuti, no responderle un examen
+   ============================================================ */
+
+const CHARLA_MEMORIA = "tutorias_charla";
+const CHARLA_TURNOS = 8; // lo mismo que recuerda el backend
+const CHARLA_LARGO = 400;
+
+let charlaHistorial = [];
+let charlaOcupada = false;
+let charlaSaludada = false;
+
+/** Deja el panel de la charla colgado del body, una sola vez. */
+function montarCharla() {
+  if (document.getElementById("mentor-charla")) return;
+  const caja = document.createElement("div");
+  caja.innerHTML = CHARLA_HTML;
+  document.body.appendChild(caja.firstElementChild);
+
+  document.getElementById("charla-cerrar").addEventListener("click", cerrarCharla);
+  document.getElementById("charla-forma").addEventListener("submit", enviarCharla);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !document.getElementById("mentor-charla").classList.contains("oculto")) {
+      cerrarCharla();
+    }
+  });
+
+  charlaHistorial = leerCharlaGuardada();
+  charlaHistorial.forEach((t) => pintarTurno(t.papel, t.texto));
+  charlaSaludada = charlaHistorial.length > 0;
+}
+
+function leerCharlaGuardada() {
+  try {
+    const crudo = JSON.parse(sessionStorage.getItem(CHARLA_MEMORIA) || "[]");
+    if (!Array.isArray(crudo)) return [];
+    return crudo
+      .filter((t) => t && (t.papel === "tu" || t.papel === "tuti") && typeof t.texto === "string")
+      .map((t) => ({ papel: t.papel, texto: t.texto.slice(0, CHARLA_LARGO) }))
+      .slice(-CHARLA_TURNOS * 3);
+  } catch (e) {
+    return [];
+  }
+}
+
+function guardarCharla() {
+  try {
+    sessionStorage.setItem(
+      CHARLA_MEMORIA,
+      JSON.stringify(charlaHistorial.slice(-CHARLA_TURNOS * 3)),
+    );
+  } catch (e) {
+    // Sin almacenamiento la charla vive solo mientras la página esté abierta
+  }
+}
+
+/**
+ * Pinta un turno. El texto entra siempre por textContent: lo que escribe el
+ * estudiante, y lo que devuelve la IA, nunca se interpreta como HTML.
+ */
+function pintarTurno(papel, texto) {
+  const lista = document.getElementById("charla-mensajes");
+  if (!lista) return null;
+
+  const fila = document.createElement("div");
+  fila.className = `charla-turno charla-${papel === "tu" ? "mio" : "suyo"}`;
+  const globo = document.createElement("p");
+  globo.className = "charla-globo";
+  globo.textContent = texto;
+  fila.appendChild(globo);
+  lista.appendChild(fila);
+  lista.scrollTop = lista.scrollHeight;
+  return fila;
+}
+
+/** Los tres puntos mientras Tuti piensa. */
+function pintarEscribiendo() {
+  const lista = document.getElementById("charla-mensajes");
+  const fila = document.createElement("div");
+  fila.className = "charla-turno charla-suyo charla-pensando";
+  fila.innerHTML =
+    '<p class="charla-globo"><span class="charla-punto"></span>' +
+    '<span class="charla-punto"></span><span class="charla-punto"></span></p>';
+  fila.setAttribute("aria-label", "Tuti está escribiendo");
+  lista.appendChild(fila);
+  lista.scrollTop = lista.scrollHeight;
+  return fila;
+}
+
+function anotarTurno(papel, texto) {
+  charlaHistorial.push({ papel, texto });
+  pintarTurno(papel, texto);
+  guardarCharla();
+}
+
+async function abrirCharla() {
+  montarCharla();
+  const panel = document.getElementById("mentor-charla");
+  panel.classList.remove("oculto");
+  document.getElementById("mentor").classList.add("en-charla");
+  document.getElementById("charla-entrada").focus();
+
+  const lista = document.getElementById("charla-mensajes");
+  lista.scrollTop = lista.scrollHeight;
+
+  if (charlaSaludada) return;
+  charlaSaludada = true;
+  const pensando = pintarEscribiendo();
+  try {
+    const { texto } = await MentorAPI.saludo();
+    pensando.remove();
+    anotarTurno("tuti", texto);
+  } catch (err) {
+    pensando.remove();
+    anotarTurno("tuti", "¡Hola! Soy Tuti. ¿Cómo va tu inglés hoy?");
+  }
+}
+
+function cerrarCharla() {
+  document.getElementById("mentor-charla").classList.add("oculto");
+  document.getElementById("mentor").classList.remove("en-charla");
+  const abrir = document.getElementById("mentor-abrir-charla");
+  if (abrir) abrir.focus();
+}
+
+async function enviarCharla(evento) {
+  evento.preventDefault();
+  if (charlaOcupada) return;
+
+  const campo = document.getElementById("charla-entrada");
+  const mensaje = campo.value.trim().slice(0, CHARLA_LARGO);
+  if (!mensaje) return;
+
+  charlaOcupada = true;
+  campo.value = "";
+  campo.disabled = true;
+  document.getElementById("charla-enviar").disabled = true;
+  document.getElementById("charla-estado").textContent = "Escribiendo...";
+
+  anotarTurno("tu", mensaje);
+  // El historial que se manda no incluye este mensaje: el backend lo añade
+  const historial = charlaHistorial.slice(0, -1).slice(-CHARLA_TURNOS);
+  const pensando = pintarEscribiendo();
+
+  try {
+    const { texto } = await MentorAPI.charlar(mensaje, historial);
+    pensando.remove();
+    anotarTurno("tuti", texto);
+  } catch (err) {
+    pensando.remove();
+    anotarTurno("tuti", "No pude responderte ahora mismo. Inténtalo otra vez en un momento.");
+  } finally {
+    charlaOcupada = false;
+    campo.disabled = false;
+    document.getElementById("charla-enviar").disabled = false;
+    document.getElementById("charla-estado").textContent = "En línea";
+    campo.focus();
+  }
+}
+
+/** Al cerrar sesión la charla no puede quedar colgada en pantalla. */
+function olvidarCharla() {
+  charlaHistorial = [];
+  charlaSaludada = false;
+  const lista = document.getElementById("charla-mensajes");
+  if (lista) lista.textContent = "";
+  const panel = document.getElementById("mentor-charla");
+  if (panel) panel.classList.add("oculto");
+  try {
+    sessionStorage.removeItem(CHARLA_MEMORIA);
+  } catch (e) {
+    // Sin almacenamiento no hay nada guardado que olvidar
+  }
+}
+
 window.iniciarMentor = iniciarMentor;
 window.refrescarMentor = refrescarMentor;
+window.olvidarCharla = olvidarCharla;

@@ -20,6 +20,31 @@ const MentorAPI = {
     if (!resp.ok) throw new Error(datos.error || "Error pidiendo el consejo");
     return datos;
   },
+
+  /** Trae el saludo con que Tuti abre la charla. */
+  async saludo() {
+    const resp = await fetch(`${URL_BASE_MENTOR}/mentor/saludo`, {
+      headers: { Authorization: `Bearer ${Sesion.obtenerToken()}` },
+    });
+    const datos = await resp.json();
+    if (!resp.ok) throw new Error(datos.error || "Error abriendo la charla");
+    return datos;
+  },
+
+  /** Manda un turno de la conversación con el historial reciente. */
+  async charlar(mensaje, historial) {
+    const resp = await fetch(`${URL_BASE_MENTOR}/mentor/charla`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Sesion.obtenerToken()}`,
+      },
+      body: JSON.stringify({ mensaje, historial }),
+    });
+    const datos = await resp.json();
+    if (!resp.ok) throw new Error(datos.error || "Tuti no pudo responder");
+    return datos;
+  },
 };
 
 window.MentorAPI = MentorAPI;

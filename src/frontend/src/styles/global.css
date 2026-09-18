@@ -2955,9 +2955,19 @@ button,
   max-width: min(23rem, calc(100vw - 40px));
 }
 
+/* La burbuja y el botón de charla comparten columna, a la izquierda del loro */
+.mentor-columna {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  transition: opacity 0.25s ease, translate 0.3s var(--curva);
+}
+
 /* La burbuja es un botón: tocarla lleva al módulo que aconseja */
 .mentor-burbuja {
-  flex: 1 1 auto;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -3083,8 +3093,9 @@ button,
 .mentor-punto.visible { opacity: 1; scale: 1; }
 
 /* Guardado: solo queda el loro en la esquina */
-.mentor.encogido .mentor-burbuja,
-.mentor.fuera-del-menu .mentor-burbuja {
+.mentor.encogido .mentor-columna,
+.mentor.fuera-del-menu .mentor-columna,
+.mentor.en-charla .mentor-columna {
   opacity: 0;
   pointer-events: none;
   translate: 12px 0;
@@ -3154,6 +3165,221 @@ button,
 .mentor[data-animo="celebrando"] .mentor-nombre,
 .mentor[data-animo="celebrando"] .mentor-accion { color: var(--verde); }
 
+/* ─────────── la charla con Tuti ─────────── */
+
+/* Solo para lectores de pantalla: la etiqueta del campo de texto */
+.sr-solo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* El botón que abre la conversación, debajo del consejo */
+.mentor-charlar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: var(--radio);
+  background: var(--marca-fondo);
+  border: 1px solid var(--marca-fondo);
+  color: var(--marca-tinta);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--sombra-2);
+  translate: 0;
+  transition: translate 0.25s var(--curva), box-shadow 0.25s var(--curva);
+  animation: mentor-entra 0.5s var(--curva) both;
+}
+
+.mentor-charlar svg { width: 18px; height: 18px; flex: none; }
+.mentor-charlar:hover { translate: 0 -2px; box-shadow: var(--sombra-2); }
+.mentor-charlar:hover svg { animation: charla-saluda 0.9s ease-in-out; }
+
+@keyframes charla-saluda {
+  0%, 100% { rotate: 0deg; }
+  30% { rotate: -10deg; }
+  60% { rotate: 8deg; }
+}
+
+.mentor-charlar-texto { min-width: 0; }
+
+/* El panel: una conversación de verdad, no una ventanita de aviso */
+.mentor-charla {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  width: min(24rem, calc(100vw - 40px));
+  height: min(32rem, calc(100vh - 40px));
+  border-radius: var(--radio);
+  background: var(--panel-alto);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra-2);
+  overflow: hidden;
+  animation: charla-abre 0.32s var(--curva) both;
+}
+
+@keyframes charla-abre {
+  from { opacity: 0; translate: 0 18px; scale: 0.97; }
+}
+
+.charla-barra {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--marca-fondo);
+  color: var(--marca-tinta);
+  flex: none;
+}
+
+.charla-ave {
+  display: block;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--marca-tinta);
+  padding: 2px;
+}
+.charla-ave svg { width: 100%; height: 100%; display: block; }
+
+.charla-quien { display: flex; flex-direction: column; gap: 1px; flex: 1 1 auto; min-width: 0; }
+.charla-quien strong { font-family: var(--font-display); font-size: 15px; font-weight: 800; }
+.charla-estado { font-size: 12px; color: var(--marca-realce); }
+
+.charla-cerrar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -6px -8px -6px 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--marca-tinta);
+  cursor: pointer;
+  transition: background 0.2s ease, rotate 0.25s var(--curva);
+}
+.charla-cerrar svg { width: 20px; height: 20px; }
+.charla-cerrar:hover { background: rgba(255, 255, 255, 0.16); rotate: 90deg; }
+
+.charla-mensajes {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--panel);
+}
+
+.charla-turno { display: flex; animation: charla-entra 0.28s var(--curva) both; }
+/* Con pocos mensajes la charla se apoya abajo, como cualquier chat */
+.charla-turno:first-child { margin-top: auto; }
+.charla-mio { justify-content: flex-end; }
+.charla-suyo { justify-content: flex-start; }
+
+@keyframes charla-entra {
+  from { opacity: 0; translate: 0 8px; }
+}
+
+.charla-globo {
+  max-width: 82%;
+  margin: 0;
+  padding: 10px 13px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.charla-suyo .charla-globo {
+  background: var(--panel-alto);
+  border: 1px solid var(--borde);
+  color: var(--blanco);
+  border-bottom-left-radius: 5px;
+}
+
+.charla-mio .charla-globo {
+  background: var(--azul-tinta);
+  border: 1px solid var(--azul-borde);
+  color: var(--blanco);
+  border-bottom-right-radius: 5px;
+}
+
+/* Los tres puntos mientras Tuti piensa */
+.charla-pensando .charla-globo { display: flex; gap: 5px; align-items: center; padding: 14px 15px; }
+.charla-punto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gris-tenue);
+  animation: charla-pensar 1.3s ease-in-out infinite;
+}
+.charla-punto:nth-child(2) { animation-delay: 0.18s; }
+.charla-punto:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes charla-pensar {
+  0%, 60%, 100% { opacity: 0.32; translate: 0 0; }
+  30% { opacity: 1; translate: 0 -3px; }
+}
+
+.charla-forma {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: var(--panel);
+  border-top: 1px solid var(--borde);
+}
+
+.charla-entrada {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 22px;
+  border: 1px solid var(--borde-campo);
+  background: var(--panel-alto);
+  color: var(--blanco);
+  font-family: inherit;
+  font-size: 14px;
+}
+.charla-entrada::placeholder { color: var(--gris-tenue); }
+.charla-entrada:focus-visible { outline: 2px solid var(--azul); outline-offset: 1px; }
+.charla-entrada:disabled { opacity: 0.7; }
+
+.charla-enviar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 0;
+  border-radius: 50%;
+  background: var(--marca-fondo);
+  color: var(--marca-tinta);
+  cursor: pointer;
+  transition: scale 0.2s var(--curva), opacity 0.2s ease;
+}
+.charla-enviar svg { width: 19px; height: 19px; }
+.charla-enviar:hover { scale: 1.08; }
+.charla-enviar:disabled { opacity: 0.55; cursor: default; scale: 1; }
+
 /* En pantalla angosta la burbuja ocupa el ancho y el loro se recuesta al lado */
 @media (max-width: 40rem) {
   .mentor {
@@ -3165,6 +3391,16 @@ button,
   }
   .mentor-avatar { width: 56px; height: 56px; }
   .mentor.encogido, .mentor.fuera-del-menu { left: auto; }
+
+  /* La charla se toma la pantalla: en el móvil media ventana no sirve */
+  .mentor-charla {
+    right: 8px;
+    left: 8px;
+    bottom: 8px;
+    top: 8px;
+    width: auto;
+    height: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3173,12 +3409,17 @@ button,
   .mentor-parpados,
   .mentor-ala,
   .mentor-nota,
+  .mentor-charlar,
+  .mentor-charlar:hover svg,
   .mentor[data-animo="feliz"] .mentor-nota,
   .mentor[data-animo="animando"] .mentor-flota,
   .mentor[data-animo="preocupado"] .mentor-flota,
   .mentor[data-animo="celebrando"] .mentor-flota,
   .mentor[data-animo="celebrando"] .mentor-ala { animation: none; }
-  .mentor-burbuja, .mentor-avatar, .mentor-punto { transition-duration: 0.01s; }
+  .mentor-charla, .charla-turno { animation-duration: 0.01s; }
+  .charla-punto { animation-duration: 1.3s; }
+  .mentor-burbuja, .mentor-avatar, .mentor-punto,
+  .mentor-charlar, .charla-cerrar, .charla-enviar { transition-duration: 0.01s; }
 }
 
 /* ============================================================
@@ -3402,6 +3643,17 @@ button,
    se le pone un halo claro para que no se pierda el borde */
 :root[data-tema="oscuro"] .logo-img {
   filter: drop-shadow(0 0 1px rgba(233, 238, 251, 0.55));
+}
+
+/* La charla: el azul de marca es casi el mismo lienzo en oscuro, así que la
+   barra se aclara y los botones toman el azul claro con tinta oscura, para que
+   se distingan del panel (7.4:1) y no queden como manchas apagadas */
+:root[data-tema="oscuro"] .charla-barra { background: #22497f; }
+:root[data-tema="oscuro"] .charla-enviar,
+:root[data-tema="oscuro"] .mentor-charlar {
+  background: var(--azul);
+  border-color: var(--azul);
+  color: #0a1424;
 }
 
 /* La rejilla de las gráficas se apaga para que el dato mande */

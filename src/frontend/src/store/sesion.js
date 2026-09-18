@@ -22,6 +22,13 @@ const Sesion = {
   cerrar() {
     localStorage.removeItem('tutorias_token');
     localStorage.removeItem('tutorias_usuario');
+    // La charla con Tuti vive en sessionStorage y sobrevive a la recarga:
+    // si no se borra aquí, el siguiente en entrar en esta pestaña la vería
+    try {
+      sessionStorage.removeItem('tutorias_charla');
+    } catch (e) {
+      // Sin almacenamiento no hay nada guardado que borrar
+    }
   }
 };
 

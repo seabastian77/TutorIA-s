@@ -2,6 +2,8 @@ const pool = require("../config/db");
 const { reportarError } = require("../utils/errores");
 const { elegirConsejo } = require("../utils/mentorReglas");
 const { generarConsejoDelDia } = require("../services/mentorIA");
+const { responderCharla } = require("../services/charlaIA");
+const { mensajeUtil, limpiarMensaje, saludoInicial } = require("../utils/charlaMentor");
 
 const META_DIARIA = 5;
 const DOMINIO_DEBIL = 1; // una palabra con dominio 0 o 1 todavía no se asienta
@@ -74,6 +76,54 @@ const MentorController = {
       // Que la IA no responda no puede dejar al avatar mudo: cae al consejo de reglas
       if (error.status !== 429) reportarError("Error generando el consejo del día", error);
       res.json({ texto: elegirConsejo(estado).texto, origen: "reglas" });
+    }
+  },
+
+  /** Abre la charla: devuelve el saludo con que Tuti empieza, sin gastar IA. */
+  async saludo(req, res) {
+    try {
+      const estado = await leerEstado(req.usuario.id);
+      res.json({ texto: saludoInicial(estado, estado.ayudaEspanol) });
+    } catch (error) {
+      reportarError("Error abriendo la charla con el mentor", error);
+      res.status(500).json({ error: "No se pudo abrir la charla" });
+    }
+  },
+
+  /**
+   * Un turno de conversación. El historial llega del navegador, así que se
+   * limpia y se recorta antes de tocar la IA.
+   */
+  async charla(req, res) {
+    const mensaje = limpiarMensaje(req.body && req.body.mensaje);
+    if (!mensajeUtil(mensaje)) {
+      return res.status(400).json({ error: "Escribe algo para que Tuti te responda" });
+    }
+
+    let estado;
+    try {
+      estado = await leerEstado(req.usuario.id);
+    } catch (error) {
+      reportarError("Error leyendo el estado para la charla", error);
+      return res.status(500).json({ error: "No se pudo leer tu progreso" });
+    }
+
+    const historial = [
+      ...(Array.isArray(req.body.historial) ? req.body.historial : []),
+      { papel: "tu", texto: mensaje },
+    ];
+
+    try {
+      const texto = await responderCharla(estado, historial, estado.ayudaEspanol);
+      if (!texto) throw new Error("La IA devolvió una respuesta vacía");
+      res.json({ texto, origen: "ia" });
+    } catch (error) {
+      // Si la IA no responde, Tuti no se queda mudo: contesta con el consejo de reglas
+      if (error.status !== 429) reportarError("Error en la charla con el mentor", error);
+      const disculpa = estado.ayudaEspanol
+        ? "Se me enredó la lengua un momento. Mientras tanto, te dejo esto: "
+        : "My words got tangled for a second. In the meantime, here's this: ";
+      res.json({ texto: disculpa + elegirConsejo(estado).texto, origen: "reglas" });
     }
   },
 };
