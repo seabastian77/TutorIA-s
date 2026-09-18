@@ -126,11 +126,7 @@ function hablar(texto) {
 
   const utterance = new SpeechSynthesisUtterance(texto);
   utterance.lang = "en-US";
-
-  const vozIngles = vocesDisponibles.find(
-    (v) => v.lang && v.lang.startsWith("en"),
-  );
-  if (vozIngles) utterance.voice = vozIngles;
+  VozIngles.prepararVoz(utterance, vocesDisponibles);
 
   window.speechSynthesis.speak(utterance);
 }

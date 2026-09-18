@@ -3275,7 +3275,23 @@ button,
   transition: background 0.2s ease, rotate 0.25s var(--curva);
 }
 .charla-cerrar svg { width: 20px; height: 20px; }
-.charla-cerrar:hover { background: rgba(255, 255, 255, 0.16); rotate: 90deg; }
+.charla-cerrar:hover { background: rgba(255, 255, 255, 0.16); }
+#charla-cerrar:hover { rotate: 90deg; }
+
+/* La bocina: una sola tecla que alterna entre sonando y muda */
+#charla-voz { margin-right: 0; }
+#charla-voz .ic-muda, #charla-voz.muda .ic-suena { display: none; }
+#charla-voz.muda .ic-muda { display: block; }
+#charla-voz.muda { color: var(--marca-realce); }
+
+/* Mientras Tuti habla, las ondas de la bocina laten */
+.mentor-charla.hablando #charla-voz .onda-corta { animation: onda-suena 1.1s ease-in-out infinite; }
+.mentor-charla.hablando #charla-voz .onda-larga { animation: onda-suena 1.1s ease-in-out infinite 0.16s; }
+
+@keyframes onda-suena {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
 
 .charla-mensajes {
   flex: 1 1 auto;
@@ -3338,6 +3354,18 @@ button,
   30% { opacity: 1; translate: 0 -3px; }
 }
 
+/* Aviso de que este navegador no trae micrófono */
+.charla-aviso {
+  flex: none;
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--amarillo-tinta);
+  border-top: 1px solid var(--amarillo-borde);
+  color: var(--blanco);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .charla-forma {
   flex: none;
   display: flex;
@@ -3345,6 +3373,45 @@ button,
   padding: 12px;
   background: var(--panel);
   border-top: 1px solid var(--borde);
+}
+
+/* El micrófono: hablarle a Tuti en vez de escribirle */
+.charla-mic {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1px solid var(--borde-campo);
+  border-radius: 50%;
+  background: var(--panel-alto);
+  color: var(--blanco);
+  cursor: pointer;
+  transition: scale 0.2s var(--curva), background 0.2s ease, color 0.2s ease;
+}
+.charla-mic svg { width: 20px; height: 20px; position: relative; z-index: 1; }
+.charla-mic:hover { scale: 1.06; }
+
+.charla-mic.oyendo {
+  background: var(--rojo);
+  border-color: var(--rojo);
+  color: var(--negro);
+}
+
+/* El halo que late mientras el micrófono está abierto */
+.charla-mic-halo {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  opacity: 0;
+  border: 2px solid var(--rojo);
+}
+.charla-mic.oyendo .charla-mic-halo { animation: mic-late 1.4s ease-out infinite; }
+
+@keyframes mic-late {
+  0% { opacity: 0.85; scale: 1; }
+  100% { opacity: 0; scale: 1.5; }
 }
 
 .charla-entrada {
@@ -3418,8 +3485,11 @@ button,
   .mentor[data-animo="celebrando"] .mentor-ala { animation: none; }
   .mentor-charla, .charla-turno { animation-duration: 0.01s; }
   .charla-punto { animation-duration: 1.3s; }
+  .charla-mic.oyendo .charla-mic-halo { animation: none; }
+  .mentor-charla.hablando #charla-voz .onda-corta,
+  .mentor-charla.hablando #charla-voz .onda-larga { animation: none; opacity: 1; }
   .mentor-burbuja, .mentor-avatar, .mentor-punto,
-  .mentor-charlar, .charla-cerrar, .charla-enviar { transition-duration: 0.01s; }
+  .mentor-charlar, .charla-cerrar, .charla-enviar, .charla-mic { transition-duration: 0.01s; }
 }
 
 /* ============================================================

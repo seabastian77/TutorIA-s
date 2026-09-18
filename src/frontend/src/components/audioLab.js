@@ -10,11 +10,7 @@ function hablarIngles(texto, velocidad = 1) {
   const mensaje = new SpeechSynthesisUtterance(texto);
   mensaje.lang = "en-US";
   mensaje.rate = velocidad;
-
-  const vozInglesa = window.speechSynthesis
-    .getVoices()
-    .find((v) => v.lang && v.lang.startsWith("en"));
-  if (vozInglesa) mensaje.voice = vozInglesa;
+  VozIngles.prepararVoz(mensaje, window.speechSynthesis.getVoices());
 
   window.speechSynthesis.speak(mensaje);
   return true;

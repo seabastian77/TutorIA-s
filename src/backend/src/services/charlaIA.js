@@ -15,9 +15,9 @@ const MAX_TOKENS = 220;
  * El mensaje de sistema va siempre primero: el historial que llega del navegador
  * solo puede traer papeles de usuario o de asistente, nunca de sistema.
  */
-async function responderCharla(estado, historial, enEspanol) {
+async function responderCharla(estado, historial, enEspanol, voz) {
   const mensajes = [
-    { role: "system", content: instruccionesDeTuti(estado, enEspanol) },
+    { role: "system", content: instruccionesDeTuti(estado, enEspanol, voz) },
     ...comoMensajes(historial),
   ];
 
@@ -26,6 +26,9 @@ async function responderCharla(estado, historial, enEspanol) {
     messages: mensajes,
     max_tokens: MAX_TOKENS,
     temperature: 0.9,
+    // Castiga repetir las mismas aperturas turno tras turno
+    presence_penalty: 0.4,
+    frequency_penalty: 0.3,
   });
 
   return (respuesta.choices[0].message.content || "").trim();

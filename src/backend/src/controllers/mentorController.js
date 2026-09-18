@@ -83,7 +83,10 @@ const MentorController = {
   async saludo(req, res) {
     try {
       const estado = await leerEstado(req.usuario.id);
-      res.json({ texto: saludoInicial(estado, estado.ayudaEspanol) });
+      res.json({
+        texto: saludoInicial(estado, estado.ayudaEspanol),
+        idioma: estado.ayudaEspanol ? "es" : "en",
+      });
     } catch (error) {
       reportarError("Error abriendo la charla con el mentor", error);
       res.status(500).json({ error: "No se pudo abrir la charla" });
@@ -112,18 +115,20 @@ const MentorController = {
       ...(Array.isArray(req.body.historial) ? req.body.historial : []),
       { papel: "tu", texto: mensaje },
     ];
+    const voz = { hablado: req.body.hablado === true, claridad: req.body.claridad };
+    const idioma = estado.ayudaEspanol ? "es" : "en";
 
     try {
-      const texto = await responderCharla(estado, historial, estado.ayudaEspanol);
+      const texto = await responderCharla(estado, historial, estado.ayudaEspanol, voz);
       if (!texto) throw new Error("La IA devolvió una respuesta vacía");
-      res.json({ texto, origen: "ia" });
+      res.json({ texto, origen: "ia", idioma });
     } catch (error) {
       // Si la IA no responde, Tuti no se queda mudo: contesta con el consejo de reglas
       if (error.status !== 429) reportarError("Error en la charla con el mentor", error);
       const disculpa = estado.ayudaEspanol
         ? "Se me enredó la lengua un momento. Mientras tanto, te dejo esto: "
         : "My words got tangled for a second. In the meantime, here's this: ";
-      res.json({ texto: disculpa + elegirConsejo(estado).texto, origen: "reglas" });
+      res.json({ texto: disculpa + elegirConsejo(estado).texto, origen: "reglas", idioma });
     }
   },
 };

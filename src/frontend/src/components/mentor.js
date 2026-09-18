@@ -81,6 +81,23 @@ const CHARLA_HTML = `
       <strong id="charla-titulo">${MENTOR_NOMBRE}</strong>
       <span id="charla-estado" class="charla-estado">En línea</span>
     </span>
+    <button id="charla-voz" class="charla-cerrar" type="button" aria-pressed="true"
+            aria-label="Silenciar la voz de ${MENTOR_NOMBRE}" title="Silenciar a ${MENTOR_NOMBRE}">
+      <svg class="ic-suena" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linejoin="round"/>
+        <path class="onda-corta" d="M15.6 9.6a3.4 3.4 0 0 1 0 4.8" fill="none"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path class="onda-larga" d="M18.4 7a7.2 7.2 0 0 1 0 10" fill="none"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <svg class="ic-muda" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
     <button id="charla-cerrar" class="charla-cerrar" type="button" aria-label="Cerrar la charla">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor"
@@ -92,8 +109,22 @@ const CHARLA_HTML = `
   <div id="charla-mensajes" class="charla-mensajes" role="log" aria-live="polite"
        aria-label="Conversación con ${MENTOR_NOMBRE}"></div>
 
+  <p id="charla-aviso-mic" class="charla-aviso oculto">
+    Tu navegador no deja usar el micrófono aquí. Prueba con Chrome o Edge.
+  </p>
+
   <form id="charla-forma" class="charla-forma">
     <label class="sr-solo" for="charla-entrada">Escríbele a ${MENTOR_NOMBRE}</label>
+    <button id="charla-mic" class="charla-mic oculto" type="button"
+            aria-label="Hablar en inglés" title="Hablar en inglés">
+      <span class="charla-mic-halo" aria-hidden="true"></span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor"
+              stroke-width="1.8"/>
+        <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
     <input id="charla-entrada" class="charla-entrada" type="text" autocomplete="off"
            maxlength="400" placeholder="Escríbele a ${MENTOR_NOMBRE}...">
     <button id="charla-enviar" class="charla-enviar" type="submit" aria-label="Enviar">
@@ -237,12 +268,17 @@ async function iniciarMentor() {
    ============================================================ */
 
 const CHARLA_MEMORIA = "tutorias_charla";
+const CHARLA_VOZ_MEMORIA = "tutorias_charla_voz";
 const CHARLA_TURNOS = 8; // lo mismo que recuerda el backend
 const CHARLA_LARGO = 400;
 
 let charlaHistorial = [];
 let charlaOcupada = false;
 let charlaSaludada = false;
+let charlaIdioma = "es";
+let charlaConVoz = true;
+let charlaOyendo = false;
+let charlaReconocimiento = null;
 
 /** Deja el panel de la charla colgado del body, una sola vez. */
 function montarCharla() {
@@ -252,12 +288,18 @@ function montarCharla() {
   document.body.appendChild(caja.firstElementChild);
 
   document.getElementById("charla-cerrar").addEventListener("click", cerrarCharla);
-  document.getElementById("charla-forma").addEventListener("submit", enviarCharla);
+  document.getElementById("charla-forma").addEventListener("submit", (e) => enviarCharla(e));
+  document.getElementById("charla-voz").addEventListener("click", alternarVozDeTuti);
+  document.getElementById("charla-mic").addEventListener("click", alternarMicrofono);
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !document.getElementById("mentor-charla").classList.contains("oculto")) {
       cerrarCharla();
     }
   });
+
+  charlaConVoz = leerPreferenciaDeVoz();
+  pintarBotonDeVoz();
+  prepararMicrofono();
 
   charlaHistorial = leerCharlaGuardada();
   charlaHistorial.forEach((t) => pintarTurno(t.papel, t.texto));
@@ -341,9 +383,11 @@ async function abrirCharla() {
   charlaSaludada = true;
   const pensando = pintarEscribiendo();
   try {
-    const { texto } = await MentorAPI.saludo();
+    const { texto, idioma } = await MentorAPI.saludo();
     pensando.remove();
+    if (idioma) charlaIdioma = idioma;
     anotarTurno("tuti", texto);
+    hablarComoTuti(texto);
   } catch (err) {
     pensando.remove();
     anotarTurno("tuti", "¡Hola! Soy Tuti. ¿Cómo va tu inglés hoy?");
@@ -351,20 +395,23 @@ async function abrirCharla() {
 }
 
 function cerrarCharla() {
+  callarATuti();
+  pararMicrofono();
   document.getElementById("mentor-charla").classList.add("oculto");
   document.getElementById("mentor").classList.remove("en-charla");
   const abrir = document.getElementById("mentor-abrir-charla");
   if (abrir) abrir.focus();
 }
 
-async function enviarCharla(evento) {
-  evento.preventDefault();
+async function enviarCharla(evento, voz) {
+  if (evento) evento.preventDefault();
   if (charlaOcupada) return;
 
   const campo = document.getElementById("charla-entrada");
   const mensaje = campo.value.trim().slice(0, CHARLA_LARGO);
   if (!mensaje) return;
 
+  callarATuti();
   charlaOcupada = true;
   campo.value = "";
   campo.disabled = true;
@@ -377,9 +424,11 @@ async function enviarCharla(evento) {
   const pensando = pintarEscribiendo();
 
   try {
-    const { texto } = await MentorAPI.charlar(mensaje, historial);
+    const respuesta = await MentorAPI.charlar(mensaje, historial, voz);
     pensando.remove();
-    anotarTurno("tuti", texto);
+    if (respuesta.idioma) charlaIdioma = respuesta.idioma;
+    anotarTurno("tuti", respuesta.texto);
+    hablarComoTuti(respuesta.texto);
   } catch (err) {
     pensando.remove();
     anotarTurno("tuti", "No pude responderte ahora mismo. Inténtalo otra vez en un momento.");
@@ -392,8 +441,138 @@ async function enviarCharla(evento) {
   }
 }
 
+/* ─────────── la voz de Tuti ─────────── */
+
+function leerPreferenciaDeVoz() {
+  try {
+    return localStorage.getItem(CHARLA_VOZ_MEMORIA) !== "0";
+  } catch (e) {
+    return true;
+  }
+}
+
+/** Pone el botón de la bocina acorde con si Tuti suena o está mudo. */
+function pintarBotonDeVoz() {
+  const btn = document.getElementById("charla-voz");
+  if (!btn) return;
+  btn.classList.toggle("muda", !charlaConVoz);
+  btn.setAttribute("aria-pressed", String(charlaConVoz));
+  const etiqueta = charlaConVoz ? "Silenciar a Tuti" : "Dejar que Tuti hable";
+  btn.setAttribute("aria-label", etiqueta);
+  btn.setAttribute("title", etiqueta);
+}
+
+function alternarVozDeTuti() {
+  charlaConVoz = !charlaConVoz;
+  if (!charlaConVoz) callarATuti();
+  pintarBotonDeVoz();
+  try {
+    localStorage.setItem(CHARLA_VOZ_MEMORIA, charlaConVoz ? "1" : "0");
+  } catch (e) {
+    // Sin almacenamiento la preferencia dura lo que dure la página abierta
+  }
+}
+
+function callarATuti() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  const panel = document.getElementById("mentor-charla");
+  if (panel) panel.classList.remove("hablando");
+}
+
+/** Lee en voz alta la respuesta de Tuti, en el idioma en que la escribió. */
+function hablarComoTuti(texto) {
+  if (!charlaConVoz || !texto || !window.speechSynthesis) return;
+
+  window.speechSynthesis.cancel();
+  const mensaje = new SpeechSynthesisUtterance(texto);
+  mensaje.lang = charlaIdioma === "en" ? "en-US" : "es-MX";
+  mensaje.rate = 0.98;
+  mensaje.pitch = 1.05;
+  VozIngles.prepararVoz(mensaje, null, charlaIdioma);
+
+  const panel = document.getElementById("mentor-charla");
+  mensaje.onstart = () => panel && panel.classList.add("hablando");
+  mensaje.onend = () => panel && panel.classList.remove("hablando");
+  mensaje.onerror = () => panel && panel.classList.remove("hablando");
+
+  window.speechSynthesis.speak(mensaje);
+}
+
+/* ─────────── hablarle a Tuti por micrófono ─────────── */
+
+/** Arma el reconocimiento de voz, o avisa si el navegador no lo trae. */
+function prepararMicrofono() {
+  const Reconocimiento = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const boton = document.getElementById("charla-mic");
+  const aviso = document.getElementById("charla-aviso-mic");
+
+  if (!Reconocimiento) {
+    aviso.classList.remove("oculto");
+    return;
+  }
+  boton.classList.remove("oculto");
+
+  charlaReconocimiento = new Reconocimiento();
+  charlaReconocimiento.lang = "en-US"; // se practica la pronunciación en inglés
+  charlaReconocimiento.interimResults = false;
+  charlaReconocimiento.maxAlternatives = 1;
+
+  charlaReconocimiento.onresult = (evento) => {
+    const oido = evento.results[0][0];
+    document.getElementById("charla-entrada").value = String(oido.transcript || "")
+      .trim()
+      .slice(0, CHARLA_LARGO);
+    pararMicrofono();
+    enviarCharla(null, { hablado: true, claridad: oido.confidence });
+  };
+
+  charlaReconocimiento.onerror = (evento) => {
+    pararMicrofono();
+    document.getElementById("charla-estado").textContent =
+      evento.error === "not-allowed" ? "Sin permiso del micrófono" : "No te escuché bien";
+  };
+
+  charlaReconocimiento.onend = pararMicrofono;
+}
+
+function alternarMicrofono() {
+  if (!charlaReconocimiento || charlaOcupada) return;
+  if (charlaOyendo) return pararMicrofono();
+
+  callarATuti(); // que la voz de Tuti no se meta en el micrófono
+  try {
+    charlaReconocimiento.start();
+  } catch (e) {
+    return; // ya venía arrancado: el navegador se queja y no pasa nada
+  }
+  charlaOyendo = true;
+  document.getElementById("charla-mic").classList.add("oyendo");
+  document.getElementById("charla-mic").setAttribute("aria-pressed", "true");
+  document.getElementById("charla-estado").textContent = "Te escucho... habla en inglés";
+}
+
+function pararMicrofono() {
+  if (charlaReconocimiento && charlaOyendo) {
+    try {
+      charlaReconocimiento.stop();
+    } catch (e) {
+      // Si ya se había detenido solo, no hay nada que parar
+    }
+  }
+  charlaOyendo = false;
+  const boton = document.getElementById("charla-mic");
+  if (boton) {
+    boton.classList.remove("oyendo");
+    boton.setAttribute("aria-pressed", "false");
+  }
+  const estado = document.getElementById("charla-estado");
+  if (estado && estado.textContent.startsWith("Te escucho")) estado.textContent = "En línea";
+}
+
 /** Al cerrar sesión la charla no puede quedar colgada en pantalla. */
 function olvidarCharla() {
+  callarATuti();
+  pararMicrofono();
   charlaHistorial = [];
   charlaSaludada = false;
   const lista = document.getElementById("charla-mensajes");

@@ -31,15 +31,20 @@ const MentorAPI = {
     return datos;
   },
 
-  /** Manda un turno de la conversación con el historial reciente. */
-  async charlar(mensaje, historial) {
+  /** Manda un turno de la conversación con el historial y, si fue hablado, cómo sonó. */
+  async charlar(mensaje, historial, voz) {
     const resp = await fetch(`${URL_BASE_MENTOR}/mentor/charla`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${Sesion.obtenerToken()}`,
       },
-      body: JSON.stringify({ mensaje, historial }),
+      body: JSON.stringify({
+        mensaje,
+        historial,
+        hablado: !!(voz && voz.hablado),
+        claridad: voz && voz.claridad,
+      }),
     });
     const datos = await resp.json();
     if (!resp.ok) throw new Error(datos.error || "Tuti no pudo responder");

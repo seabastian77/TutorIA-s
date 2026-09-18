@@ -83,11 +83,7 @@ function reproducirLineaActual() {
     escenaActual.lineas[indiceLinea],
   );
   utterance.lang = "en-US";
-
-  const vozIngles = vocesDisponiblesEscena.find(
-    (v) => v.lang && v.lang.startsWith("en"),
-  );
-  if (vozIngles) utterance.voice = vozIngles;
+  VozIngles.prepararVoz(utterance, vocesDisponiblesEscena);
 
   window.speechSynthesis.speak(utterance);
 }
