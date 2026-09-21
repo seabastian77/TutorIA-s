@@ -31,4 +31,28 @@ async function obtenerPerfil(token) {
   return datos;
 }
 
-window.AuthAPI = { registrar, login, obtenerPerfil };
+/** Pide el enlace para cambiar la contraseña. */
+async function pedirEnlace(correo) {
+  const resp = await fetch(`${URL_BASE}/auth/olvide`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ correo }),
+  });
+  const datos = await resp.json();
+  if (!resp.ok) throw new Error(datos.error || "No se pudo pedir el enlace");
+  return datos;
+}
+
+/** Cambia la contraseña con el token que venía en el enlace. */
+async function restablecer({ token, contrasena }) {
+  const resp = await fetch(`${URL_BASE}/auth/restablecer`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, contrasena }),
+  });
+  const datos = await resp.json();
+  if (!resp.ok) throw new Error(datos.error || "No se pudo cambiar la contraseña");
+  return datos;
+}
+
+window.AuthAPI = { registrar, login, obtenerPerfil, pedirEnlace, restablecer };

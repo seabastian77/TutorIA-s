@@ -5,6 +5,8 @@ const verificarAuth = require("../middleware/authMiddleware");
 
 router.post("/registro", AuthController.registrar);
 router.post("/login", AuthController.login);
+router.post("/olvide", AuthController.olvide);
+router.post("/restablecer", AuthController.restablecer);
 router.get("/perfil", verificarAuth, AuthController.perfil);
 
 module.exports = router;

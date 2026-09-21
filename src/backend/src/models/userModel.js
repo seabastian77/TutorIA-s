@@ -21,7 +21,9 @@ const UserModel = {
 
   async buscarPorId(id) {
     const { rows } = await pool.query(
-      "SELECT id, nombre, correo, nivel_mcer, fecha_registro, ultimo_acceso FROM usuarios WHERE id = $1",
+      `SELECT id, nombre, correo, nivel_mcer, fecha_registro, ultimo_acceso,
+              contrasena_cambiada_en
+         FROM usuarios WHERE id = $1`,
       [id],
     );
     return rows[0];

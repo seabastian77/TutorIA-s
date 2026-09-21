@@ -82,6 +82,41 @@
           </div>
           <button type="submit" class="btn-principal">Start practicing</button>
         </form>
+        <button id="btn-olvide" class="enlace-suave" type="button">Forgot your password?</button>
+      </div>
+
+      <div id="pagina-olvide" class="pagina">
+        <form id="form-olvide">
+          <p class="pagina-intro">
+            Write the email you signed up with and we'll send you a link to set a new password.
+          </p>
+          <div class="campo">
+            <label for="olvide-correo">Email</label>
+            <input type="email" id="olvide-correo" placeholder="youremail@example.com" required />
+          </div>
+          <button type="submit" class="btn-principal">Send me the link</button>
+        </form>
+        <p id="olvide-aviso" class="mensaje-exito oculto" role="status"></p>
+        <button id="btn-volver-login" class="enlace-suave" type="button">Back to log in</button>
+      </div>
+
+      <div id="pagina-restablecer" class="pagina">
+        <form id="form-restablecer">
+          <p class="pagina-intro">Set a new password for your account.</p>
+          <div class="campo">
+            <label for="restablecer-contrasena">New password</label>
+            <input type="password" id="restablecer-contrasena"
+                   placeholder="Minimum 6 characters" minlength="6" required />
+          </div>
+          <div class="campo">
+            <label for="restablecer-repetir">Repeat it</label>
+            <input type="password" id="restablecer-repetir"
+                   placeholder="Type it again" minlength="6" required />
+          </div>
+          <button type="submit" class="btn-principal">Save my new password</button>
+        </form>
+        <p id="restablecer-aviso" class="mensaje-exito oculto" role="status"></p>
+        <button id="btn-cancelar-restablecer" class="enlace-suave" type="button">Back to log in</button>
       </div>
 
       <div id="pagina-registro" class="pagina">

@@ -98,6 +98,112 @@ function inicializarFormAuth() {
       boton.textContent = "Crear cuenta";
     }
   });
+
+  /* ─────────── recuperar la contraseña ─────────── */
+
+  const formOlvide = document.getElementById("form-olvide");
+  const formRestablecer = document.getElementById("form-restablecer");
+  const avisoOlvide = document.getElementById("olvide-aviso");
+  const avisoRestablecer = document.getElementById("restablecer-aviso");
+
+  document.getElementById("btn-olvide").addEventListener("click", () => {
+    avisoOlvide.classList.add("oculto");
+    formOlvide.classList.remove("oculto");
+    document.getElementById("olvide-correo").value =
+      document.getElementById("login-correo").value.trim();
+    cambiarPestana("pagina-olvide");
+    document.getElementById("olvide-correo").focus();
+  });
+
+  document.getElementById("btn-volver-login").addEventListener("click", () =>
+    cambiarPestana("pagina-login"),
+  );
+
+  document.getElementById("btn-cancelar-restablecer").addEventListener("click", () => {
+    limpiarEnlaceDeLaUrl();
+    cambiarPestana("pagina-login");
+  });
+
+  formOlvide.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    limpiarError();
+
+    const correo = document.getElementById("olvide-correo").value.trim();
+    const boton = formOlvide.querySelector('button[type="submit"]');
+    if (!Validaciones.correoValido(correo)) return mostrarError("Ingresa un correo válido");
+
+    boton.disabled = true;
+    boton.textContent = "Enviando...";
+
+    try {
+      const { mensaje } = await AuthAPI.pedirEnlace(correo);
+      // La respuesta es la misma exista o no la cuenta, a propósito
+      avisoOlvide.textContent = mensaje;
+      avisoOlvide.classList.remove("oculto");
+      formOlvide.classList.add("oculto");
+    } catch (err) {
+      mostrarError(err.message);
+    } finally {
+      boton.disabled = false;
+      boton.textContent = "Enviar el enlace";
+    }
+  });
+
+  formRestablecer.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    limpiarError();
+
+    const contrasena = document.getElementById("restablecer-contrasena").value;
+    const repetida = document.getElementById("restablecer-repetir").value;
+    const boton = formRestablecer.querySelector('button[type="submit"]');
+
+    if (!Validaciones.contrasenaValida(contrasena)) {
+      return mostrarError("La contraseña debe tener al menos 6 caracteres");
+    }
+    if (contrasena !== repetida) return mostrarError("Las dos contraseñas no coinciden");
+
+    boton.disabled = true;
+    boton.textContent = "Guardando...";
+
+    try {
+      const { mensaje } = await AuthAPI.restablecer({ token: tokenDelEnlace(), contrasena });
+      avisoRestablecer.textContent = mensaje;
+      avisoRestablecer.classList.remove("oculto");
+      formRestablecer.classList.add("oculto");
+      limpiarEnlaceDeLaUrl();
+    } catch (err) {
+      mostrarError(err.message);
+    } finally {
+      boton.disabled = false;
+      boton.textContent = "Guardar mi contraseña";
+    }
+  });
+
+  // Si llegó por el enlace del correo, se abre directo la pantalla de clave nueva
+  if (tokenDelEnlace()) {
+    Sesion.cerrar(); // cambiar la clave no puede dejarlo dentro con la sesión vieja
+    cambiarPestana("pagina-restablecer");
+    document.getElementById("restablecer-contrasena").focus();
+  }
+}
+
+/** Saca el token de la dirección, sin creerle nada de lo que traiga. */
+function tokenDelEnlace() {
+  try {
+    const valor = new URLSearchParams(location.search).get("recuperar");
+    return /^[0-9a-f]{64}$/.test(valor || "") ? valor : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/** Borra el token de la barra de direcciones para que no quede en el historial. */
+function limpiarEnlaceDeLaUrl() {
+  try {
+    history.replaceState(null, "", location.pathname);
+  } catch (e) {
+    // Si el navegador no deja, el token vence en una hora de todos modos
+  }
 }
 
 function mostrarPantallaPrincipal(usuario) {

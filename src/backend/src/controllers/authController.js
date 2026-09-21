@@ -1,5 +1,11 @@
 const AuthService = require("../services/authService");
+const RecuperacionService = require("../services/recuperacionService");
 const { reportarError } = require("../utils/errores");
+const { correoValido, contrasenaValida, LARGO_MINIMO } = require("../utils/recuperacion");
+
+// La misma respuesta exista o no la cuenta: así nadie averigua quién está registrado
+const RESPUESTA_NEUTRA =
+  "Si ese correo tiene una cuenta, le llegará un enlace para cambiar la contraseña.";
 
 const AuthController = {
   async registrar(req, res) {
@@ -56,6 +62,42 @@ const AuthController = {
 
   async perfil(req, res) {
     res.json({ usuario: req.usuario });
+  },
+
+  /** Pide el enlace para cambiar la contraseña. */
+  async olvide(req, res) {
+    const { correo } = req.body || {};
+    if (!correoValido(correo)) {
+      return res.status(400).json({ error: "Escribe un correo válido" });
+    }
+
+    try {
+      await RecuperacionService.pedirEnlace(correo);
+    } catch (error) {
+      // Ni siquiera un fallo interno puede delatar si la cuenta existe
+      reportarError("Error pidiendo el enlace de recuperación", error);
+    }
+    res.json({ mensaje: RESPUESTA_NEUTRA });
+  },
+
+  /** Cambia la contraseña con el token que venía en el enlace del correo. */
+  async restablecer(req, res) {
+    const { token, contrasena } = req.body || {};
+    if (!contrasenaValida(contrasena)) {
+      return res
+        .status(400)
+        .json({ error: `La contraseña debe tener al menos ${LARGO_MINIMO} caracteres` });
+    }
+
+    try {
+      await RecuperacionService.restablecer(token, contrasena);
+      res.json({ mensaje: "Tu contraseña quedó cambiada. Ya puedes entrar con ella." });
+    } catch (error) {
+      if (!error.status) reportarError("Error restableciendo la contraseña", error);
+      res
+        .status(error.status || 500)
+        .json({ error: error.message || "No se pudo cambiar la contraseña" });
+    }
   },
 };
 

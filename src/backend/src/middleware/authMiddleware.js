@@ -1,5 +1,6 @@
 const AuthService = require('../services/authService');
 const UserModel = require('../models/userModel');
+const { tokenAnteriorAlCambio } = require('../utils/sesionValida');
 
 async function verificarAuth(req, res, next) {
   try {
@@ -16,6 +17,12 @@ async function verificarAuth(req, res, next) {
       return res.status(401).json({ error: 'Usuario no encontrado' });
     }
 
+    // Cambiar la contraseña cierra las sesiones que estaban abiertas antes
+    if (tokenAnteriorAlCambio(payload.iat, usuario.contrasena_cambiada_en)) {
+      return res.status(401).json({ error: 'Token inválido o expirado' });
+    }
+
+    delete usuario.contrasena_cambiada_en;
     req.usuario = usuario;
     next();
   } catch (error) {

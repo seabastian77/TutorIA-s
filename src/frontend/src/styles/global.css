@@ -253,6 +253,48 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .mensaje-error.visible { display: block; }
 
+/* El aviso de que el correo salió, o de que la clave quedó cambiada */
+.mensaje-exito {
+  margin: 0 0 16px;
+  padding: 13px 16px;
+  border-radius: var(--radio-chico);
+  background: var(--verde-tinta);
+  border: 1px solid var(--verde-borde);
+  color: var(--verde);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* La línea que explica de qué se trata la pantalla */
+.pagina-intro {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--gris);
+}
+
+/* Un enlace que por dentro es botón: "¿Olvidaste tu contraseña?" */
+.enlace-suave {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 4px;
+  padding: 10px;
+  border: 0;
+  background: none;
+  color: var(--azul);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--radio-chico);
+  transition: background 0.2s ease;
+}
+
+.enlace-suave:hover { background: var(--azul-tinta); text-decoration: underline; }
+.enlace-suave:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+
 .pie-auth {
   margin-top: 26px;
   text-align: center;
