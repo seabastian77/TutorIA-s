@@ -73,6 +73,11 @@
       <!-- Solo aparece si la app tiene configurado el acceso con Google -->
       <div id="caja-google" class="caja-google oculto">
         <div id="boton-google"></div>
+        <p class="aviso-politica">
+          Al continuar con Google aceptas la
+          <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.
+          Si eres menor de 18 años, necesitas la autorización de tu acudiente.
+        </p>
         <p class="separador-o"><span>or</span></p>
       </div>
 
@@ -139,11 +144,22 @@
             <label for="registro-contrasena">Password</label>
             <input type="password" id="registro-contrasena" placeholder="Minimum 6 characters" required />
           </div>
+          <label class="casilla-politica" for="registro-politica">
+            <input type="checkbox" id="registro-politica" required />
+            <span>
+              Acepto la
+              <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.
+              Si soy menor de 18 años, tengo la autorización de mi madre, padre o representante legal.
+            </span>
+          </label>
           <button type="submit" class="btn-principal">Create my account</button>
         </form>
       </div>
 
-      <div class="pie-auth">Learn English at your own pace, every day</div>
+      <div class="pie-auth">
+        Learn English at your own pace, every day
+        <a class="enlace-politica" href="privacidad.html">Política de tratamiento de datos</a>
+      </div>
     </div>
   </div>
 

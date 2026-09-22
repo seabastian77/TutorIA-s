@@ -291,6 +291,45 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   background: var(--borde);
 }
 
+/* La autorización de datos: casilla del registro y aviso bajo el botón de Google */
+.casilla-politica {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 18px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gris);
+  cursor: pointer;
+}
+
+.casilla-politica input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  accent-color: var(--azul);
+  cursor: pointer;
+}
+
+.casilla-politica a,
+.aviso-politica a,
+.enlace-politica { color: var(--azul); }
+
+.aviso-politica {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--gris);
+  text-align: center;
+}
+
+.enlace-politica {
+  display: block;
+  margin-top: 6px;
+  min-height: 24px;
+}
+
 /* El aviso de que el correo salió, o de que la clave quedó cambiada */
 .mensaje-exito {
   margin: 0 0 16px;
@@ -3828,4 +3867,73 @@ button,
 @media (prefers-reduced-motion: reduce) {
   .btn-tema .ic-sol-rayos { animation: none; }
   .btn-tema { transition: none; }
+}
+
+/* ============================================================
+   POLÍTICA DE DATOS — una página de lectura, sin nada que distraiga
+   ============================================================ */
+
+.cuerpo-legal { background: var(--negro); color: var(--blanco); }
+
+.legal {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  line-height: 1.65;
+  font-size: 16px;
+}
+
+.legal-volver {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--azul);
+  text-decoration: none;
+}
+.legal-volver:hover { text-decoration: underline; }
+
+.legal-cabeza { margin: 12px 0 24px; }
+.legal-cabeza img { display: block; height: 44px; width: auto; margin-bottom: 18px; }
+.legal-cabeza h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 1.2; margin: 0 0 8px; }
+.legal-meta { margin: 0; color: var(--gris); font-size: 14px; }
+
+.legal-resumen {
+  padding: 16px 18px;
+  border-radius: var(--radio-chico);
+  background: var(--azul-tinta);
+  border: 1px solid var(--azul-borde);
+}
+
+.legal-indice {
+  margin: 24px 0 8px;
+  padding: 16px 18px;
+  border-radius: var(--radio-chico);
+  background: var(--panel);
+  border: 1px solid var(--borde);
+}
+.legal-indice ol { margin: 0; padding-left: 1.4em; columns: 2; column-gap: 24px; }
+.legal-indice li { break-inside: avoid; margin: 3px 0; }
+
+.legal section { scroll-margin-top: 16px; }
+.legal h2 { font-size: 1.3rem; margin: 40px 0 10px; }
+.legal h3 { font-size: 1.05rem; margin: 22px 0 6px; }
+.legal ul { padding-left: 1.3em; }
+.legal li { margin: 6px 0; }
+.legal a:not(.legal-volver) { color: var(--azul); overflow-wrap: anywhere; }
+
+.legal-tabla { overflow-x: auto; margin: 14px 0; }
+.legal table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 32rem; }
+.legal th, .legal td {
+  text-align: left;
+  vertical-align: top;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--borde);
+}
+.legal th { background: var(--panel); font-weight: 700; }
+
+.legal-pie { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--borde); }
+
+@media (max-width: 40rem) {
+  .legal-indice ol { columns: 1; }
 }

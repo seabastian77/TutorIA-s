@@ -7,6 +7,7 @@ async function entrar(p) {
   await p.fill("#registro-nombre", "Sebas");
   await p.fill("#registro-correo", `resp${Date.now()}@t4.com`);
   await p.fill("#registro-contrasena", "123456");
+  await p.check("#registro-politica");
   await p.click("#form-registro button[type=submit]");
   await p.waitForSelector("#vista-principal:not(.oculto)");
   await p.click("#mentor-abrir-charla");

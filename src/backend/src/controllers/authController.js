@@ -4,6 +4,7 @@ const { GoogleService, googleConfigurado } = require("../services/googleService"
 const { vozGoogleConfigurada } = require("../services/vozGoogleService");
 const { reportarError } = require("../utils/errores");
 const { correoValido, contrasenaValida, LARGO_MINIMO } = require("../utils/recuperacion");
+const { aceptoPolitica } = require("../utils/politica");
 
 // La misma respuesta exista o no la cuenta: así nadie averigua quién está registrado
 const RESPUESTA_NEUTRA =
@@ -12,7 +13,7 @@ const RESPUESTA_NEUTRA =
 const AuthController = {
   async registrar(req, res) {
     try {
-      const { nombre, correo, contrasena } = req.body;
+      const { nombre, correo, contrasena, aceptaPolitica } = req.body;
 
       if (!nombre || !correo || !contrasena) {
         return res
@@ -23,6 +24,12 @@ const AuthController = {
         return res
           .status(400)
           .json({ error: "La contraseña debe tener al menos 6 caracteres" });
+      }
+      // La ley exige autorización previa y expresa antes de guardar cualquier dato
+      if (!aceptoPolitica(aceptaPolitica)) {
+        return res
+          .status(400)
+          .json({ error: "Debes aceptar la política de tratamiento de datos" });
       }
 
       const { usuario, token } = await AuthService.registrar({

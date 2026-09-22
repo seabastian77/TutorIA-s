@@ -17,7 +17,7 @@ const post = async (ruta, cuerpo) => {
 (async () => {
   const correo = `recu${Date.now()}@t4.com`;
   const registro = await post("/auth/registro", {
-    nombre: "Sebas", correo, contrasena: "clavevieja",
+    nombre: "Sebas", correo, contrasena: "clavevieja", aceptaPolitica: true,
   });
   const tokenViejo = registro.datos.token;
   console.log("1. cuenta creada:", registro.estado === 201);
@@ -145,7 +145,7 @@ const post = async (ruta, cuerpo) => {
 
   // Tope de solicitudes por hora
   const correo2 = `tope${Date.now()}@t4.com`;
-  await post("/auth/registro", { nombre: "Tope", correo: correo2, contrasena: "clavevieja" });
+  await post("/auth/registro", { nombre: "Tope", correo: correo2, contrasena: "clavevieja", aceptaPolitica: true });
   for (let i = 0; i < 5; i++) await post("/auth/olvide", { correo: correo2 });
   const { rows: creadas } = await pool.query(
     `SELECT COUNT(*)::int AS n FROM recuperaciones_contrasena r

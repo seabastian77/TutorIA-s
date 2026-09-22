@@ -75,6 +75,7 @@ function inicializarFormAuth() {
     const nombre = document.getElementById("registro-nombre").value.trim();
     const correo = document.getElementById("registro-correo").value.trim();
     const contrasena = document.getElementById("registro-contrasena").value;
+    const aceptaPolitica = document.getElementById("registro-politica").checked;
     const boton = formRegistro.querySelector('button[type="submit"]');
 
     if (!nombre) return mostrarError("Ingresa tu nombre");
@@ -83,12 +84,15 @@ function inicializarFormAuth() {
     if (!Validaciones.contrasenaValida(contrasena)) {
       return mostrarError("La contraseña debe tener al menos 6 caracteres");
     }
+    if (!aceptaPolitica) {
+      return mostrarError("Debes aceptar la política de tratamiento de datos");
+    }
 
     boton.disabled = true;
     boton.textContent = "Creando cuenta...";
 
     try {
-      const datos = await AuthAPI.registrar({ nombre, correo, contrasena });
+      const datos = await AuthAPI.registrar({ nombre, correo, contrasena, aceptaPolitica });
       Sesion.guardar(datos);
       mostrarPantallaPrincipal(datos.usuario);
     } catch (err) {

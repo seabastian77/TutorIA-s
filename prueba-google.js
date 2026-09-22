@@ -27,7 +27,7 @@ const perfil = (sub, email, verificado = true) =>
   const gSinVerificar = `g-sin-${marca}`;
 
   // 1) Cuenta que ya existía con contraseña
-  await post("/auth/registro", { nombre: "Sebas", correo: correoViejo, contrasena: "miclave" });
+  await post("/auth/registro", { nombre: "Sebas", correo: correoViejo, contrasena: "miclave", aceptaPolitica: true });
 
   // 2) Entra con Google usando ESE mismo correo: tiene que vincular, no duplicar
   const vinculo = await post("/auth/google", { credencial: perfil(gViejo, correoViejo) });

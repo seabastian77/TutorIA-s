@@ -1,13 +1,14 @@
 const pool = require("../config/db");
 
 const UserModel = {
-  async crear({ nombre, correo, contrasenaHash }) {
+  /** Crea la cuenta y deja constancia de cuándo aceptó la política y cuál. */
+  async crear({ nombre, correo, contrasenaHash, politicaVersion }) {
     const query = `
-      INSERT INTO usuarios (nombre, correo, contrasena_hash)
-      VALUES ($1, $2, $3)
+      INSERT INTO usuarios (nombre, correo, contrasena_hash, politica_aceptada_en, politica_version)
+      VALUES ($1, $2, $3, NOW(), $4)
       RETURNING id, nombre, correo, nivel_mcer, fecha_registro
     `;
-    const { rows } = await pool.query(query, [nombre, correo, contrasenaHash]);
+    const { rows } = await pool.query(query, [nombre, correo, contrasenaHash, politicaVersion]);
     return rows[0];
   },
 
@@ -37,13 +38,16 @@ const UserModel = {
     return rows[0];
   },
 
-  /** Crea la cuenta de quien entra con Google: sin contraseña guardada. */
-  async crearConGoogle({ nombre, correo, googleId }) {
+  /**
+   * Crea la cuenta de quien entra con Google: sin contraseña guardada. La
+   * aceptación queda registrada porque el aviso está junto al botón.
+   */
+  async crearConGoogle({ nombre, correo, googleId, politicaVersion }) {
     const { rows } = await pool.query(
-      `INSERT INTO usuarios (nombre, correo, google_id)
-       VALUES ($1, $2, $3)
+      `INSERT INTO usuarios (nombre, correo, google_id, politica_aceptada_en, politica_version)
+       VALUES ($1, $2, $3, NOW(), $4)
        RETURNING id, nombre, correo, nivel_mcer, fecha_registro`,
-      [nombre, correo, googleId],
+      [nombre, correo, googleId, politicaVersion],
     );
     return rows[0];
   },

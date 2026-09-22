@@ -4,6 +4,7 @@ const { OAuth2Client } = require("google-auth-library");
 const UserModel = require("../models/userModel");
 const AuthService = require("./authService");
 const { datosDePerfilGoogle, decidirVinculo } = require("../utils/cuentaGoogle");
+const { POLITICA_VERSION } = require("../utils/politica");
 
 let cliente = null;
 
@@ -60,7 +61,14 @@ const GoogleService = {
     let usuario;
     if (decision === "entrar") usuario = porGoogleId;
     else if (decision === "vincular") usuario = await UserModel.vincularGoogle(porCorreo.id, googleId);
-    else usuario = await UserModel.crearConGoogle({ nombre, correo, googleId });
+    else {
+      usuario = await UserModel.crearConGoogle({
+        nombre,
+        correo,
+        googleId,
+        politicaVersion: POLITICA_VERSION,
+      });
+    }
 
     await UserModel.actualizarUltimoAcceso(usuario.id);
 

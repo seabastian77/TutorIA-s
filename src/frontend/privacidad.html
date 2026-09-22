@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de tratamiento de datos · TutorIA's</title>
+  <meta name="description" content="Cómo TutorIA's recoge, usa y protege tus datos personales, y cómo ejercer tus derechos según la Ley 1581 de 2012." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    // Antes de pintar nada, para que no haya un destello del tema contrario
+    (function () {
+      try {
+        var t = localStorage.getItem("tutorias_tema");
+        if (t !== "claro" && t !== "oscuro") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "oscuro" : "claro";
+        }
+        document.documentElement.dataset.tema = t;
+      } catch (e) {
+        document.documentElement.dataset.tema = "claro";
+      }
+    })();
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icono-32.png" />
+  <link rel="stylesheet" href="src/styles/global.css" />
+</head>
+<body class="cuerpo-legal">
+
+  <main class="legal">
+    <a class="legal-volver" href="./">← Volver a TutorIA's</a>
+
+    <header class="legal-cabeza">
+      <img src="assets/logo-tutorias.png" alt="TutorIA's" width="180" height="53" />
+      <h1>Política de tratamiento de datos personales</h1>
+      <p class="legal-meta">Versión 1.0 · Vigente desde el 22 de septiembre de 2026</p>
+    </header>
+
+    <p class="legal-resumen">
+      <strong>En corto:</strong> guardamos lo necesario para que aprendas inglés y veas tu progreso.
+      No vendemos tus datos ni los usamos para publicidad. Puedes pedir en cualquier momento que
+      los corrijamos o los borremos, escribiendo a
+      <a href="mailto:sebastiangonzalez304@gmail.com">sebastiangonzalez304@gmail.com</a>.
+    </p>
+
+    <nav class="legal-indice" aria-label="Contenido">
+      <ol>
+        <li><a href="#responsables">Quiénes somos</a></li>
+        <li><a href="#datos">Qué datos recogemos</a></li>
+        <li><a href="#finalidades">Para qué los usamos</a></li>
+        <li><a href="#terceros">Quién más los procesa</a></li>
+        <li><a href="#otros-estudiantes">Qué ven otros estudiantes</a></li>
+        <li><a href="#menores">Menores de edad</a></li>
+        <li><a href="#derechos">Tus derechos</a></li>
+        <li><a href="#como-ejercer">Cómo ejercerlos y en qué plazos</a></li>
+        <li><a href="#seguridad">Cómo los protegemos</a></li>
+        <li><a href="#conservacion">Cuánto tiempo los guardamos</a></li>
+        <li><a href="#navegador">Lo que se guarda en tu navegador</a></li>
+        <li><a href="#cambios">Cambios a esta política</a></li>
+      </ol>
+    </nav>
+
+    <section id="responsables">
+      <h2>1. Quiénes somos</h2>
+      <p>
+        TutorIA's es un asistente para aprender inglés con inteligencia artificial, desarrollado como
+        trabajo de grado del programa de Ingeniería de Sistemas de la Universidad Católica Luis Amigó,
+        en Medellín, Colombia.
+      </p>
+      <p>Los responsables del tratamiento de tus datos son los autores del proyecto:</p>
+      <ul>
+        <li>Sebastián González González</li>
+        <li>Ebert de Jesús Ríos Arroyave</li>
+      </ul>
+      <p>
+        Correo de contacto para todo lo relacionado con tus datos:
+        <a href="mailto:sebastiangonzalez304@gmail.com">sebastiangonzalez304@gmail.com</a>
+      </p>
+      <p>
+        Esta política cumple con la Ley 1581 de 2012 y el Decreto 1377 de 2013 (compilado en el
+        Decreto 1074 de 2015), que regulan la protección de datos personales en Colombia.
+      </p>
+    </section>
+
+    <section id="datos">
+      <h2>2. Qué datos recogemos</h2>
+
+      <h3>Tu cuenta</h3>
+      <ul>
+        <li>Tu nombre y tu correo electrónico.</li>
+        <li>
+          Tu contraseña, guardada cifrada: nadie puede leerla, ni siquiera nosotros.
+        </li>
+        <li>
+          Si entras con Google: el identificador de tu cuenta de Google, junto con tu nombre y tu correo.
+          Nunca recibimos tu contraseña de Google.
+        </li>
+        <li>La fecha en que te registraste, la de tu último ingreso y la fecha en que aceptaste esta política.</li>
+      </ul>
+
+      <h3>Tu aprendizaje</h3>
+      <ul>
+        <li>Tu nivel de inglés y las respuestas del examen de diagnóstico.</li>
+        <li>Los ejercicios que haces, las palabras de tu vocabulario y las lecturas que terminas.</li>
+        <li>Tus puntos, monedas, racha de días, liga y lo que compras en la tienda de la app.</li>
+        <li>Si activaste la ayuda en español.</li>
+      </ul>
+
+      <h3>Tus conversaciones</h3>
+      <ul>
+        <li>
+          Lo que escribes o dices en <em>Talk to the AI</em>, <em>Scene Mode</em> y <em>Roleplay</em>
+          se guarda, junto con la respuesta de la IA y las correcciones.
+        </li>
+        <li>
+          La charla con Tuti <strong>no</strong> se guarda en nuestro servidor: vive solo en tu
+          navegador y se borra al cerrar sesión. Sí se envía a la inteligencia artificial para
+          que pueda responderte (ver sección 4).
+        </li>
+      </ul>
+
+      <h3>Tu voz</h3>
+      <p>
+        <strong>No guardamos grabaciones de tu voz.</strong> Cuando usas el micrófono, la transcripción
+        la hace tu propio navegador, y a nosotros solo nos llega el texto. Ten en cuenta que algunos
+        navegadores, como Google Chrome, envían el audio a su propio servicio para transcribirlo; eso
+        lo maneja el navegador según su propia política.
+      </p>
+
+      <h3>Datos técnicos</h3>
+      <p>
+        Cuando algo falla, registramos el error para poder arreglarlo. Ese registro puede incluir la
+        sección de la app donde ocurrió y datos técnicos del navegador.
+      </p>
+    </section>
+
+    <section id="finalidades">
+      <h2>3. Para qué los usamos</h2>
+      <ul>
+        <li>Crear tu cuenta y dejarte entrar.</li>
+        <li>Ajustar los ejercicios a tu nivel y mostrarte tu progreso.</li>
+        <li>Que la inteligencia artificial pueda conversar contigo, corregirte y darte consejos.</li>
+        <li>Mostrar la liga semanal.</li>
+        <li>Enviarte el enlace para cambiar tu contraseña cuando lo pidas.</li>
+        <li>Detectar y corregir errores de la app.</li>
+        <li>
+          Analizar, <strong>de forma agregada y anónima</strong>, si la app ayuda a aprender inglés, como
+          parte del trabajo de grado. Nunca publicamos datos que permitan identificarte.
+        </li>
+      </ul>
+      <p><strong>No vendemos tus datos ni los usamos para publicidad.</strong></p>
+    </section>
+
+    <section id="terceros">
+      <h2>4. Quién más los procesa</h2>
+      <p>
+        Para funcionar, la app usa servicios de otras empresas que procesan datos por encargo nuestro.
+        Varias tienen sus servidores en Estados Unidos; al aceptar esta política autorizas que tus datos
+        se transmitan a esos servidores para las finalidades de la sección 3.
+      </p>
+      <div class="legal-tabla">
+        <table>
+          <thead>
+            <tr><th scope="col">Servicio</th><th scope="col">Para qué</th><th scope="col">Qué recibe</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Railway</td>
+              <td>Aloja la app y la base de datos</td>
+              <td>Todos los datos de la sección 2</td>
+            </tr>
+            <tr>
+              <td>Groq</td>
+              <td>La inteligencia artificial</td>
+              <td>El texto de tus conversaciones y tu nivel. No le enviamos tu nombre ni tu correo, salvo que tú los escribas en la conversación</td>
+            </tr>
+            <tr>
+              <td>Google</td>
+              <td>Entrar con Google y enviar los correos de recuperación</td>
+              <td>Tu correo y, si entras con Google, lo que tú autorices en su pantalla</td>
+            </tr>
+            <tr>
+              <td>Sentry</td>
+              <td>Registrar errores</td>
+              <td>Datos técnicos del error</td>
+            </tr>
+            <tr>
+              <td>Pexels</td>
+              <td>Fotos y videos de los ejercicios</td>
+              <td>Solo el tema de la imagen; ningún dato tuyo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="otros-estudiantes">
+      <h2>5. Qué ven otros estudiantes</h2>
+      <p>
+        En la <strong>liga semanal</strong>, los demás estudiantes de tu liga ven tu nombre y tus
+        puntos de la semana. No ven tu correo ni ningún otro dato.
+      </p>
+    </section>
+
+    <section id="menores">
+      <h2>6. Menores de edad</h2>
+      <p>
+        Si tienes <strong>menos de 18 años</strong>, necesitas la autorización de tu madre, tu padre o
+        tu representante legal para registrarte. Al marcar la casilla de registro declaras que la tienes.
+      </p>
+      <p>
+        Tratamos los datos de niñas, niños y adolescentes solo para ayudarles a aprender, respetando su
+        interés superior y sus derechos fundamentales, como lo exige el artículo 12 del Decreto 1377 de
+        2013. Su representante legal puede ejercer en su nombre todos los derechos de la sección 7, y
+        pedir en cualquier momento que borremos su cuenta.
+      </p>
+    </section>
+
+    <section id="derechos">
+      <h2>7. Tus derechos</h2>
+      <p>Según el artículo 8 de la Ley 1581 de 2012, tienes derecho a:</p>
+      <ul>
+        <li>Conocer, actualizar y corregir tus datos.</li>
+        <li>Pedir prueba de que nos diste tu autorización.</li>
+        <li>Que te digamos, si lo pides, qué uso le hemos dado a tus datos.</li>
+        <li>Presentar quejas ante la Superintendencia de Industria y Comercio.</li>
+        <li>Retirar tu autorización y pedir que borremos tus datos.</li>
+        <li>Acceder gratis a tus datos.</li>
+      </ul>
+    </section>
+
+    <section id="como-ejercer">
+      <h2>8. Cómo ejercerlos y en qué plazos</h2>
+      <p>
+        Escríbenos a <a href="mailto:sebastiangonzalez304@gmail.com">sebastiangonzalez304@gmail.com</a> desde el correo con el
+        que te registraste, diciendo qué necesitas.
+      </p>
+      <ul>
+        <li>
+          <strong>Consultas</strong> (por ejemplo, qué datos tenemos tuyos): te respondemos en máximo
+          <strong>10 días hábiles</strong>. Si no alcanzamos, te avisamos el motivo y te respondemos en
+          máximo 5 días hábiles más.
+        </li>
+        <li>
+          <strong>Reclamos</strong> (por ejemplo, corregir o borrar tus datos): te respondemos en máximo
+          <strong>15 días hábiles</strong>. Si no alcanzamos, te avisamos el motivo y te respondemos en
+          máximo 8 días hábiles más.
+        </li>
+      </ul>
+      <p>
+        Cuando pides que borremos tu cuenta, se borra con todo lo que está asociado a ella: progreso,
+        conversaciones, vocabulario y compras.
+      </p>
+      <p>
+        Si no quedas satisfecho con nuestra respuesta, puedes acudir a la
+        <a href="https://www.sic.gov.co" rel="noopener" target="_blank">Superintendencia de Industria y Comercio</a>.
+      </p>
+    </section>
+
+    <section id="seguridad">
+      <h2>9. Cómo los protegemos</h2>
+      <ul>
+        <li>Toda la comunicación con la app va cifrada (HTTPS).</li>
+        <li>Las contraseñas se guardan cifradas con bcrypt y nunca en texto legible.</li>
+        <li>
+          Los enlaces para cambiar la contraseña sirven una sola vez y vencen en una hora. Al cambiar
+          tu contraseña se cierran las sesiones abiertas en otros dispositivos.
+        </li>
+        <li>Solo los responsables del proyecto tienen acceso a la base de datos.</li>
+      </ul>
+      <p>
+        Ningún sistema es infalible. Si llegáramos a detectar un acceso indebido a tus datos, te lo
+        informaríamos.
+      </p>
+    </section>
+
+    <section id="conservacion">
+      <h2>10. Cuánto tiempo los guardamos</h2>
+      <p>
+        Mientras tu cuenta exista. Si pides que la borremos, borramos tus datos y todo lo asociado. Los
+        registros de errores los conserva el servicio de errores por el tiempo que fija su política.
+      </p>
+    </section>
+
+    <section id="navegador">
+      <h2>11. Lo que se guarda en tu navegador</h2>
+      <p>La app guarda en tu propio navegador:</p>
+      <ul>
+        <li>Tu sesión, para que no tengas que entrar cada vez.</li>
+        <li>Si prefieres el tema claro o el oscuro.</li>
+        <li>La charla con Tuti, hasta que cierres sesión.</li>
+      </ul>
+      <p>
+        No usamos cookies de publicidad ni de rastreo. El botón de Google y las fuentes de letra se
+        cargan desde servidores de Google y Cloudflare, que pueden registrar la visita según sus propias
+        políticas.
+      </p>
+    </section>
+
+    <section id="cambios">
+      <h2>12. Cambios a esta política</h2>
+      <p>
+        Si la cambiamos, publicaremos la nueva versión en esta misma página con su fecha, y si el cambio
+        afecta cómo usamos tus datos, te pediremos que la aceptes de nuevo.
+      </p>
+    </section>
+
+    <footer class="legal-pie">
+      <a href="./">← Volver a TutorIA's</a>
+    </footer>
+  </main>
+
+</body>
+</html>

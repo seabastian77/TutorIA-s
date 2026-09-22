@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/userModel");
 const { entraConContrasena } = require("../utils/cuentaGoogle");
+const { POLITICA_VERSION } = require("../utils/politica");
 
 const JWT_SECRET = process.env.JWT_SECRET || "cambia_esta_clave_en_produccion";
 const JWT_EXPIRA = "7d";
@@ -16,7 +17,12 @@ const AuthService = {
     }
 
     const contrasenaHash = await bcrypt.hash(contrasena, 10);
-    const usuario = await UserModel.crear({ nombre, correo, contrasenaHash });
+    const usuario = await UserModel.crear({
+      nombre,
+      correo,
+      contrasenaHash,
+      politicaVersion: POLITICA_VERSION,
+    });
     const token = this.generarToken(usuario);
 
     return { usuario, token };

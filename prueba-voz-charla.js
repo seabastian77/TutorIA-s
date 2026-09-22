@@ -95,6 +95,7 @@ const MEDIR_CONTROLES = () => {
     await p.fill("#registro-nombre", "Sebas");
     await p.fill("#registro-correo", `voz${tema}${Date.now()}@t4.com`);
     await p.fill("#registro-contrasena", "123456");
+    await p.check("#registro-politica");
     await p.click("#form-registro button[type=submit]");
     await p.waitForSelector("#vista-principal:not(.oculto)");
     if (tema === "oscuro") {

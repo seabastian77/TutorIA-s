@@ -55,6 +55,7 @@ const MEDIR = () => {
     await pagina.fill("#registro-nombre", "Sebas");
     await pagina.fill("#registro-correo", `charla${tema}${Date.now()}@t4.com`);
     await pagina.fill("#registro-contrasena", "123456");
+    await pagina.check("#registro-politica");
     await pagina.click("#form-registro button[type=submit]");
     await pagina.waitForSelector("#vista-principal:not(.oculto)");
 
