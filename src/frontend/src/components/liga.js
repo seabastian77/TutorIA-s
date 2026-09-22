@@ -29,7 +29,7 @@ function pintarCabeceraLiga(datos) {
   const escudo = ESCUDOS_LIGA[datos.liga] || ESCUDOS_LIGA.bronce;
 
   const icono = document.getElementById("liga-icono");
-  icono.className = `fa-solid ${escudo.icono}`;
+  icono.innerHTML = Icono.svg(escudo.icono);
   icono.style.color = escudo.color;
 
   document.getElementById("liga-nombre").textContent = datos.ligaNombre;

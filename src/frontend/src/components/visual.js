@@ -48,7 +48,7 @@ async function mostrarTemasVisual() {
     temas.forEach((tema) => {
       const boton = document.createElement("button");
       boton.className = "tema-visual";
-      boton.innerHTML = `<i class="fa-solid ${tema.icono}"></i>`;
+      boton.innerHTML = Icono.svg(tema.icono);
 
       const nombre = document.createElement("span");
       nombre.textContent = tema.nombre;

@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script>
     // Antes de pintar nada, para que no haya un destello del tema contrario
     (function () {
@@ -24,246 +23,264 @@
       }
     })();
   </script>
+  <link rel="icon" type="image/svg+xml" href="assets/tuti.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icono-32.png" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/icono-64.png" />
   <link rel="apple-touch-icon" href="assets/icono-180.png" />
+  <meta name="theme-color" content="#0B1B36" />
   <link rel="stylesheet" href="src/styles/global.css" />
 </head>
 <body>
 
+  <!-- El símbolo de la marca: Tuti simplificado, se reutiliza en toda la app -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="marca-tuti" viewBox="9 8 54 54">
+      <g fill="#F5B301">
+        <path d="M30.5 19c-1.5-3.5-.8-6.5 1.5-8 1.3 2.4 1.7 5.3 1 7.7z"/>
+        <path d="M36 17.5c-1-4 .3-7 2.8-8.2.8 2.7.6 5.7-.6 7.9z"/>
+        <path d="M41.5 19.2c-.3-3.8 1.2-6.4 3.8-7 .1 2.7-.9 5.4-2.6 7.2z"/>
+      </g>
+      <circle cx="36" cy="39" r="22" fill="#14B8A6"/>
+      <path d="M36 17a22 22 0 0 1 0 44z" fill="#0D9488" opacity=".55"/>
+      <ellipse cx="36" cy="49.5" rx="12.5" ry="9.5" fill="#FDE68A"/>
+      <circle cx="28" cy="34" r="5.6" fill="#fff"/>
+      <circle cx="44" cy="34" r="5.6" fill="#fff"/>
+      <circle cx="29" cy="34.8" r="2.8" fill="#0B1B36"/>
+      <circle cx="45" cy="34.8" r="2.8" fill="#0B1B36"/>
+      <path d="M30.5 41.5h11L36 50.5z" fill="#F59E0B"/>
+    </symbol>
+  </svg>
+
   <!-- Vista de autenticación -->
   <div id="vista-auth" class="pantalla-auth">
 
-    <!-- Panel naranja de marca -->
-    <div class="auth-lado-izquierdo">
-      <img src="assets/logo-tutorias-completo.png" alt="TutorIA's"
-           class="logo-auth" width="320" height="203" />
+    <!-- Panel de marca -->
+    <section class="auth-lado-izquierdo" aria-label="TutorIA&#8217;s">
+      <span class="marca marca-clara"><svg class="marca-simbolo" aria-hidden="true"><use href="#marca-tuti"/></svg><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></span>
 
-      <div class="auth-frase">
-        <span>Speak</span>
-        <span>English</span>
-        <span class="auth-frase-destacada"><span class="auth-frase-glow">out loud.</span></span>
-      </div>
+      <h2 class="auth-frase">Speak English <span class="auth-frase-glow">out loud.</span></h2>
 
       <p class="auth-subfrase">
         Your AI tutor listens, corrects you mid-sentence, and makes tomorrow harder only when you're ready.
       </p>
 
-      <div class="auth-lado-derecho">
-        <span class="bento-etiqueta">A1 → C2</span>
-        <span class="bento-etiqueta">VOICE</span>
-        <span class="bento-etiqueta">ADAPTIVE</span>
-      </div>
-    </div>
+      <ul class="auth-rasgos">
+        <li><i class="fa-solid fa-microphone"></i>Voice practice</li>
+        <li><i class="fa-solid fa-arrow-trend-up"></i>From A1 to C2</li>
+        <li><i class="fa-solid fa-lightbulb"></i>Adapts to you</li>
+      </ul>
+    </section>
 
     <!-- Tarjeta de login/registro -->
     <div class="tarjeta-auth">
-      <div class="marca">
-        <h1>TutorIA<span>'s</span></h1>
-        <p>Your AI English study assistant</p>
-      </div>
+      <div class="auth-contenido">
+        <span class="marca marca-movil"><svg class="marca-simbolo" aria-hidden="true"><use href="#marca-tuti"/></svg><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></span>
 
-      <div class="pestanas">
-        <div id="tab-login" class="pestana activa">Log In</div>
-        <div id="tab-registro" class="pestana">Sign Up</div>
-      </div>
+        <div class="auth-cabecera">
+          <h1 id="auth-titulo">Welcome back</h1>
+          <p id="auth-subtitulo">Log in to keep your streak going.</p>
+        </div>
 
-      <div id="mensaje-error" class="mensaje-error"></div>
+        <div class="pestanas" role="tablist" aria-label="Account">
+          <button type="button" id="tab-login" class="pestana activa" role="tab" aria-selected="true">Log in</button>
+          <button type="button" id="tab-registro" class="pestana" role="tab" aria-selected="false">Sign up</button>
+        </div>
 
-      <!-- Solo aparece si la app tiene configurado el acceso con Google -->
-      <div id="caja-google" class="caja-google oculto">
-        <div id="boton-google"></div>
-        <p class="aviso-politica">
-          Al continuar con Google aceptas la
-          <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.
-          Si eres menor de 18 años, necesitas la autorización de tu acudiente.
-        </p>
-        <p class="separador-o"><span>or</span></p>
-      </div>
+        <div id="mensaje-error" class="mensaje-error" role="alert"></div>
 
-      <div id="pagina-login" class="pagina activa">
-        <form id="form-login">
-          <div class="campo">
-            <label for="login-correo">Email</label>
-            <input type="email" id="login-correo" placeholder="youremail@example.com" required />
-          </div>
-          <div class="campo">
-            <label for="login-contrasena">Password</label>
-            <input type="password" id="login-contrasena" placeholder="••••••••" required />
-          </div>
-          <button type="submit" class="btn-principal">Start practicing</button>
-        </form>
-        <button id="btn-olvide" class="enlace-suave" type="button">Forgot your password?</button>
-      </div>
-
-      <div id="pagina-olvide" class="pagina">
-        <form id="form-olvide">
-          <p class="pagina-intro">
-            Write the email you signed up with and we'll send you a link to set a new password.
+        <!-- Solo aparece si la app tiene configurado el acceso con Google -->
+        <div id="caja-google" class="caja-google oculto">
+          <div id="boton-google"></div>
+          <p class="aviso-politica">
+            Al continuar con Google aceptas la
+            <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.
+            Si eres menor de 18 años, necesitas la autorización de tu acudiente.
           </p>
-          <div class="campo">
-            <label for="olvide-correo">Email</label>
-            <input type="email" id="olvide-correo" placeholder="youremail@example.com" required />
-          </div>
-          <button type="submit" class="btn-principal">Send me the link</button>
-        </form>
-        <p id="olvide-aviso" class="mensaje-exito oculto" role="status"></p>
-        <button id="btn-volver-login" class="enlace-suave" type="button">Back to log in</button>
-      </div>
+          <p class="separador-o"><span>or with your email</span></p>
+        </div>
+        <div id="pagina-login" class="pagina activa">
+          <form id="form-login">
+            <div class="campo">
+              <label for="login-correo">Email</label>
+              <input type="email" id="login-correo" placeholder="youremail@example.com" required />
+            </div>
+            <div class="campo">
+              <label for="login-contrasena">Password</label>
+              <input type="password" id="login-contrasena" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="btn-principal">Log in</button>
+          </form>
+          <button id="btn-olvide" class="enlace-suave" type="button">Forgot your password?</button>
+        </div>
 
-      <div id="pagina-restablecer" class="pagina">
-        <form id="form-restablecer">
-          <p class="pagina-intro">Set a new password for your account.</p>
-          <div class="campo">
-            <label for="restablecer-contrasena">New password</label>
-            <input type="password" id="restablecer-contrasena"
-                   placeholder="Minimum 6 characters" minlength="6" required />
-          </div>
-          <div class="campo">
-            <label for="restablecer-repetir">Repeat it</label>
-            <input type="password" id="restablecer-repetir"
-                   placeholder="Type it again" minlength="6" required />
-          </div>
-          <button type="submit" class="btn-principal">Save my new password</button>
-        </form>
-        <p id="restablecer-aviso" class="mensaje-exito oculto" role="status"></p>
-        <button id="btn-cancelar-restablecer" class="enlace-suave" type="button">Back to log in</button>
-      </div>
+        <div id="pagina-olvide" class="pagina">
+          <form id="form-olvide">
+            <p class="pagina-intro">
+              Write the email you signed up with and we'll send you a link to set a new password.
+            </p>
+            <div class="campo">
+              <label for="olvide-correo">Email</label>
+              <input type="email" id="olvide-correo" placeholder="youremail@example.com" required />
+            </div>
+            <button type="submit" class="btn-principal">Send me the link</button>
+          </form>
+          <p id="olvide-aviso" class="mensaje-exito oculto" role="status"></p>
+          <button id="btn-volver-login" class="enlace-suave" type="button">Back to log in</button>
+        </div>
 
-      <div id="pagina-registro" class="pagina">
-        <form id="form-registro">
-          <div class="campo">
-            <label for="registro-nombre">Name</label>
-            <input type="text" id="registro-nombre" placeholder="Your name" required />
-          </div>
-          <div class="campo">
-            <label for="registro-correo">Email</label>
-            <input type="email" id="registro-correo" placeholder="youremail@example.com" required />
-          </div>
-          <div class="campo">
-            <label for="registro-contrasena">Password</label>
-            <input type="password" id="registro-contrasena" placeholder="Minimum 6 characters" required />
-          </div>
-          <label class="casilla-politica" for="registro-politica">
-            <input type="checkbox" id="registro-politica" required />
-            <span>
-              Acepto la
-              <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.
-              Si soy menor de 18 años, tengo la autorización de mi madre, padre o representante legal.
-            </span>
-          </label>
-          <button type="submit" class="btn-principal">Create my account</button>
-        </form>
-      </div>
+        <div id="pagina-restablecer" class="pagina">
+          <form id="form-restablecer">
+            <p class="pagina-intro">Set a new password for your account.</p>
+            <div class="campo">
+              <label for="restablecer-contrasena">New password</label>
+              <input type="password" id="restablecer-contrasena"
+                     placeholder="Minimum 6 characters" minlength="6" required />
+            </div>
+            <div class="campo">
+              <label for="restablecer-repetir">Repeat it</label>
+              <input type="password" id="restablecer-repetir"
+                     placeholder="Type it again" minlength="6" required />
+            </div>
+            <button type="submit" class="btn-principal">Save my new password</button>
+          </form>
+          <p id="restablecer-aviso" class="mensaje-exito oculto" role="status"></p>
+          <button id="btn-cancelar-restablecer" class="enlace-suave" type="button">Back to log in</button>
+        </div>
 
-      <div class="pie-auth">
-        Learn English at your own pace, every day
-        <a class="enlace-politica" href="privacidad.html">Política de tratamiento de datos</a>
+        <div id="pagina-registro" class="pagina">
+          <form id="form-registro">
+            <div class="campo">
+              <label for="registro-nombre">Name</label>
+              <input type="text" id="registro-nombre" placeholder="Your name" required />
+            </div>
+            <div class="campo">
+              <label for="registro-correo">Email</label>
+              <input type="email" id="registro-correo" placeholder="youremail@example.com" required />
+            </div>
+            <div class="campo">
+              <label for="registro-contrasena">Password</label>
+              <input type="password" id="registro-contrasena" placeholder="Minimum 6 characters" required />
+            </div>
+            <label class="casilla-politica" for="registro-politica">
+              <input type="checkbox" id="registro-politica" required />
+              <span>
+                Acepto la
+                <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.
+                Si soy menor de 18 años, tengo la autorización de mi madre, padre o representante legal.
+              </span>
+            </label>
+            <button type="submit" class="btn-principal">Create my account</button>
+          </form>
+        </div>
+
+
+        <p class="pie-auth">
+          <a class="enlace-politica" href="privacidad.html">Política de tratamiento de datos</a>
+        </p>
       </div>
     </div>
   </div>
 
+  <!-- Barra superior: se queda fija en todas las vistas mientras hay sesión -->
+  <header id="barra-app" class="barra-app oculto">
+    <button type="button" id="btn-logo-inicio" class="marca marca-boton" aria-label="TutorIA&#8217;s, go to Home"><svg class="marca-simbolo" aria-hidden="true"><use href="#marca-tuti"/></svg><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></button>
+
+    <div id="progreso-usuario" class="progreso-usuario oculto" role="button" tabindex="0" title="See my progress">
+      <span class="progreso-item item-racha" title="Day streak">
+        <i class="fa-solid fa-fire"></i><span id="progreso-racha">0</span><span class="sr-solo"> day streak</span>
+      </span>
+      <span class="progreso-item item-monedas" id="progreso-monedas-wrap" title="Coins">
+        <i class="fa-solid fa-coins"></i><span id="progreso-monedas">0</span><span class="sr-solo"> coins</span>
+      </span>
+      <span class="progreso-item item-puntos" title="Points">
+        <span id="progreso-puntos">0</span>&nbsp;pts
+      </span>
+    </div>
+
+    <button id="btn-tema" class="btn-tema" type="button" aria-pressed="false"
+            aria-label="Switch to dark mode" title="Switch to dark mode">
+      <svg class="ic-sol" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2" />
+        <g class="ic-sol-rayos">
+          <path d="M12 2.6v2.2" /><path d="M12 19.2v2.2" />
+          <path d="M2.6 12h2.2" /><path d="M19.2 12h2.2" />
+          <path d="m5.4 5.4 1.6 1.6" /><path d="m17 17 1.6 1.6" />
+          <path d="m18.6 5.4-1.6 1.6" /><path d="m7 17-1.6 1.6" />
+        </g>
+      </svg>
+      <svg class="ic-luna" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.2 8.2 0 0 1 9.5 4 8.2 8.2 0 1 0 20 14.5z" />
+      </svg>
+    </button>
+
+    <div class="cuenta">
+      <button type="button" id="btn-cuenta" class="btn-cuenta" aria-haspopup="true"
+              aria-expanded="false" aria-controls="menu-cuenta" aria-label="Account menu">
+        <span id="cuenta-inicial" aria-hidden="true">?</span>
+      </button>
+      <div id="menu-cuenta" class="menu-cuenta oculto">
+        <div class="menu-cuenta-quien">
+          <strong id="cuenta-nombre"></strong>
+          <span id="cuenta-correo"></span>
+        </div>
+        <button type="button" id="btn-menu-progreso" class="menu-cuenta-opcion"><i class="fa-solid fa-arrow-trend-up"></i>My progress</button>
+        <button type="button" id="btn-cerrar-sesion" class="menu-cuenta-opcion"><i class="fa-solid fa-log-out"></i>Log out</button>
+      </div>
+    </div>
+  </header>
+
   <!-- Vista principal tras login -->
-  <div id="vista-principal" class="pantalla-principal oculto">
+  <main id="vista-principal" class="pantalla-principal oculto">
 
-    <div class="barra-superior">
-      <div class="logo-marca"><img src="assets/logo-tutorias.png" alt="TutorIA's"
-             class="logo-img" width="180" height="53" /></div>
+    <div class="saludo">
+      <h2 id="saludo-usuario">Hi!</h2>
+      <p id="progreso-tendencia-wrap" class="saludo-nota tendencia-neutra">
+        <span id="progreso-tendencia-icono" class="saludo-nota-icono"></span>
+        <span id="progreso-tendencia-texto">Let's make today count.</span>
+      </p>
+    </div>
 
-      <div id="progreso-usuario" class="progreso-usuario oculto" role="button" tabindex="0" title="See my progress">
-        <div class="progreso-item">
-          <i class="fa-solid fa-star"></i>
-          <span id="progreso-puntos">0</span> pts
-        </div>
-        <div class="progreso-item">
-          <i class="fa-solid fa-fire"></i>
-          <span id="progreso-racha">0</span> days
-        </div>
-        <div class="progreso-item" id="progreso-monedas-wrap">
-          <i class="fa-solid fa-coins"></i>
-          <span id="progreso-monedas">0</span>
-        </div>
-        <div class="progreso-item" id="progreso-tendencia-wrap">
-          <i class="fa-solid fa-minus" id="progreso-tendencia-icono"></i>
-          <span id="progreso-tendencia-texto">—</span>
+    <!-- Lo que toca ahora: lo decide el mismo motor que usa Tuti -->
+    <section id="siguiente-paso" class="siguiente-paso" aria-labelledby="paso-titulo">
+      <div class="paso-cuerpo">
+        <p class="paso-etiqueta">Your next step</p>
+        <h3 id="paso-titulo">Daily Practice</h3>
+        <p id="paso-texto">Questions that get harder the moment you stop missing them.</p>
+        <div class="paso-acciones">
+          <button type="button" id="btn-paso" class="btn-paso" data-destino="btn-practicar">
+            <span id="paso-accion">Start practicing</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </button>
+
+          <label id="ayuda-espanol" class="ayuda-espanol oculto">
+            <input type="checkbox" id="ayuda-espanol-check" />
+            <span class="ayuda-espanol-palanca"></span>
+            <span id="ayuda-espanol-texto">Explanations in Spanish: on</span>
+          </label>
         </div>
       </div>
 
-      <button id="btn-tema" class="btn-tema" type="button" aria-pressed="false"
-              aria-label="Switch to dark mode" title="Switch to dark mode">
-        <svg class="ic-sol" width="20" height="20" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="4.2" />
-          <g class="ic-sol-rayos">
-            <path d="M12 2.6v2.2" /><path d="M12 19.2v2.2" />
-            <path d="M2.6 12h2.2" /><path d="M19.2 12h2.2" />
-            <path d="m5.4 5.4 1.6 1.6" /><path d="m17 17 1.6 1.6" />
-            <path d="m18.6 5.4-1.6 1.6" /><path d="m7 17-1.6 1.6" />
-          </g>
+      <div id="meta-diaria" class="meta-diaria oculto">
+        <svg class="meta-aro" viewBox="0 0 112 112" aria-hidden="true">
+          <circle class="meta-aro-fondo" cx="56" cy="56" r="48" />
+          <circle id="meta-diaria-aro" class="meta-aro-relleno" cx="56" cy="56" r="48" pathLength="100" />
         </svg>
-        <svg class="ic-luna" width="20" height="20" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
-             stroke-linejoin="round" aria-hidden="true">
-          <path d="M20 14.5A8.2 8.2 0 0 1 9.5 4 8.2 8.2 0 1 0 20 14.5z" />
-        </svg>
-      </button>
-
-      <button id="btn-cerrar-sesion" class="btn-secundario">Log Out</button>
-    </div>
-
-    <h2 id="saludo-usuario">Hi!</h2>
-    <p>Welcome to TutorIA's. Let's start by discovering your current English level.</p>
-
-    <div id="meta-diaria" class="meta-diaria oculto">
-      <div class="meta-diaria-fondo">
-        <div id="meta-diaria-relleno" class="meta-diaria-relleno" style="width:0%"></div>
+        <p class="meta-cifra"><strong id="meta-diaria-hoy">0</strong><span>/<span id="meta-diaria-total">5</span></span></p>
+        <p id="meta-diaria-texto" class="meta-diaria-texto">Daily goal: 0 / 5</p>
       </div>
-      <p id="meta-diaria-texto" class="meta-diaria-texto">Daily goal: 0 / 5</p>
-    </div>
+    </section>
 
-    <label id="ayuda-espanol" class="ayuda-espanol oculto">
-      <input type="checkbox" id="ayuda-espanol-check" />
-      <span class="ayuda-espanol-palanca"></span>
-      <span id="ayuda-espanol-texto">Explanations in Spanish: on</span>
-    </label>
-
-    <div class="bento">
-
-      <button id="btn-iniciar-nivel" class="btn-principal">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 4v16" />
-            <path d="M12 4a4 4 0 0 0-4 4 3 3 0 0 0-1 5.8V17a3 3 0 0 0 5 2.2" />
-            <path d="M12 4a4 4 0 0 1 4 4 3 3 0 0 1 1 5.8V17a3 3 0 0 1-5 2.2" />
-            <circle class="ic-chispa" cx="16.8" cy="8.5" r="1.15" fill="currentColor" stroke="none" />
-          </svg>
-          <span class="bento-etiqueta">DIAGNOSTIC</span>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Level Check</span>
-          <span class="bento-nota">An immersive AI diagnostic in 8 scenes</span>
-        </span>
-      </button>
-
-      <button id="btn-hablar-ia" class="btn-principal btn-voz">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="3" width="6" height="11" rx="3" />
-            <path d="M5 11a7 7 0 0 0 14 0" />
-            <path d="M12 18v3" />
-            <path class="ic-onda ic-onda-1" d="M17.6 7.2a3.6 3.6 0 0 1 0 5" />
-            <path class="ic-onda ic-onda-2" d="M19.6 5.4a6.2 6.2 0 0 1 0 8.6" />
-          </svg>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Talk to the AI</span>
-          <span class="bento-nota">Speak out loud, corrected in real time</span>
-        </span>
-      </button>
-
-      <button id="btn-practicar" class="btn-principal">
-        <span class="bento-fila-icono">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <section class="grupo-modulos" aria-labelledby="grupo-practicar">
+      <div class="grupo-modulos-cabecera">
+        <h3 id="grupo-practicar">Practice</h3>
+        <p>Speak, answer and get corrected</p>
+      </div>
+      <div class="modulos">
+        <button id="btn-practicar" class="modulo btn-destacado" type="button">
+          <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <g class="ic-pesa">
               <path d="M6.5 6.5v11" />
               <path d="M17.5 6.5v11" />
@@ -271,32 +288,31 @@
               <path d="M21 9v6" />
               <path d="M6.5 12h11" />
             </g>
-          </svg>
-          <span class="bento-etiqueta">START HERE</span>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Daily Practice</span>
-          <span class="bento-nota">Unlimited questions that get harder the moment you stop missing them.</span>
-        </span>
-      </button>
-
-      <button id="btn-roleplay" class="btn-principal btn-roleplay">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          </svg></span><span class="modulo-sello">Daily</span></span>
+          <span class="modulo-titulo">Daily Practice</span>
+          <span class="modulo-nota">Questions that get harder the moment you stop missing them</span>
+        </button>
+        <button id="btn-hablar-ia" class="modulo btn-voz" type="button">
+          <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="3" width="6" height="11" rx="3" />
+            <path d="M5 11a7 7 0 0 0 14 0" />
+            <path d="M12 18v3" />
+            <path class="ic-onda ic-onda-1" d="M17.6 7.2a3.6 3.6 0 0 1 0 5" />
+            <path class="ic-onda ic-onda-2" d="M19.6 5.4a6.2 6.2 0 0 1 0 8.6" />
+          </svg></span></span>
+          <span class="modulo-titulo">Talk to the AI</span>
+          <span class="modulo-nota">Speak out loud, corrected in real time</span>
+        </button>
+        <button id="btn-roleplay" class="modulo btn-roleplay" type="button">
+          <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path class="ic-burbuja-1" d="M3 6a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8l-5 4z" />
             <path class="ic-burbuja-2" d="M17 9h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v3l-3-3" />
-          </svg>
-          <span class="bento-etiqueta">ROLE-PLAY</span>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Real Situations</span>
-          <span class="bento-nota">Order a coffee, pass immigration, nail an interview</span>
-        </span>
-      </button>
-
-      <button id="btn-escena" class="btn-principal btn-escena">
-        <span class="bento-fila-icono">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          </svg></span></span>
+          <span class="modulo-titulo">Real Situations</span>
+          <span class="modulo-nota">Order a coffee, pass immigration, nail an interview</span>
+        </button>
+        <button id="btn-escena" class="modulo btn-escena" type="button">
+          <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="9" width="18" height="10" rx="2" />
             <g class="ic-tapa">
               <path d="M3 9h18" />
@@ -304,111 +320,49 @@
               <path d="m8.5 8.6.9-4.2" />
               <path d="m14 8.3.9-4.2" />
             </g>
-          </svg>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Scene Mode</span>
-          <span class="bento-nota">Original AI scripts</span>
-        </span>
-      </button>
+          </svg></span></span>
+          <span class="modulo-titulo">Scene Mode</span>
+          <span class="modulo-nota">Original AI scripts to hear and repeat</span>
+        </button>
+      </div>
+    </section>
 
-      <button id="btn-vocabulario" class="btn-principal btn-vocab">
-        <span class="bento-fila-icono">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="6" width="11" height="14" rx="2" />
-            <rect class="ic-carta" x="4" y="4" width="11" height="14" rx="2" fill="var(--tono-borde)" />
-          </svg>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Vocabulary</span>
-          <span class="bento-nota">Spaced repetition cards</span>
-        </span>
-      </button>
-
-      <button id="btn-biblioteca" class="btn-principal btn-biblioteca">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 7c-1.5-1.5-4-2-7-2v13c3 0 5.5.5 7 2" />
-            <path d="M12 7c1.5-1.5 4-2 7-2v13c-3 0-5.5.5-7 2" />
-            <path class="ic-hoja" d="M12 7v13" />
-          </svg>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Library</span>
-          <span class="bento-nota">Stories at your level — tap any word to see what it means</span>
-        </span>
-      </button>
-
-      <button id="btn-audio" class="btn-principal btn-audio">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <section class="grupo-modulos" aria-labelledby="grupo-escuchar">
+      <div class="grupo-modulos-cabecera">
+        <h3 id="grupo-escuchar">Listen &amp; read</h3>
+        <p>Build your ear and your vocabulary</p>
+      </div>
+      <div class="modulos">
+        <button id="btn-audio" class="modulo btn-audio" type="button">
+          <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path class="ic-eq ic-eq-1" d="M3 10v4" />
             <path class="ic-eq ic-eq-2" d="M7.5 7v10" />
             <path class="ic-eq ic-eq-3" d="M12 4v16" />
             <path class="ic-eq ic-eq-4" d="M16.5 7v10" />
             <path class="ic-eq ic-eq-5" d="M21 10v4" />
-          </svg>
-          <span class="bento-etiqueta">LISTENING</span>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Audio Lab</span>
-          <span class="bento-nota">Dictations and listening comprehension</span>
-        </span>
-      </button>
-
-      <button id="btn-liga" class="btn-principal btn-liga">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 21h18" />
-            <rect class="ic-col ic-col-1" x="3" y="14" width="5" height="6.5" rx="1" />
-            <rect class="ic-col ic-col-2" x="9.5" y="8" width="5" height="12.5" rx="1" />
-            <rect class="ic-col ic-col-3" x="16" y="11" width="5" height="9.5" rx="1" />
-          </svg>
-          <span class="bento-etiqueta">WEEKLY</span>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">League</span>
-          <span class="bento-nota">Compete with 29 other learners</span>
-        </span>
-      </button>
-
-      <button id="btn-logros" class="btn-principal btn-logros">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <g class="ic-copa">
-              <path d="M8 4h8v5a4 4 0 0 1-8 0z" />
-              <path d="M8 5H5v2a3 3 0 0 0 3 3" />
-              <path d="M16 5h3v2a3 3 0 0 1-3 3" />
-              <path d="M10 20h4" />
-              <path d="M12 13v7" />
-            </g>
-            <circle class="ic-destello" cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
-          </svg>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Achievements</span>
-          <span class="bento-nota">Badges you unlock as you go</span>
-        </span>
-      </button>
-
-      <button id="btn-tienda" class="btn-principal btn-tienda">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <g class="ic-bolsa">
-              <path d="M4 8h16l-1 11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
-              <path d="M9 11V7a3 3 0 0 1 6 0v4" />
-            </g>
-          </svg>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Shop</span>
-          <span class="bento-nota">Spend your coins on shields and hints</span>
-        </span>
-      </button>
-
-      <button id="btn-juegos" class="btn-principal btn-juegos">
-        <span class="bento-fila-icono">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          </svg></span></span>
+          <span class="modulo-titulo">Audio Lab</span>
+          <span class="modulo-nota">Dictations and listening comprehension</span>
+        </button>
+        <button id="btn-biblioteca" class="modulo btn-biblioteca" type="button">
+          <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 7c-1.5-1.5-4-2-7-2v13c3 0 5.5.5 7 2" />
+            <path d="M12 7c1.5-1.5 4-2 7-2v13c-3 0-5.5.5-7 2" />
+            <path class="ic-hoja" d="M12 7v13" />
+          </svg></span></span>
+          <span class="modulo-titulo">Library</span>
+          <span class="modulo-nota">Stories at your level. Tap any word to see what it means</span>
+        </button>
+        <button id="btn-vocabulario" class="modulo btn-vocab" type="button">
+          <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="6" width="11" height="14" rx="2" />
+            <rect class="ic-carta" x="4" y="4" width="11" height="14" rx="2" fill="var(--tono-borde)" />
+          </svg></span></span>
+          <span class="modulo-titulo">Vocabulary</span>
+          <span class="modulo-nota">Spaced repetition cards</span>
+        </button>
+        <button id="btn-juegos" class="modulo btn-juegos" type="button">
+          <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <g class="ic-dado">
               <rect x="3" y="3" width="18" height="18" rx="4" />
               <circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none" />
@@ -417,40 +371,80 @@
               <circle cx="8.5" cy="15.5" r="1.3" fill="currentColor" stroke="none" />
               <circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none" />
             </g>
-          </svg>
-          <span class="bento-etiqueta">GAMES</span>
-        </span>
-        <span class="bento-texto">
-          <span class="bento-titulo">Word Games</span>
-          <span class="bento-nota">Hangman, word search and matching, built from the words you keep missing</span>
-        </span>
-      </button>
-    </div>
+          </svg></span></span>
+          <span class="modulo-titulo">Word Games</span>
+          <span class="modulo-nota">Hangman, word search and matching with the words you miss</span>
+        </button>
+      </div>
+    </section>
 
-    <div class="tarjeta-tip">
-      <div class="tarjeta-tip-icono">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 18h6" />
-          <path d="M10 21h4" />
-          <path d="M12 3a6 6 0 0 0-4 10.5V15h8v-1.5A6 6 0 0 0 12 3z" />
-        </svg>
+    <section class="grupo-modulos" aria-labelledby="grupo-progreso">
+      <div class="grupo-modulos-cabecera">
+        <h3 id="grupo-progreso">Your progress</h3>
+        <button type="button" id="btn-mi-progreso" class="enlace-grupo">See my progress</button>
       </div>
-      <div>
-        <p class="tarjeta-tip-titulo">Tip of the day</p>
-        <p class="tarjeta-tip-texto">"Practice makes perfect" — spend at least 10 minutes today reviewing your vocabulary on TutorIA's.</p>
+      <div class="modulos modulos-mini">
+        <button id="btn-iniciar-nivel" class="modulo modulo-mini btn-nivel" type="button">
+          <span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v16" />
+            <path d="M12 4a4 4 0 0 0-4 4 3 3 0 0 0-1 5.8V17a3 3 0 0 0 5 2.2" />
+            <path d="M12 4a4 4 0 0 1 4 4 3 3 0 0 1 1 5.8V17a3 3 0 0 1-5 2.2" />
+            <circle class="ic-chispa" cx="16.8" cy="8.5" r="1.15" fill="currentColor" stroke="none" />
+          </svg></span>
+          <span class="modulo-texto"><span class="modulo-titulo">Level Check</span><span class="modulo-nota">An AI diagnostic in 8 scenes</span></span>
+        </button>
+        <button id="btn-liga" class="modulo modulo-mini btn-liga" type="button">
+          <span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18" />
+            <rect class="ic-col ic-col-1" x="3" y="14" width="5" height="6.5" rx="1" />
+            <rect class="ic-col ic-col-2" x="9.5" y="8" width="5" height="12.5" rx="1" />
+            <rect class="ic-col ic-col-3" x="16" y="11" width="5" height="9.5" rx="1" />
+          </svg></span>
+          <span class="modulo-texto"><span class="modulo-titulo">League</span><span class="modulo-nota">Compete with 29 other learners</span></span>
+        </button>
+        <button id="btn-logros" class="modulo modulo-mini btn-logros" type="button">
+          <span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <g class="ic-copa">
+              <path d="M8 4h8v5a4 4 0 0 1-8 0z" />
+              <path d="M8 5H5v2a3 3 0 0 0 3 3" />
+              <path d="M16 5h3v2a3 3 0 0 1-3 3" />
+              <path d="M10 20h4" />
+              <path d="M12 13v7" />
+            </g>
+            <circle class="ic-destello" cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
+          </svg></span>
+          <span class="modulo-texto"><span class="modulo-titulo">Achievements</span><span class="modulo-nota">Badges you unlock as you go</span></span>
+        </button>
+        <button id="btn-tienda" class="modulo modulo-mini btn-tienda" type="button">
+          <span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <g class="ic-bolsa">
+              <path d="M4 8h16l-1 11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
+              <path d="M9 11V7a3 3 0 0 1 6 0v4" />
+            </g>
+          </svg></span>
+          <span class="modulo-texto"><span class="modulo-titulo">Shop</span><span class="modulo-nota">Shields and hints for your coins</span></span>
+        </button>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
   <!-- Vista: historial y progreso -->
-  <div id="vista-historial" class="pantalla-principal oculto">
-    <h2 id="historial-titulo">My progress</h2>
+  <div id="vista-historial" class="pantalla-principal oculto" data-modulo="My progress">
+    <header class="cabecera-modulo">
+      <h2 id="historial-titulo">My progress</h2>
+      <p>How your English has moved since you started.</p>
+    </header>
     <div id="historial-contenido" class="historial"></div>
-    <button id="btn-salir-historial" class="btn-secundario">Back to Home</button>
+    <button id="btn-salir-historial" class="btn-secundario"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: prueba de nivel (Diagnóstico Inmersivo) -->
-  <div id="vista-nivel" class="pantalla-principal oculto">
+  <div id="vista-nivel" class="pantalla-principal oculto" data-modulo="Level Check">
+    <header class="cabecera-modulo">
+      <h2>Level Check</h2>
+      <p>Eight short scenes with the AI. Answer as best you can; there is no penalty for mistakes.</p>
+    </header>
+
     <div class="tarjeta-nivel">
       <div id="nivel-progreso" class="nivel-progreso">Scene 1 of 8</div>
       <p id="nivel-narrativa" class="nivel-narrativa">...</p>
@@ -466,7 +460,7 @@
       <button id="btn-siguiente-turno" class="btn-principal oculto" style="margin-top:16px;">Next</button>
     </div>
 
-    <button id="btn-salir-nivel" class="btn-secundario">Back to Home</button>
+    <button id="btn-salir-nivel" class="btn-secundario"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: resultado del diagnóstico -->
@@ -480,10 +474,13 @@
   </div>
 
   <!-- Vista: práctica continua -->
-  <div id="vista-practica" class="pantalla-principal oculto">
+  <div id="vista-practica" class="pantalla-principal oculto" data-modulo="Daily Practice">
+    <header class="cabecera-modulo">
+      <h2>Daily Practice</h2>
+      <p>Pick a topic. The questions get harder as soon as you stop missing them.</p>
+    </header>
 
     <div id="practica-temas" class="practica-temas">
-      <h2>What do you want to practise today?</h2>
 
       <button id="btn-visual-describir" class="tarjeta-entrada">
         <i class="fa-solid fa-image"></i>
@@ -502,11 +499,16 @@
       <div id="practica-nivel-tag" class="nivel-progreso">Level</div>
       <div id="practica-cuerpo"></div>
     </div>
-    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+    <button id="btn-salir-practica" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: conversación de voz con la IA -->
-  <div id="vista-voz" class="pantalla-principal oculto">
+  <div id="vista-voz" class="pantalla-principal oculto" data-modulo="Talk to the AI">
+    <header class="cabecera-modulo">
+      <h2>Talk to the AI</h2>
+      <p>Press the microphone and speak. You get corrections while you talk.</p>
+    </header>
+
     <div class="tarjeta-voz">
       <div id="voz-aviso-navegador" class="voz-aviso oculto">
         Your browser doesn't support voice recognition. Try Google Chrome or Microsoft Edge on desktop.
@@ -521,11 +523,15 @@
         <p id="voz-estado" class="voz-estado">Press the microphone and start talking</p>
       </div>
     </div>
-    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+    <button id="btn-salir-voz" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: modo escena — guiones originales para pronunciación -->
-  <div id="vista-escena" class="pantalla-principal oculto">
+  <div id="vista-escena" class="pantalla-principal oculto" data-modulo="Scene Mode">
+    <header class="cabecera-modulo">
+      <h2>Scene Mode</h2>
+      <p>Listen to each line, then say it out loud.</p>
+    </header>
 
     <div id="escena-video" class="escena-video oculto">
       <video id="escena-video-fuente" autoplay muted loop playsinline></video>
@@ -551,11 +557,16 @@
       <div id="escena-feedback" class="nivel-feedback oculto"></div>
       <button id="btn-siguiente-linea" class="btn-principal oculto" style="margin-top:16px;">Next Line</button>
     </div>
-    <button id="btn-salir-escena" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+    <button id="btn-salir-escena" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: mi vocabulario — tarjetas de repaso con repetición espaciada -->
-  <div id="vista-vocabulario" class="pantalla-principal oculto">
+  <div id="vista-vocabulario" class="pantalla-principal oculto" data-modulo="Vocabulary">
+    <header class="cabecera-modulo">
+      <h2>Vocabulary</h2>
+      <p>Words you are learning, repeated right before you would forget them.</p>
+    </header>
+
     <div id="vocab-progreso" class="nivel-progreso"></div>
 
     <div class="vocab-zona">
@@ -575,21 +586,26 @@
       <button id="btn-vocab-sabia" class="btn-principal">I knew it</button>
     </div>
 
-    <button id="btn-salir-vocabulario" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+    <button id="btn-salir-vocabulario" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: logros / achievements -->
-  <div id="vista-logros" class="pantalla-principal oculto">
-    <h2>Achievements</h2>
-    <p id="logros-estado"></p>
+  <div id="vista-logros" class="pantalla-principal oculto" data-modulo="Achievements">
+    <header class="cabecera-modulo">
+      <h2>Achievements</h2>
+      <p id="logros-estado"></p>
+    </header>
     <div id="logros-lista" class="logros-lista"></div>
-    <button id="btn-salir-logros" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+    <button id="btn-salir-logros" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: tienda -->
-  <div id="vista-tienda" class="pantalla-principal oculto">
-    <div class="cabecera-seccion">
-      <h2>Shop</h2>
+  <div id="vista-tienda" class="pantalla-principal oculto" data-modulo="Shop">
+    <div class="cabecera-seccion cabecera-modulo">
+      <div>
+        <h2>Shop</h2>
+        <p>Spend your coins on streak shields, hints and extra lives.</p>
+      </div>
       <div class="monedas-grandes">
         <i class="fa-solid fa-coins"></i>
         <span id="tienda-monedas">0</span>
@@ -600,13 +616,18 @@
     <p id="tienda-estado" class="tienda-estado"></p>
     <div id="tienda-lista" class="tienda-lista"></div>
 
-    <button id="btn-salir-tienda" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+    <button id="btn-salir-tienda" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: liga semanal -->
-  <div id="vista-liga" class="pantalla-principal oculto">
+  <div id="vista-liga" class="pantalla-principal oculto" data-modulo="League">
+    <header class="cabecera-modulo">
+      <h2>League</h2>
+      <p>Earn XP this week to climb your group. The top of the table moves up a league.</p>
+    </header>
+
     <div class="liga-cabecera">
-      <i id="liga-icono" class="fa-solid fa-medal"></i>
+      <span id="liga-icono" class="liga-icono" aria-hidden="true"></span>
       <h2 id="liga-nombre">Bronze</h2>
       <div class="liga-meta">
         <span id="liga-grupo">Group 1</span>
@@ -619,15 +640,17 @@
     <p id="liga-estado" class="tienda-estado"></p>
     <div id="liga-tabla" class="liga-tabla"></div>
 
-    <button id="btn-salir-liga" class="btn-secundario" style="margin-top:18px;">Back to Home</button>
+    <button id="btn-salir-liga" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: roleplay de situaciones reales -->
-  <div id="vista-roleplay" class="pantalla-principal oculto">
+  <div id="vista-roleplay" class="pantalla-principal oculto" data-modulo="Real Situations">
 
     <div id="roleplay-seleccion">
-      <h2>Real Situations</h2>
-      <p>Pick a situation and talk your way through it.</p>
+      <header class="cabecera-modulo">
+        <h2>Real Situations</h2>
+        <p>Pick a situation and talk your way through it.</p>
+      </header>
 
       <button id="btn-visual-reaccionar" class="tarjeta-entrada">
         <i class="fa-solid fa-camera-retro"></i>
@@ -659,18 +682,20 @@
     </div>
 
     <p id="roleplay-estado" class="tienda-estado"></p>
-    <button id="btn-salir-roleplay" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+    <button id="btn-salir-roleplay" class="btn-secundario" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: biblioteca de lecturas -->
-  <div id="vista-biblioteca" class="pantalla-principal oculto">
+  <div id="vista-biblioteca" class="pantalla-principal oculto" data-modulo="Library">
 
     <div id="biblioteca-catalogo">
-      <div class="cabecera-seccion">
-        <h2>Library</h2>
+      <div class="cabecera-seccion cabecera-modulo">
+        <div>
+          <h2>Library</h2>
+          <p>Stories at your level. Tap any word while you read to see what it means.</p>
+        </div>
         <span id="biblioteca-nivel" class="nivel-progreso"></span>
       </div>
-      <p>Tap any word while you read to see what it means.</p>
       <div id="biblioteca-lista" class="biblioteca-lista"></div>
     </div>
 
@@ -691,7 +716,7 @@
     </div>
 
     <p id="biblioteca-estado" class="tienda-estado"></p>
-    <button id="btn-salir-biblioteca" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+    <button id="btn-salir-biblioteca" class="btn-secundario" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Globo de traduccion de palabras -->
@@ -704,8 +729,11 @@
   </div>
 
   <!-- Vista: laboratorio de audio -->
-  <div id="vista-audio" class="pantalla-principal oculto">
-    <h2>Audio Lab</h2>
+  <div id="vista-audio" class="pantalla-principal oculto" data-modulo="Audio Lab">
+    <header class="cabecera-modulo">
+      <h2>Audio Lab</h2>
+      <p>Train your ear with dictations and listening practice.</p>
+    </header>
 
     <div id="audio-aviso-navegador" class="voz-aviso oculto">
       Your browser cannot read text aloud. Try Google Chrome or Microsoft Edge.
@@ -771,15 +799,17 @@
     </div>
 
     <p id="audio-estado" class="tienda-estado"></p>
-    <button id="btn-salir-audio" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+    <button id="btn-salir-audio" class="btn-secundario" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: minijuegos de vocabulario -->
-  <div id="vista-juegos" class="pantalla-principal oculto">
+  <div id="vista-juegos" class="pantalla-principal oculto" data-modulo="Word Games">
 
     <div id="juegos-menu">
-      <h2>Word Games</h2>
-      <p>Three quick games built from the words you are learning.</p>
+      <header class="cabecera-modulo">
+        <h2>Word Games</h2>
+        <p>Three quick games built from the words you are learning.</p>
+      </header>
 
       <div class="juegos-lista">
         <button id="btn-juego-ahorcado" class="juego-tarjeta juego-ahorcado">
@@ -878,16 +908,16 @@
     </div>
 
     <p id="juegos-estado" class="tienda-estado"></p>
-    <button id="btn-salir-juegos" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+    <button id="btn-salir-juegos" class="btn-secundario" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <!-- Vista: ejercicios con imagen -->
-  <div id="vista-visual" class="pantalla-principal oculto">
+  <div id="vista-visual" class="pantalla-principal oculto" data-modulo="Photo practice">
 
-    <div class="cabecera-seccion">
+    <header class="cabecera-modulo">
       <h2 id="visual-titulo">Describe the photo</h2>
-    </div>
-    <p id="visual-subtitulo"></p>
+      <p id="visual-subtitulo"></p>
+    </header>
 
     <div id="visual-temas">
       <div id="visual-lista-temas" class="visual-temas"></div>
@@ -913,10 +943,11 @@
     </div>
 
     <p id="visual-estado" class="tienda-estado"></p>
-    <button id="btn-salir-visual" class="btn-secundario" style="margin-top:14px;">Back to Home</button>
+    <button id="btn-salir-visual" class="btn-secundario" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
+  <script src="src/utils/iconos.js"></script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/utils/vozIngles.js"></script>
   <script src="src/store/tema.js"></script>
@@ -956,5 +987,6 @@
   <script src="src/components/visual.js"></script>
   <script src="src/components/mentor.js"></script>
   <script src="src/components/historial.js"></script>
+  <script src="src/components/navegacion.js"></script>
 </body>
 </html>

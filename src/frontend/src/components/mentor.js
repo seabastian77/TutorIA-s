@@ -61,12 +61,12 @@ const MENTOR_HTML = `
         <circle cx="13" cy="12" r="1.1" fill="currentColor"/>
         <circle cx="16.5" cy="12" r="1.1" fill="currentColor"/>
       </svg>
-      <span class="mentor-charlar-texto">Hablar con ${MENTOR_NOMBRE}</span>
+      <span class="mentor-charlar-texto">Chat with ${MENTOR_NOMBRE}</span>
     </button>
   </div>
 
   <button id="mentor-avatar" class="mentor-avatar" type="button"
-          aria-label="Ask ${MENTOR_NOMBRE} what to do next">
+          aria-label="${MENTOR_NOMBRE}: tips and chat">
     ${MENTOR_CUERPO}
     <span id="mentor-punto" class="mentor-punto" aria-hidden="true"></span>
   </button>
@@ -120,7 +120,7 @@ const CHARLA_HTML = `
 </div>`;
 
 let mentorConsejo = null;
-let mentorAbierto = true;
+let mentorAbierto = false;
 
 /** Deja el avatar y su burbuja colgados del body, una sola vez. */
 function montarMentor() {
@@ -163,6 +163,7 @@ function pintarConsejo(consejo) {
     consejo.animo === "preocupado",
   );
   mentor.classList.remove("oculto");
+  if (typeof pintarSiguientePaso === "function") pintarSiguientePaso(consejo);
 }
 
 /** Lleva al módulo que el consejo propone, cerrando la vista que esté abierta. */
@@ -210,8 +211,7 @@ function alternarMentor() {
   mentorAbierto = !mentorAbierto;
   document.getElementById("mentor").classList.toggle("encogido", !mentorAbierto);
   try {
-    if (mentorAbierto) sessionStorage.removeItem(MENTOR_MEMORIA);
-    else sessionStorage.setItem(MENTOR_MEMORIA, "1");
+    sessionStorage.setItem(MENTOR_MEMORIA, mentorAbierto ? "0" : "1");
   } catch (e) {
     // Sin almacenamiento el estado vive solo mientras la página esté abierta
   }
@@ -232,16 +232,15 @@ async function iniciarMentor() {
   if (!Sesion.estaAutenticado()) return;
   montarMentor();
 
-  let cerrado = false;
+  // El consejo ya se ve en "Your next step": el globo solo se abre si el estudiante lo pide
+  let cerrado = true;
   try {
-    cerrado = sessionStorage.getItem(MENTOR_MEMORIA) === "1";
+    cerrado = sessionStorage.getItem(MENTOR_MEMORIA) !== "0";
   } catch (e) {
-    cerrado = false;
+    cerrado = true;
   }
-  if (cerrado) {
-    mentorAbierto = false;
-    document.getElementById("mentor").classList.add("encogido");
-  }
+  mentorAbierto = !cerrado;
+  document.getElementById("mentor").classList.toggle("encogido", cerrado);
 
   await refrescarMentor();
 }

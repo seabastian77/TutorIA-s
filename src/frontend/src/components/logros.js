@@ -29,7 +29,7 @@ function renderizarLogros(logros) {
 
     fila.innerHTML = `
       <div class="logro-icono">
-        <i class="fa-solid ${logro.desbloqueado ? logro.icono : "fa-lock"}"></i>
+        ${Icono.svg(logro.desbloqueado ? logro.icono : "fa-lock")}
       </div>
       <div class="logro-info">
         <p class="logro-nombre">${logro.nombre}</p>

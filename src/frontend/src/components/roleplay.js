@@ -29,7 +29,7 @@ async function mostrarSelectorEscenarios() {
 
       const icono = document.createElement("span");
       icono.className = "escenario-icono";
-      icono.innerHTML = `<i class="fa-solid ${esc.icono}"></i>`;
+      icono.innerHTML = Icono.svg(esc.icono);
 
       const texto = document.createElement("span");
       texto.className = "escenario-texto";

@@ -32,7 +32,7 @@ async function mostrarCatalogoBiblioteca() {
 
       const icono = document.createElement("span");
       icono.className = "lectura-icono";
-      icono.innerHTML = `<i class="fa-solid ${tema.icono}"></i>`;
+      icono.innerHTML = Icono.svg(tema.icono);
 
       const texto = document.createElement("span");
       texto.className = "lectura-texto";

@@ -16,9 +16,25 @@ function inicializarFormAuth() {
     errorBox.classList.remove("visible");
   }
 
-  // Solo la página con clase .activa se muestra
+  const CABECERAS = {
+    "pagina-login": ["Welcome back", "Log in to keep your streak going."],
+    "pagina-registro": ["Create your account", "It takes a minute. Your first lesson starts right after."],
+    "pagina-olvide": ["Forgot your password?", ""],
+    "pagina-restablecer": ["Choose a new password", ""],
+  };
+
+  // Solo la página con clase .activa se muestra; el título y las pestañas la acompañan
   function cambiarPestana(id) {
     limpiarError();
+
+    const [titulo, subtitulo] = CABECERAS[id] || CABECERAS["pagina-login"];
+    document.getElementById("auth-titulo").textContent = titulo;
+    const sub = document.getElementById("auth-subtitulo");
+    sub.textContent = subtitulo;
+    sub.classList.toggle("oculto", !subtitulo);
+    const conPestanas = id === "pagina-login" || id === "pagina-registro";
+    document.querySelector(".pestanas").classList.toggle("oculto", !conPestanas);
+    document.getElementById("caja-google").dataset.fueraDeLugar = String(!conPestanas);
 
     contenedorAuth.querySelectorAll(".pagina").forEach((pagina) => {
       pagina.classList.remove("activa");
@@ -27,6 +43,8 @@ function inicializarFormAuth() {
 
     tabLogin.classList.toggle("activa", id === "pagina-login");
     tabRegistro.classList.toggle("activa", id === "pagina-registro");
+    tabLogin.setAttribute("aria-selected", String(id === "pagina-login"));
+    tabRegistro.setAttribute("aria-selected", String(id === "pagina-registro"));
   }
 
   tabLogin.addEventListener("click", () => cambiarPestana("pagina-login"));
@@ -271,7 +289,7 @@ function mostrarPantallaPrincipal(usuario) {
   const principal = document.getElementById("vista-principal");
   principal.classList.remove("oculto");
   document.getElementById("saludo-usuario").textContent =
-    `Hi, ${usuario.nombre}!`;
+    `Hi, ${usuario.nombre}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {

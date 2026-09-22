@@ -50,7 +50,7 @@ function pintarInventario(datos) {
   piezas.forEach((p) => {
     const item = document.createElement("div");
     item.className = "inventario-item";
-    item.innerHTML = `<i class="fa-solid ${p.icono}"></i>`;
+    item.innerHTML = Icono.svg(p.icono);
 
     const valor = document.createElement("strong");
     valor.textContent = p.valor;
@@ -76,7 +76,7 @@ function pintarArticulos(articulos, cuenta) {
 
     const icono = document.createElement("div");
     icono.className = "articulo-icono";
-    icono.innerHTML = `<i class="fa-solid ${articulo.icono}"></i>`;
+    icono.innerHTML = Icono.svg(articulo.icono);
 
     const info = document.createElement("div");
     info.className = "articulo-info";
@@ -95,7 +95,7 @@ function pintarArticulos(articulos, cuenta) {
     const boton = document.createElement("button");
     boton.className = "articulo-precio";
     boton.disabled = !alcanza;
-    boton.innerHTML = `<i class="fa-solid fa-coins"></i>`;
+    boton.innerHTML = Icono.svg("fa-coins");
 
     const precio = document.createElement("span");
     precio.textContent = articulo.precio;

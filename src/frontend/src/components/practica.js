@@ -65,7 +65,7 @@ function mostrarSelectorTema() {
 
     const cabecera = document.createElement("div");
     cabecera.className = `grupo-cabecera grupo-${grupo.color}`;
-    cabecera.innerHTML = `<i class="fa-solid ${grupo.icono}"></i>`;
+    cabecera.innerHTML = Icono.svg(grupo.icono);
 
     const nombre = document.createElement("span");
     nombre.textContent = grupo.grupo;

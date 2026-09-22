@@ -64,6 +64,8 @@ const MEDIR = () => {
       await ESPERA(350);
     }
 
+    await pagina.waitForSelector("#mentor-avatar");
+    if (await pagina.locator("#mentor.encogido").count()) await pagina.click("#mentor-avatar");
     await pagina.waitForSelector("#mentor-abrir-charla");
     const tam = await pagina.locator("#mentor-abrir-charla").boundingBox();
     console.log(tema, "| botón de charla:", Math.round(tam.width) + "x" + Math.round(tam.height));
@@ -141,6 +143,8 @@ const MEDIR = () => {
     // Cerrar y reabrir: la charla no puede perderse
     await pagina.click("#charla-cerrar");
     await pagina.waitForSelector("#mentor-charla", { state: "hidden" });
+    await pagina.waitForSelector("#mentor-avatar");
+    if (await pagina.locator("#mentor.encogido").count()) await pagina.click("#mentor-avatar");
     await pagina.click("#mentor-abrir-charla");
     const guardados = await pagina.locator(".charla-turno").count();
     console.log(tema, "| turnos al reabrir:", guardados);
@@ -148,6 +152,7 @@ const MEDIR = () => {
     await pagina.waitForSelector("#mentor-charla", { state: "hidden" });
 
     // Al salir, la charla no puede quedar guardada para el siguiente
+    await pagina.click("#btn-cuenta");
     await pagina.click("#btn-cerrar-sesion");
     await ESPERA(600);
     const quedo = await pagina.evaluate(() => sessionStorage.getItem("tutorias_charla"));

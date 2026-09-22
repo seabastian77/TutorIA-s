@@ -50,7 +50,7 @@ function mostrarPalabraActual() {
     progresoEl.textContent = "";
     textoEl.textContent = palabrasRepaso.length
       ? "You reviewed all your due words!"
-      : "You're all caught up! No words to review right now.";
+      : "No words to review yet. Words you miss in your exercises will show up here.";
     btnMostrar.classList.add("oculto");
     if (tarjeta) tarjeta.classList.add("vocab-tarjeta-vacia");
     marcarPila(0);

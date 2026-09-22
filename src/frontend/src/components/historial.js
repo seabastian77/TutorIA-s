@@ -9,7 +9,7 @@ const SUPERFICIE = "#ffffff";
 
 const TEXTOS = {
   es: {
-    titulo: "Mi progreso",
+    titulo: "My progress",
     bajada: "Todo lo que has hecho en TutorIA's, reunido.",
     vacio: "Todavía no hay nada que mostrar",
     vacioNota: "Haz el Level Check y unos cuantos ejercicios; aquí vas a ver cómo avanzas.",

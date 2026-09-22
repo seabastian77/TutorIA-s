@@ -10,6 +10,8 @@ async function entrar(p) {
   await p.check("#registro-politica");
   await p.click("#form-registro button[type=submit]");
   await p.waitForSelector("#vista-principal:not(.oculto)");
+  await p.waitForSelector("#mentor-avatar");
+  if (await p.locator("#mentor.encogido").count()) await p.click("#mentor-avatar");
   await p.click("#mentor-abrir-charla");
   await p.waitForSelector(".charla-suyo:not(.charla-pensando)");
 }

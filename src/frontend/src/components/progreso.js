@@ -1,8 +1,8 @@
 const TEXTO_TENDENCIA = {
-  mejorando: { texto: "Improving", icono: "fa-arrow-trend-up", color: "buena" },
-  bajando: { texto: "Declining", icono: "fa-arrow-trend-down", color: "mala" },
-  estable: { texto: "Stable", icono: "fa-minus", color: "neutra" },
-  "sin-datos": { texto: "Keep Practicing", icono: "fa-minus", color: "neutra" },
+  mejorando: { texto: "Your English is improving. Keep it up.", icono: "fa-arrow-trend-up", color: "buena" },
+  bajando: { texto: "Your scores dipped a little lately. Let's win them back.", icono: "fa-arrow-trend-down", color: "mala" },
+  estable: { texto: "You're holding steady. Time for a small push.", icono: "fa-minus", color: "neutra" },
+  "sin-datos": { texto: "Let's make today count.", icono: "fa-lightbulb", color: "neutra" },
 };
 
 function renderizarProgreso(datos) {
@@ -28,7 +28,7 @@ function renderizarProgreso(datos) {
 
   const info = TEXTO_TENDENCIA[datos.tendencia] || TEXTO_TENDENCIA["sin-datos"];
   tendenciaTextoEl.textContent = info.texto;
-  tendenciaIconoEl.className = `fa-solid ${info.icono}`;
+  tendenciaIconoEl.innerHTML = Icono.svg(info.icono);
   tendenciaWrap.classList.remove("tendencia-buena", "tendencia-mala", "tendencia-neutra");
   tendenciaWrap.classList.add(`tendencia-${info.color}`);
 
@@ -39,13 +39,17 @@ function renderizarProgreso(datos) {
 
 function renderizarMetaDiaria(actividadesHoy, metaDiaria) {
   const contenedor = document.getElementById("meta-diaria");
-  const relleno = document.getElementById("meta-diaria-relleno");
+  const aro = document.getElementById("meta-diaria-aro");
   const texto = document.getElementById("meta-diaria-texto");
 
   if (!contenedor) return;
 
+  // El aro usa pathLength=100, así que el porcentaje es directamente el trazo
   const porcentaje = Math.min(100, Math.round((actividadesHoy / metaDiaria) * 100));
-  relleno.style.width = `${porcentaje}%`;
+  aro.style.strokeDasharray = `${porcentaje} 100`;
+  document.getElementById("meta-diaria-hoy").textContent = Math.min(actividadesHoy, metaDiaria);
+  document.getElementById("meta-diaria-total").textContent = metaDiaria;
+  contenedor.classList.toggle("cumplida", actividadesHoy >= metaDiaria);
   texto.textContent =
     actividadesHoy >= metaDiaria
       ? "Daily goal completed!"

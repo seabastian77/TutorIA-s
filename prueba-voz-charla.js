@@ -104,6 +104,8 @@ const MEDIR_CONTROLES = () => {
     }
 
     // Tuti saluda por escrito: en la charla no habla nadie
+    await p.waitForSelector("#mentor-avatar");
+    if (await p.locator("#mentor.encogido").count()) await p.click("#mentor-avatar");
     await p.click("#mentor-abrir-charla");
     await p.waitForSelector(".charla-suyo:not(.charla-pensando)");
     await ESPERA(250);
