@@ -2,7 +2,17 @@
 
 (function () {
   const URL_API = window.TUTORIAS_API_URL || "http://localhost:3000/api";
-  const RUTAS_ABIERTAS = ["/auth/login", "/auth/registro"];
+
+  // En estas un 401 significa "esas credenciales no sirven", no "se te venció
+  // la sesión": el motivo lo tiene que ver el usuario, no taparlo con un aviso
+  const RUTAS_ABIERTAS = [
+    "/auth/login",
+    "/auth/registro",
+    "/auth/google",
+    "/auth/olvide",
+    "/auth/restablecer",
+    "/auth/config",
+  ];
   const fetchOriginal = window.fetch;
   let yaExpiro = false;
 

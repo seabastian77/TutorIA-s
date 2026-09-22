@@ -2,8 +2,25 @@ const { generarRespuestaConversacion } = require("../services/iaService");
 const { registrarActividad } = require("../utils/gamificacion");
 const pool = require("../config/db");
 const { reportarError } = require("../utils/errores");
+const { sintetizar, vozGoogleConfigurada } = require("../services/vozGoogleService");
 
 const VozController = {
+  /**
+   * Lee un texto con las voces de Google. Pide sesión a propósito: sin eso,
+   * cualquiera en internet podría gastarle el cupo de la cuenta.
+   */
+  async hablar(req, res) {
+    if (!vozGoogleConfigurada()) {
+      return res.json({ audio: null, motivo: "sin-configurar" });
+    }
+
+    const { texto, idioma, velocidad } = req.body || {};
+    const audio = await sintetizar(texto, idioma, velocidad);
+
+    // Sin audio el navegador lee con su propia voz: la app no se queda muda
+    res.json({ audio, motivo: audio ? null : "fallo" });
+  },
+
   async responder(req, res) {
     try {
       const { mensajeUsuario, historial, nivel } = req.body;

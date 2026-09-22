@@ -1,5 +1,7 @@
 const AuthService = require("../services/authService");
 const RecuperacionService = require("../services/recuperacionService");
+const { GoogleService, googleConfigurado } = require("../services/googleService");
+const { vozGoogleConfigurada } = require("../services/vozGoogleService");
 const { reportarError } = require("../utils/errores");
 const { correoValido, contrasenaValida, LARGO_MINIMO } = require("../utils/recuperacion");
 
@@ -62,6 +64,27 @@ const AuthController = {
 
   async perfil(req, res) {
     res.json({ usuario: req.usuario });
+  },
+
+  /** Lo que el navegador necesita saber antes de pintar la pantalla. */
+  async config(req, res) {
+    res.json({
+      googleClientId: googleConfigurado() ? process.env.GOOGLE_CLIENT_ID : null,
+      vozGoogle: vozGoogleConfigurada(),
+    });
+  },
+
+  /** Entra con la cuenta de Google. */
+  async google(req, res) {
+    try {
+      const { usuario, token } = await GoogleService.entrar((req.body || {}).credencial);
+      res.json({ usuario, token });
+    } catch (error) {
+      if (!error.status) reportarError("Error entrando con Google", error);
+      res
+        .status(error.status || 500)
+        .json({ error: error.message || "No se pudo entrar con Google" });
+    }
   },
 
   /** Pide el enlace para cambiar la contraseña. */

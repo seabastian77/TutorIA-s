@@ -70,6 +70,12 @@
 
       <div id="mensaje-error" class="mensaje-error"></div>
 
+      <!-- Solo aparece si la app tiene configurado el acceso con Google -->
+      <div id="caja-google" class="caja-google oculto">
+        <div id="boton-google"></div>
+        <p class="separador-o"><span>or</span></p>
+      </div>
+
       <div id="pagina-login" class="pagina activa">
         <form id="form-login">
           <div class="campo">
@@ -900,6 +906,7 @@
   <script src="src/store/tema.js"></script>
   <script src="src/store/sesion.js"></script>
   <script src="src/store/sesionVigilante.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="src/services/authApi.js"></script>
   <script src="src/services/nivelApi.js"></script>
   <script src="src/services/practicaApi.js"></script>

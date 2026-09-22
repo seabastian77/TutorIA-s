@@ -253,6 +253,36 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 
 .mensaje-error.visible { display: block; }
 
+/* El botón de Google y la línea que lo separa del formulario */
+.caja-google { margin-bottom: 4px; }
+
+/* Google lo pinta dentro de un iframe, así que su forma no se puede tocar
+   con CSS: las esquinas se redondean recortando el contenedor */
+#boton-google {
+  display: flex;
+  justify-content: center;
+  border-radius: var(--radio-chico);
+  overflow: hidden;
+}
+#boton-google > div { width: 100% !important; }
+
+.separador-o {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: var(--gris-tenue);
+  font-size: 13px;
+}
+
+.separador-o::before,
+.separador-o::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--borde);
+}
+
 /* El aviso de que el correo salió, o de que la clave quedó cambiada */
 .mensaje-exito {
   margin: 0 0 16px;

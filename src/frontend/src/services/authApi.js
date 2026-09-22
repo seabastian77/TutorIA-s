@@ -31,6 +31,25 @@ async function obtenerPerfil(token) {
   return datos;
 }
 
+/** Lo que el navegador necesita saber antes de pintar el login. */
+async function obtenerConfig() {
+  const resp = await fetch(`${URL_BASE}/auth/config`);
+  if (!resp.ok) throw new Error("No se pudo leer la configuración");
+  return resp.json();
+}
+
+/** Entra con el token que devuelve el botón de Google. */
+async function entrarConGoogle(credencial) {
+  const resp = await fetch(`${URL_BASE}/auth/google`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credencial }),
+  });
+  const datos = await resp.json();
+  if (!resp.ok) throw new Error(datos.error || "No se pudo entrar con Google");
+  return datos;
+}
+
 /** Pide el enlace para cambiar la contraseña. */
 async function pedirEnlace(correo) {
   const resp = await fetch(`${URL_BASE}/auth/olvide`, {
@@ -55,4 +74,7 @@ async function restablecer({ token, contrasena }) {
   return datos;
 }
 
-window.AuthAPI = { registrar, login, obtenerPerfil, pedirEnlace, restablecer };
+window.AuthAPI = {
+  registrar, login, obtenerPerfil, pedirEnlace, restablecer,
+  obtenerConfig, entrarConGoogle,
+};

@@ -79,13 +79,7 @@ function mostrarLineaActual() {
 function reproducirLineaActual() {
   if (!window.speechSynthesis || !escenaActual) return;
 
-  const utterance = new SpeechSynthesisUtterance(
-    escenaActual.lineas[indiceLinea],
-  );
-  utterance.lang = "en-US";
-  VozIngles.prepararVoz(utterance, vocesDisponiblesEscena);
-
-  window.speechSynthesis.speak(utterance);
+  VozIngles.leer(escenaActual.lineas[indiceLinea], { idioma: "en" });
 }
 
 function configurarReconocimientoEscena() {
@@ -123,7 +117,7 @@ function alternarEscuchaEscena() {
     reconocimientoEscena.stop();
     detenerEscuchaEscena();
   } else {
-    window.speechSynthesis.cancel();
+    VozIngles.callar();
     reconocimientoEscena.start();
     escuchandoEscena = true;
     document.getElementById("btn-mic-escena").classList.add("escuchando");
@@ -233,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnSalirEscena) {
     btnSalirEscena.addEventListener("click", () => {
       if (reconocimientoEscena && escuchandoEscena) reconocimientoEscena.stop();
-      window.speechSynthesis.cancel();
+      VozIngles.callar();
       pintarVideoEscena(null);
       document.getElementById("vista-escena").classList.add("oculto");
       document.getElementById("vista-principal").classList.remove("oculto");

@@ -1,15 +1,57 @@
-// Manda los correos de la app por la API de Resend, sin librerías de por medio
+// Manda los correos de la app: por Gmail si está configurado, si no por Resend
 
+const nodemailer = require("nodemailer");
 const { reportarError } = require("../utils/errores");
+const { elegirProveedor, remitenteDe } = require("../utils/proveedorCorreo");
 
-const API = "https://api.resend.com/emails";
-// Sin dominio propio, Resend solo deja este remitente y solo al correo de la cuenta
-const REMITENTE = process.env.CORREO_REMITENTE || "TutorIA's <onboarding@resend.dev>";
-const ESPERA_MS = 10000;
+const API_RESEND = "https://api.resend.com/emails";
+const ESPERA_MS = 15000;
+
+let transporteGmail = null;
+
+/** Arma el transporte de Gmail una sola vez y lo reutiliza. */
+function gmail() {
+  if (!transporteGmail) {
+    transporteGmail = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USUARIO,
+        // Es una contraseña de aplicación, no la del correo
+        pass: process.env.GMAIL_CLAVE_APP,
+      },
+    });
+  }
+  return transporteGmail;
+}
 
 /** Dice si hay con qué mandar correos; si no, la app sigue funcionando igual. */
 function correoConfigurado() {
-  return !!process.env.RESEND_API_KEY;
+  return elegirProveedor(process.env) !== "ninguno";
+}
+
+async function porGmail({ de, para, asunto, texto, html }) {
+  await gmail().sendMail({ from: de, to: para, subject: asunto, text: texto, html });
+  return { enviado: true, por: "gmail" };
+}
+
+async function porResend({ de, para, asunto, texto, html }) {
+  const corte = AbortSignal.timeout ? AbortSignal.timeout(ESPERA_MS) : undefined;
+  const resp = await fetch(API_RESEND, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ from: de, to: [para], subject: asunto, text: texto, html }),
+    signal: corte,
+  });
+
+  if (!resp.ok) {
+    // El cuerpo trae el motivo, pero nunca la clave
+    const detalle = await resp.text().catch(() => "");
+    throw new Error(`Resend respondió ${resp.status}: ${detalle.slice(0, 300)}`);
+  }
+  return { enviado: true, por: "resend" };
 }
 
 /**
@@ -17,35 +59,22 @@ function correoConfigurado() {
  * correo falle no puede tumbar la petición del usuario.
  */
 async function enviarCorreo({ para, asunto, texto, html }) {
-  if (!correoConfigurado()) {
-    // En local no hay clave: el enlace se imprime para poder probar el flujo
+  const proveedor = elegirProveedor(process.env);
+  const de = remitenteDe(process.env, proveedor);
+
+  if (proveedor === "ninguno") {
+    // En local no hay nada configurado: el enlace se imprime para poder probar
     console.log(`[correo sin configurar] para ${para}\n${texto}`);
     return { enviado: false, motivo: "sin-configurar" };
   }
 
-  const corte = AbortSignal.timeout ? AbortSignal.timeout(ESPERA_MS) : undefined;
-
   try {
-    const resp = await fetch(API, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ from: REMITENTE, to: [para], subject: asunto, text: texto, html }),
-      signal: corte,
-    });
-
-    if (!resp.ok) {
-      // El cuerpo del error trae el motivo, pero nunca la clave
-      const detalle = await resp.text().catch(() => "");
-      throw new Error(`Resend respondió ${resp.status}: ${detalle.slice(0, 300)}`);
-    }
-    return { enviado: true };
+    const envio = { de, para, asunto, texto, html };
+    return proveedor === "gmail" ? await porGmail(envio) : await porResend(envio);
   } catch (error) {
-    reportarError("No se pudo enviar el correo", error);
+    reportarError(`No se pudo enviar el correo por ${proveedor}`, error);
     return { enviado: false, motivo: "fallo-envio" };
   }
 }
 
-module.exports = { enviarCorreo, correoConfigurado, REMITENTE };
+module.exports = { enviarCorreo, correoConfigurado };

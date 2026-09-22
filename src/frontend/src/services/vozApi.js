@@ -15,6 +15,21 @@ const VozAPI = {
     if (!resp.ok) throw new Error(datos.error || "Error procesando tu mensaje");
     return datos;
   },
+
+  /** Pide el audio de un texto a las voces de Google. */
+  async hablar({ texto, idioma, velocidad }) {
+    const resp = await fetch(`${URL_BASE_VOZ}/voz/hablar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Sesion.obtenerToken()}`,
+      },
+      body: JSON.stringify({ texto, idioma, velocidad }),
+    });
+    const datos = await resp.json();
+    if (!resp.ok) throw new Error(datos.error || "No se pudo leer el texto");
+    return datos;
+  },
 };
 
 window.VozAPI = VozAPI;

@@ -63,7 +63,7 @@ function alternarEscucha() {
     reconocimiento.stop();
     detenerEscucha();
   } else {
-    window.speechSynthesis.cancel(); // no se pisan la voz de la IA y el micrófono
+    VozIngles.callar(); // no se pisan la voz de la IA y el micrófono
     reconocimiento.start();
     escuchando = true;
     document.getElementById("btn-mic").classList.add("escuchando");
@@ -124,11 +124,7 @@ function cargarVoces() {
 function hablar(texto) {
   if (!SoporteVoz.sintesisDisponible) return;
 
-  const utterance = new SpeechSynthesisUtterance(texto);
-  utterance.lang = "en-US";
-  VozIngles.prepararVoz(utterance, vocesDisponibles);
-
-  window.speechSynthesis.speak(utterance);
+  VozIngles.leer(texto, { idioma: "en" });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -142,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnSalirVoz) {
     btnSalirVoz.addEventListener("click", () => {
       if (reconocimiento && escuchando) reconocimiento.stop();
-      window.speechSynthesis.cancel();
+      VozIngles.callar();
       document.getElementById("vista-voz").classList.add("oculto");
       document.getElementById("vista-principal").classList.remove("oculto");
     });

@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/userModel");
+const { entraConContrasena } = require("../utils/cuentaGoogle");
 
 const JWT_SECRET = process.env.JWT_SECRET || "cambia_esta_clave_en_produccion";
 const JWT_EXPIRA = "7d";
@@ -25,6 +26,14 @@ const AuthService = {
     const usuario = await UserModel.buscarPorCorreo(correo);
     if (!usuario) {
       const error = new Error("Correo o contraseña incorrectos");
+      error.status = 401;
+      throw error;
+    }
+
+    // Quien se registró con Google no tiene contraseña: hay que decírselo en
+    // vez de dejarlo probando claves que nunca van a servir
+    if (!entraConContrasena(usuario)) {
+      const error = new Error("Esta cuenta entra con Google. Usa el botón de Google.");
       error.status = 401;
       throw error;
     }

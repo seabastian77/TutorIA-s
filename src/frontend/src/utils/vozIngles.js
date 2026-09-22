@@ -105,7 +105,66 @@ function prepararVoz(utterance, voces, idioma = "en") {
   return voz;
 }
 
-const VozIngles = { elegirVoz, elegirVozIngles, prepararVoz, puntajeDeVoz, recordarVoces };
+/* ─────────── las voces de Google, cuando la app las tiene ─────────── */
+
+let vozGoogleDisponible = false;
+let audioActual = null;
+
+/** Enciende las voces de Google; si no están, todo sigue con la del navegador. */
+function usarVozGoogle(disponible) {
+  vozGoogleDisponible = !!disponible;
+}
+
+/** Corta lo que se esté leyendo, venga de Google o del navegador. */
+function callar() {
+  if (audioActual) {
+    audioActual.pause();
+    audioActual = null;
+  }
+  if (typeof window !== "undefined" && window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+/** Lee con la voz del navegador: es el respaldo de siempre. */
+function leerConElNavegador(texto, idioma, velocidad) {
+  if (typeof window === "undefined" || !window.speechSynthesis) return false;
+  const mensaje = new SpeechSynthesisUtterance(texto);
+  mensaje.lang = idioma === "es" ? "es-MX" : "en-US";
+  mensaje.rate = velocidad;
+  prepararVoz(mensaje, null, idioma);
+  window.speechSynthesis.speak(mensaje);
+  return true;
+}
+
+/**
+ * Lee un texto en voz alta. Intenta con Google, que se entiende mucho mejor, y
+ * si no hay o falla, cae a la voz del navegador sin que el usuario note nada.
+ */
+async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
+  callar();
+  if (!texto) return false;
+
+  if (vozGoogleDisponible && typeof VozAPI !== "undefined" && VozAPI.hablar) {
+    try {
+      const { audio } = await VozAPI.hablar({ texto, idioma, velocidad });
+      if (audio) {
+        audioActual = new Audio(`data:audio/mp3;base64,${audio}`);
+        await audioActual.play();
+        return true;
+      }
+    } catch (e) {
+      // Cualquier problema con Google cae al navegador, que siempre está
+    }
+  }
+
+  return leerConElNavegador(texto, idioma, velocidad);
+}
+
+const VozIngles = {
+  elegirVoz, elegirVozIngles, prepararVoz, puntajeDeVoz, recordarVoces,
+  leer, callar, usarVozGoogle, leerConElNavegador,
+};
 
 if (typeof window !== "undefined") {
   window.VozIngles = VozIngles;

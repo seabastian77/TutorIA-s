@@ -179,6 +179,57 @@ function inicializarFormAuth() {
     }
   });
 
+  /* ─────────── entrar con Google ─────────── */
+
+  /**
+   * Lee del servidor qué servicios de Google están habilitados: el botón de
+   * entrar y las voces. Sin configuración la app funciona igual, con correo y
+   * contraseña y con la voz del navegador.
+   */
+  async function prepararGoogle() {
+    let config;
+    try {
+      config = await AuthAPI.obtenerConfig();
+    } catch (e) {
+      return;
+    }
+
+    VozIngles.usarVozGoogle(config.vozGoogle);
+
+    const clientId = config.googleClientId;
+    if (!clientId || !window.google || !google.accounts) return;
+
+    google.accounts.id.initialize({
+      client_id: clientId,
+      locale: "es", // para que diga "Continuar con Google", no "Continue with"
+      callback: async ({ credential }) => {
+        limpiarError();
+        try {
+          const datos = await AuthAPI.entrarConGoogle(credential);
+          Sesion.guardar(datos);
+          mostrarPantallaPrincipal(datos.usuario);
+        } catch (err) {
+          mostrarError(err.message);
+        }
+      },
+    });
+
+    // 400 es el ancho máximo que acepta Google; con eso llena la tarjeta
+    google.accounts.id.renderButton(document.getElementById("boton-google"), {
+      theme: "outline",
+      size: "large",
+      width: 400,
+      text: "continue_with",
+      shape: "rectangular",
+      logo_alignment: "center",
+    });
+    document.getElementById("caja-google").classList.remove("oculto");
+  }
+
+  // El script de Google puede no haber cargado todavía cuando corre esto
+  if (window.google && window.google.accounts) prepararGoogle();
+  else window.addEventListener("load", prepararGoogle, { once: true });
+
   // Si llegó por el enlace del correo, se abre directo la pantalla de clave nueva
   if (tokenDelEnlace()) {
     Sesion.cerrar(); // cambiar la clave no puede dejarlo dentro con la sesión vieja

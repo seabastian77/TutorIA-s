@@ -2,17 +2,9 @@ let dictadoActual = null;
 let comprensionActual = null;
 let respuestasAudio = [];
 
-/** Lee un texto en voz alta con la voz inglesa del navegador. */
+/** Lee un texto en voz alta: con Google si la app lo tiene, si no el navegador. */
 function hablarIngles(texto, velocidad = 1) {
-  if (!("speechSynthesis" in window)) return false;
-
-  window.speechSynthesis.cancel();
-  const mensaje = new SpeechSynthesisUtterance(texto);
-  mensaje.lang = "en-US";
-  mensaje.rate = velocidad;
-  VozIngles.prepararVoz(mensaje, window.speechSynthesis.getVoices());
-
-  window.speechSynthesis.speak(mensaje);
+  VozIngles.leer(texto, { idioma: "en", velocidad });
   return true;
 }
 
@@ -32,7 +24,7 @@ async function iniciarAudioLab() {
 }
 
 function mostrarMenuAudio() {
-  window.speechSynthesis?.cancel();
+  VozIngles.callar();
   document.getElementById("audio-menu").classList.remove("oculto");
   document.getElementById("audio-dictado").classList.add("oculto");
   document.getElementById("audio-comprension").classList.add("oculto");
@@ -285,7 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnSalir = document.getElementById("btn-salir-audio");
   if (btnSalir) {
     btnSalir.addEventListener("click", () => {
-      window.speechSynthesis?.cancel();
+      VozIngles.callar();
       document.getElementById("vista-audio").classList.add("oculto");
       document.getElementById("vista-principal").classList.remove("oculto");
       if (typeof cargarProgreso === "function") cargarProgreso();
