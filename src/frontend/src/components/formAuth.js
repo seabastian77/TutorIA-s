@@ -215,13 +215,18 @@ function inicializarFormAuth() {
     });
 
     // 400 es el ancho máximo que acepta Google; con eso llena la tarjeta
-    google.accounts.id.renderButton(document.getElementById("boton-google"), {
+    const caja = document.getElementById("boton-google");
+    // Google no lo pinta más ancho de 400; el CSS lo estira hasta el borde
+    const ancho = Math.min(400, Math.round(caja.getBoundingClientRect().width) || 400);
+
+    google.accounts.id.renderButton(caja, {
       theme: "outline",
       size: "large",
-      width: 400,
-      text: "continue_with",
       shape: "rectangular",
+      text: "continue_with",
       logo_alignment: "center",
+      locale: "es",
+      width: ancho,
     });
     document.getElementById("caja-google").classList.remove("oculto");
   }

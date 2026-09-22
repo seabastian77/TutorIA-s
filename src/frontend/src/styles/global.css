@@ -261,10 +261,18 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 #boton-google {
   display: flex;
   justify-content: center;
+  width: 100%;
   border-radius: var(--radio-chico);
   overflow: hidden;
 }
-#boton-google > div { width: 100% !important; }
+
+/* Google lo pinta máximo de 400: esto lo estira hasta el borde de la tarjeta */
+#boton-google > div,
+#boton-google iframe,
+#boton-google [role="button"] {
+  width: 100% !important;
+  max-width: none !important;
+}
 
 .separador-o {
   display: flex;
