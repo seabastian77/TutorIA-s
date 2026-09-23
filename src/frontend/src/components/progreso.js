@@ -2,7 +2,7 @@ const TEXTO_TENDENCIA = {
   mejorando: { texto: "Your English is improving. Keep it up.", icono: "fa-arrow-trend-up", color: "buena" },
   bajando: { texto: "Your scores dipped a little lately. Let's win them back.", icono: "fa-arrow-trend-down", color: "mala" },
   estable: { texto: "You're holding steady. Time for a small push.", icono: "fa-minus", color: "neutra" },
-  "sin-datos": { texto: "Let's make today count.", icono: "fa-lightbulb", color: "neutra" },
+  "sin-datos": { texto: "Let's make today count.", icono: null, color: "neutra" },
 };
 
 function renderizarProgreso(datos) {
@@ -27,8 +27,22 @@ function renderizarProgreso(datos) {
   }
 
   const info = TEXTO_TENDENCIA[datos.tendencia] || TEXTO_TENDENCIA["sin-datos"];
-  tendenciaTextoEl.textContent = info.texto;
-  tendenciaIconoEl.innerHTML = Icono.svg(info.icono);
+  // Sin nivel todavía, el saludo invita a empezar por el diagnóstico
+  const medido = datos.nivelMedido === true;
+  pintarTextoAdaptable(
+    tendenciaTextoEl,
+    medido ? info.texto : "Welcome to TutorIA\u2019s. Let\u2019s start by finding your English level.",
+    medido ? info.texto : "Let\u2019s find your English level first.",
+  );
+  tendenciaIconoEl.innerHTML = medido && info.icono ? Icono.svg(info.icono) : "";
+
+  const datoTienda = document.getElementById("dato-tienda");
+  if (datoTienda) {
+    const monedas = datos.monedas ?? 0;
+    datoTienda.textContent = monedas === 1 ? "1 coin to spend" : `${monedas} coins to spend`;
+  }
+  const datoNivel = document.getElementById("dato-nivel");
+  if (datoNivel) datoNivel.textContent = medido ? `Your level: ${datos.nivel}` : "Level not set yet";
   tendenciaWrap.classList.remove("tendencia-buena", "tendencia-mala", "tendencia-neutra");
   tendenciaWrap.classList.add(`tendencia-${info.color}`);
 
@@ -47,13 +61,13 @@ function renderizarMetaDiaria(actividadesHoy, metaDiaria) {
   // El aro usa pathLength=100, así que el porcentaje es directamente el trazo
   const porcentaje = Math.min(100, Math.round((actividadesHoy / metaDiaria) * 100));
   aro.style.strokeDasharray = `${porcentaje} 100`;
+  document.getElementById("meta-barra-relleno").style.width = `${porcentaje}%`;
+  document.getElementById("meta-linea-texto").textContent =
+    `Daily goal ${Math.min(actividadesHoy, metaDiaria)}/${metaDiaria}`;
   document.getElementById("meta-diaria-hoy").textContent = Math.min(actividadesHoy, metaDiaria);
   document.getElementById("meta-diaria-total").textContent = metaDiaria;
   contenedor.classList.toggle("cumplida", actividadesHoy >= metaDiaria);
-  texto.textContent =
-    actividadesHoy >= metaDiaria
-      ? "Daily goal completed!"
-      : `Daily goal: ${actividadesHoy} / ${metaDiaria}`;
+  texto.textContent = actividadesHoy >= metaDiaria ? "Goal completed!" : "Daily goal";
 
   contenedor.classList.remove("oculto");
 }

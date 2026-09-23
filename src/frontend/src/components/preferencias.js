@@ -10,11 +10,7 @@ function pintarInterruptorEspanol(activo) {
   contenedor.classList.remove("oculto");
 
   const texto = document.getElementById("ayuda-espanol-texto");
-  if (texto) {
-    texto.textContent = activo
-      ? "Explanations in Spanish: on"
-      : "Explanations in Spanish: off";
-  }
+  if (texto) texto.textContent = "Explanations in Spanish";
 }
 
 async function cambiarAyudaEspanol(activo) {

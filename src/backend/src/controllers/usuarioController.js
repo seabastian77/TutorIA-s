@@ -104,6 +104,8 @@ const UsuarioController = {
         racha: usuario.racha_dias || 0,
         rachaMaxima: usuario.racha_maxima || 0,
         nivel: usuario.nivel_mcer || null,
+        // Todos arrancan en A1: el nivel solo cuenta como medido si hubo diagnóstico
+        nivelMedido: diag.length > 0,
         tendencia,
         actividadesHoy: Math.min(usuario.actividades_hoy || 0, META_DIARIA),
         metaDiaria: META_DIARIA,

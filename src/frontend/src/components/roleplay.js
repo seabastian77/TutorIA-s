@@ -23,36 +23,55 @@ async function mostrarSelectorEscenarios() {
     const datos = await RoleplayAPI.escenarios();
     estado.textContent = "";
 
-    datos.escenarios.forEach((esc) => {
-      const tarjeta = document.createElement("button");
-      tarjeta.className = `escenario escenario-${esc.color || "azul"}`;
-
-      const icono = document.createElement("span");
-      icono.className = "escenario-icono";
-      icono.innerHTML = Icono.svg(esc.icono);
-
-      const texto = document.createElement("span");
-      texto.className = "escenario-texto";
-
-      const nombre = document.createElement("span");
-      nombre.className = "escenario-nombre";
-      nombre.textContent = esc.nombre;
-
-      const desc = document.createElement("span");
-      desc.className = "escenario-desc";
-      desc.textContent = esc.descripcion;
-
-      texto.appendChild(nombre);
-      texto.appendChild(desc);
-      tarjeta.appendChild(icono);
-      tarjeta.appendChild(texto);
-
-      tarjeta.addEventListener("click", () => abrirEscenario(esc.id));
-      lista.appendChild(tarjeta);
-    });
+    datos.escenarios.forEach((esc) => lista.appendChild(tarjetaEscenario(esc)));
+    aplicarFiltroEscenarios();
   } catch (err) {
     estado.textContent = "Could not load the situations.";
   }
+}
+
+let filtroEscenarios = "todos";
+
+/** Arma la tarjeta de una situación: ícono, nivel sugerido, duración y la acción. */
+function tarjetaEscenario(esc) {
+  const tarjeta = document.createElement("button");
+  tarjeta.type = "button";
+  tarjeta.className = "escenario";
+  tarjeta.dataset.categoria = esc.categoria || "daily";
+  tarjeta.innerHTML = `
+    <span class="escenario-arriba">
+      <span class="escenario-icono">${Icono.svg(esc.icono)}</span>
+      <span class="escenario-nivel"></span>
+    </span>
+    <span class="escenario-texto">
+      <span class="escenario-nombre"></span>
+      <span class="escenario-desc"></span>
+    </span>
+    <span class="escenario-pie">
+      <span class="escenario-minutos"></span>
+      <span class="escenario-empezar">Start${Icono.svg("fa-arrow-right")}</span>
+    </span>`;
+  tarjeta.querySelector(".escenario-nivel").textContent = esc.nivel || "A1";
+  tarjeta.querySelector(".escenario-nombre").textContent = esc.nombre;
+  tarjeta.querySelector(".escenario-desc").textContent = esc.descripcion;
+  tarjeta.querySelector(".escenario-minutos").textContent = esc.minutos ? `~${esc.minutos} min` : "";
+  tarjeta.addEventListener("click", () => abrirEscenario(esc.id));
+  return tarjeta;
+}
+
+/** Deja ver solo las situaciones del tema elegido; la de la foto sale solo en "All". */
+function aplicarFiltroEscenarios() {
+  let visibles = 0;
+  document.querySelectorAll("#roleplay-escenarios .escenario").forEach((t) => {
+    const ver = filtroEscenarios === "todos" || t.dataset.categoria === filtroEscenarios;
+    t.classList.toggle("oculto", !ver);
+    if (ver) visibles += 1;
+  });
+  document.getElementById("btn-visual-reaccionar").classList.toggle("oculto", filtroEscenarios !== "todos");
+  document.getElementById("roleplay-vacio").classList.toggle("oculto", visibles > 0 || filtroEscenarios === "todos");
+  document.querySelectorAll("#roleplay-filtros .filtro").forEach((b) =>
+    b.setAttribute("aria-pressed", String(b.dataset.filtro === filtroEscenarios)),
+  );
 }
 
 async function abrirEscenario(escenarioId) {
@@ -182,6 +201,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  document.querySelectorAll("#roleplay-filtros .filtro").forEach((b) =>
+    b.addEventListener("click", () => {
+      filtroEscenarios = b.dataset.filtro;
+      aplicarFiltroEscenarios();
+    }),
+  );
 
   const btnCambiar = document.getElementById("btn-cambiar-escenario");
   if (btnCambiar) btnCambiar.addEventListener("click", mostrarSelectorEscenarios);

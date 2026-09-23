@@ -54,6 +54,7 @@ const ICONOS = {
   "fa-arrow-right": '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
   "fa-chart-line": '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/>',
   "fa-gauge": '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
+  "fa-check": '<path d="M20 6 9 17l-5-5" />',
   "fa-xmark": '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
 };
 

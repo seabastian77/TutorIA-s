@@ -32,9 +32,8 @@ function inicializarFormAuth() {
     const sub = document.getElementById("auth-subtitulo");
     sub.textContent = subtitulo;
     sub.classList.toggle("oculto", !subtitulo);
-    const conPestanas = id === "pagina-login" || id === "pagina-registro";
-    document.querySelector(".pestanas").classList.toggle("oculto", !conPestanas);
-    document.getElementById("caja-google").dataset.fueraDeLugar = String(!conPestanas);
+    const conGoogle = id === "pagina-login" || id === "pagina-registro";
+    document.getElementById("caja-google").dataset.fueraDeLugar = String(!conGoogle);
 
     contenedorAuth.querySelectorAll(".pagina").forEach((pagina) => {
       pagina.classList.remove("activa");
@@ -43,8 +42,6 @@ function inicializarFormAuth() {
 
     tabLogin.classList.toggle("activa", id === "pagina-login");
     tabRegistro.classList.toggle("activa", id === "pagina-registro");
-    tabLogin.setAttribute("aria-selected", String(id === "pagina-login"));
-    tabRegistro.setAttribute("aria-selected", String(id === "pagina-registro"));
   }
 
   tabLogin.addEventListener("click", () => cambiarPestana("pagina-login"));

@@ -24,10 +24,13 @@ async function pedirJSON(prompt) {
 
 // Roleplay
 
-// Catálogo de situaciones disponibles
+// Catálogo de situaciones: nivel sugerido, duración aproximada y tema para filtrar
 const ESCENARIOS = {
   cafe: {
     id: "cafe",
+    nivel: "A1",
+    minutos: 4,
+    categoria: "daily",
     nombre: "Ordering coffee",
     descripcion: "You walk into a busy café and order something to drink.",
     icono: "fa-mug-hot",
@@ -37,6 +40,9 @@ const ESCENARIOS = {
   },
   aeropuerto: {
     id: "aeropuerto",
+    nivel: "A2",
+    minutos: 5,
+    categoria: "travel",
     nombre: "Airport immigration",
     descripcion: "An immigration officer asks about your trip.",
     icono: "fa-passport",
@@ -47,6 +53,9 @@ const ESCENARIOS = {
   },
   entrevista: {
     id: "entrevista",
+    nivel: "B1",
+    minutos: 7,
+    categoria: "work",
     nombre: "Job interview",
     descripcion: "You interview for a job you really want.",
     icono: "fa-briefcase",
@@ -57,6 +66,9 @@ const ESCENARIOS = {
   },
   hotel: {
     id: "hotel",
+    nivel: "A2",
+    minutos: 5,
+    categoria: "travel",
     nombre: "Hotel check-in",
     descripcion: "You arrive at a hotel and check into your room.",
     icono: "fa-bell-concierge",
@@ -66,6 +78,9 @@ const ESCENARIOS = {
   },
   medico: {
     id: "medico",
+    nivel: "B1",
+    minutos: 6,
+    categoria: "daily",
     nombre: "Doctor's appointment",
     descripcion: "You explain to a doctor how you have been feeling.",
     icono: "fa-stethoscope",
