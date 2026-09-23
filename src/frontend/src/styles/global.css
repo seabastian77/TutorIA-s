@@ -4620,3 +4620,60 @@ button,
   .cifra-valor { font-size: 24px; }
   .grafica { padding: 16px; }
 }
+
+/* ============================================================
+   TUS DATOS — descargar lo guardado y borrar la cuenta
+   ============================================================ */
+
+.datos-tarjeta {
+  max-width: 760px;
+  padding: 22px 24px;
+  border-radius: var(--radio);
+  background: var(--panel);
+  border: 1px solid var(--borde);
+}
+
+.datos-tarjeta h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; color: var(--blanco); }
+.datos-tarjeta > p { margin-top: 6px; font-size: 16px; line-height: 1.6; color: var(--gris); }
+.datos-tarjeta > p strong { color: var(--blanco); }
+.datos-tarjeta .btn-secundario { margin-top: 16px; }
+.datos-tarjeta .btn-secundario .icono { width: 18px; height: 18px; margin-left: -4px; }
+.datos-tarjeta .mensaje-exito,
+.datos-tarjeta .mensaje-error { margin: 14px 0 0; }
+.datos-tarjeta [hidden] { display: none !important; }
+
+.datos-derechos { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 8px; font-size: 16px; line-height: 1.55; color: var(--gris); }
+.datos-derechos strong { color: var(--blanco); }
+.datos-derechos a,
+.datos-politica a { color: var(--primario); }
+.datos-politica { margin-top: 12px; font-size: 14px; color: var(--gris); }
+
+.datos-peligro { border-color: var(--rosa-borde); }
+.datos-peligro h3 { color: var(--rojo); }
+.form-borrar { margin-top: 18px; max-width: 420px; }
+.form-borrar .pagina-intro { margin-bottom: 12px; }
+
+.btn-peligro {
+  min-height: 48px;
+  padding: 0 20px;
+  margin-top: 6px;
+  border: 0;
+  border-radius: var(--radio-chico);
+  background: var(--rojo);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.16s ease;
+}
+
+.btn-peligro:hover { filter: brightness(1.08); }
+.btn-peligro:disabled { opacity: 0.6; cursor: wait; }
+.btn-peligro:focus-visible { outline: 3px solid var(--rosa-borde); outline-offset: 2px; }
+:root[data-tema="oscuro"] .btn-peligro { color: #1a0b10; }
+
+@media (max-width: 620px) {
+  .datos-tarjeta { padding: 18px; }
+  .btn-peligro { width: 100%; }
+}

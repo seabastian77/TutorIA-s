@@ -8,12 +8,12 @@ function inicializarFormAuth() {
 
   function mostrarError(msg) {
     errorBox.textContent = msg;
-    errorBox.classList.add("visible");
+    errorBox.className = "mensaje-error visible";
   }
 
   function limpiarError() {
     errorBox.textContent = "";
-    errorBox.classList.remove("visible");
+    errorBox.className = "mensaje-error";
   }
 
   const CABECERAS = {
@@ -54,6 +54,14 @@ function inicializarFormAuth() {
   if (aviso) {
     sessionStorage.removeItem("tutorias_aviso");
     mostrarError(aviso);
+  }
+
+  // Quien acaba de borrar su cuenta llega aquí con un aviso de despedida
+  const despedida = sessionStorage.getItem("tutorias_despedida");
+  if (despedida) {
+    sessionStorage.removeItem("tutorias_despedida");
+    errorBox.textContent = despedida;
+    errorBox.className = "mensaje-exito";
   }
 
   formLogin.addEventListener("submit", async (e) => {

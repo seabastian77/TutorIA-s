@@ -228,6 +228,7 @@
         <button type="button" id="btn-menu-progreso" class="menu-cuenta-opcion"><i class="fa-solid fa-chart-line"></i>My progress</button>
         <button type="button" id="btn-menu-tema" class="menu-cuenta-opcion menu-solo-movil"><i class="fa-solid fa-sun"></i><span id="menu-tema-texto">Dark mode</span></button>
         <button type="button" id="btn-menu-metricas" class="menu-cuenta-opcion oculto"><i class="fa-solid fa-chart-column"></i>Métricas del estudio</button>
+        <button type="button" id="btn-menu-datos" class="menu-cuenta-opcion"><i class="fa-solid fa-shield-halved"></i>Tus datos y tu cuenta</button>
         <button type="button" id="btn-cerrar-sesion" class="menu-cuenta-opcion"><i class="fa-solid fa-log-out"></i>Log out</button>
       </div>
     </div>
@@ -971,6 +972,52 @@
     <button id="btn-salir-visual" class="btn-secundario" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
+  <!-- Vista: tus datos, con lo que pide la Ley 1581 de 2012 -->
+  <div id="vista-datos" class="pantalla-principal oculto" data-seccion="Tus datos" lang="es">
+    <header class="cabecera-modulo">
+      <h2>Tus datos</h2>
+      <p>Lo que TutorIA&#8217;s guarda de ti y lo que puedes hacer con eso, como lo dice la Ley 1581 de 2012.</p>
+    </header>
+
+    <section class="datos-tarjeta" aria-labelledby="t-descarga">
+      <h3 id="t-descarga">Descarga tus datos</h3>
+      <p>Un archivo con todo lo que guardamos de ti: tu cuenta, tus diagnósticos, ejercicios, conversaciones con la IA, vocabulario, liga, compras y actividades, además de cuándo aceptaste la política. No incluye tu contraseña.</p>
+      <button type="button" id="btn-descargar-datos" class="btn-secundario"><i class="fa-solid fa-download"></i>Descargar mis datos</button>
+      <p id="datos-aviso-descarga" class="mensaje-exito" role="status" hidden></p>
+    </section>
+
+    <section class="datos-tarjeta" aria-labelledby="t-derechos">
+      <h3 id="t-derechos">Tus derechos</h3>
+      <ul class="datos-derechos">
+        <li><strong>Conocer tus datos y llevártelos:</strong> con el botón de arriba, cuando quieras y gratis.</li>
+        <li><strong>Corregirlos o preguntar cómo los usamos:</strong> escríbenos a <a href="mailto:sebastiangonzalez304@gmail.com">sebastiangonzalez304@gmail.com</a> desde el correo de tu cuenta.</li>
+        <li><strong>Retirar tu autorización y que borremos tus datos:</strong> aquí abajo, sin tener que escribirle a nadie.</li>
+        <li><strong>Quejarte</strong> ante la Superintendencia de Industria y Comercio si no te respondemos.</li>
+      </ul>
+      <p class="datos-politica">Todo está explicado en la <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.</p>
+    </section>
+
+    <section class="datos-tarjeta datos-peligro" aria-labelledby="t-borrar">
+      <h3 id="t-borrar">Borrar mi cuenta</h3>
+      <p>Se borran para siempre tu cuenta (<span id="datos-correo-cuenta"></span>), tu nivel, tu racha, tus monedas, tu vocabulario y todo lo que va en el archivo de arriba. <strong>No se puede deshacer.</strong> Si quieres guardar algo, descarga tus datos primero.</p>
+      <form id="form-borrar" class="form-borrar" novalidate>
+        <div class="campo">
+          <label for="borrar-correo">Escribe el correo de tu cuenta para confirmar</label>
+          <input type="email" id="borrar-correo" autocomplete="off" required />
+        </div>
+        <div class="campo" id="campo-borrar-clave">
+          <label for="borrar-contrasena">Tu contraseña</label>
+          <input type="password" id="borrar-contrasena" autocomplete="current-password" />
+        </div>
+        <p id="nota-google" class="pagina-intro" hidden>Entras con Google, así que basta con tu correo.</p>
+        <p id="datos-aviso-borrar" class="mensaje-error visible" role="alert" hidden></p>
+        <button type="submit" id="btn-borrar-cuenta" class="btn-peligro">Borrar mi cuenta para siempre</button>
+      </form>
+    </section>
+
+    <button id="btn-salir-datos" class="btn-secundario"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
+  </div>
+
   <!-- Vista: métricas del estudio, solo para el equipo -->
   <div id="vista-metricas" class="pantalla-principal oculto" data-seccion="Métricas" lang="es">
     <div class="cabecera-seccion cabecera-modulo">
@@ -1063,6 +1110,7 @@
   <script src="src/services/mentorApi.js"></script>
   <script src="src/services/historialApi.js"></script>
   <script src="src/services/metricasApi.js"></script>
+  <script src="src/services/misDatosApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
@@ -1083,5 +1131,6 @@
   <script src="src/components/historial.js"></script>
   <script src="src/components/navegacion.js"></script>
   <script src="src/components/metricas.js"></script>
+  <script src="src/components/misDatos.js"></script>
 </body>
 </html>
