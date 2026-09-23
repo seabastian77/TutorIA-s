@@ -1,7 +1,8 @@
 // Escoge qué voz del navegador lee en voz alta: de mujer y la más clara que haya
 
 const VOCES_MUJER = [
-  // inglés
+  // inglés (las de Google en Chrome se entienden mucho mejor que las viejas de Windows)
+  "google us english", "google uk english female",
   "zira", "aria", "jenny", "michelle", "ana", "eva", "sonia", "libby", "maisie",
   "hazel", "catherine", "linda", "susan", "samantha", "ava", "allison", "nicky",
   "karen", "moira", "tessa", "fiona", "serena", "kate", "martha", "joanna",
@@ -30,10 +31,10 @@ const MOTORES_CLAROS = ["natural", "neural", "online", "premium", "enhanced", "g
 // Variantes preferidas de cada idioma: la primera pesa más
 const PREFERIDAS = { en: ["en-us", "en-gb"], es: ["es-us", "es-mx", "es-es"] };
 
-/** Dice si el nombre de la voz aparece en una lista de pistas. */
+/** Dice si el nombre de la voz trae alguna de las pistas como palabra completa ("male" no cuenta dentro de "female"). */
 function nombreContiene(voz, pistas) {
-  const nombre = String((voz && voz.name) || "").toLowerCase();
-  return pistas.some((p) => nombre.includes(p));
+  const nombre = ` ${String((voz && voz.name) || "").toLowerCase().replace(/[^a-záéíóúñ]+/g, " ")} `;
+  return pistas.some((p) => nombre.includes(` ${p} `));
 }
 
 /** Puntúa una voz para un idioma: premia que sea de mujer y que suene clara. */
@@ -107,6 +108,8 @@ function prepararVoz(utterance, voces, idioma = "en") {
 
 /* ─────────── las voces de Google, cuando la app las tiene ─────────── */
 
+const RITMO_INGLES = 0.9;
+
 let vozGoogleDisponible = false;
 let audioActual = null;
 
@@ -126,9 +129,27 @@ function callar() {
   }
 }
 
+/** Espera a que el navegador cargue sus voces; sin esto Windows lee con la de hombre por defecto. */
+function esperarVoces(maximoMs = 1500) {
+  recordarVoces();
+  if (vocesEnCache.length || typeof window === "undefined" || !window.speechSynthesis) {
+    return Promise.resolve();
+  }
+  return new Promise((listo) => {
+    const terminar = () => {
+      recordarVoces();
+      window.speechSynthesis.removeEventListener("voiceschanged", terminar);
+      listo();
+    };
+    window.speechSynthesis.addEventListener("voiceschanged", terminar);
+    setTimeout(terminar, maximoMs);
+  });
+}
+
 /** Lee con la voz del navegador: es el respaldo de siempre. */
-function leerConElNavegador(texto, idioma, velocidad) {
+async function leerConElNavegador(texto, idioma, velocidad) {
   if (typeof window === "undefined" || !window.speechSynthesis) return false;
+  await esperarVoces();
   const mensaje = new SpeechSynthesisUtterance(texto);
   mensaje.lang = idioma === "es" ? "es-MX" : "en-US";
   mensaje.rate = velocidad;
@@ -144,6 +165,9 @@ function leerConElNavegador(texto, idioma, velocidad) {
 async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
   callar();
   if (!texto) return false;
+
+  // El inglés va un poco más despacio para quien lo está aprendiendo
+  velocidad = idioma === "es" ? velocidad : Math.round(velocidad * RITMO_INGLES * 100) / 100;
 
   if (vozGoogleDisponible && typeof VozAPI !== "undefined" && VozAPI.hablar) {
     try {
@@ -162,8 +186,8 @@ async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
 }
 
 const VozIngles = {
-  elegirVoz, elegirVozIngles, prepararVoz, puntajeDeVoz, recordarVoces,
-  leer, callar, usarVozGoogle, leerConElNavegador,
+  elegirVoz, elegirVozIngles, prepararVoz, puntajeDeVoz, recordarVoces, esperarVoces,
+  leer, callar, usarVozGoogle, leerConElNavegador, RITMO_INGLES,
 };
 
 if (typeof window !== "undefined") {

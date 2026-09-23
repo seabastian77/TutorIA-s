@@ -61,6 +61,23 @@ describe("elegirVozIngles", () => {
     expect(elegirVozIngles(lista).name).toBe("Samantha");
   });
 
+  test("en Chrome de Windows prefiere la voz de Google, que se entiende mejor que Zira", () => {
+    const lista = [
+      ...WINDOWS,
+      voz("Google US English", "en-US", { localService: false }),
+      voz("Google UK English Male", "en-GB", { localService: false }),
+    ];
+    expect(elegirVozIngles(lista).name).toBe("Google US English");
+  });
+
+  test("\"Female\" no se confunde con \"Male\"", () => {
+    const lista = [
+      voz("Google UK English Male", "en-GB", { localService: false }),
+      voz("Google UK English Female", "en-GB", { localService: false }),
+    ];
+    expect(elegirVozIngles(lista).name).toBe("Google UK English Female");
+  });
+
   test("con la lista vacía o con basura no revienta", () => {
     [[], null, undefined, "voces", 7].forEach((malo) => {
       expect(elegirVozIngles(malo)).toBeNull();
