@@ -16,7 +16,7 @@ const VozAPI = {
     return datos;
   },
 
-  /** Pide el audio de un texto a las voces de Google. */
+  /** Pide el audio de un texto a la voz del servidor. */
   async hablar({ texto, idioma, velocidad }) {
     const resp = await fetch(`${URL_BASE_VOZ}/voz/hablar`, {
       method: "POST",

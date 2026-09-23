@@ -32,6 +32,10 @@ const mentorRoutes = require("./src/routes/mentorRoutes");
 const historialRoutes = require("./src/routes/historialRoutes");
 const metricasRoutes = require("./src/routes/metricasRoutes");
 const { ejecutarMigraciones } = require("./src/config/migraciones");
+const { spawn } = require("child_process");
+const path = require("path");
+const { vozDescargada } = require("./src/utils/descargaVoz");
+const { precargarVoz } = require("./src/services/vozPiperService");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -96,6 +100,12 @@ async function arrancar() {
   app.listen(PORT, () => {
     console.log(`TutorIA's backend corriendo en el puerto ${PORT}`);
   });
+
+  // Si la voz en inglés no quedó lista en la construcción, se baja en otro proceso para no frenar el servidor
+  if (process.env.TUTORIAS_SIN_VOZ !== "1" && !vozDescargada()) {
+    spawn(process.execPath, [path.join(__dirname, "scripts", "descargar-voz.js")], { stdio: "inherit" });
+  }
+  precargarVoz();
 }
 
 arrancar();

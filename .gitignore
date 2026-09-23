@@ -33,3 +33,6 @@ coverage/
 *.tgz
 *.tmp
 Claude outputs/
+
+# Voz en inglés del servidor: se descarga sola al construir o arrancar el backend
+src/backend/voces/

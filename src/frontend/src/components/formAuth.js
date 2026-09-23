@@ -221,7 +221,7 @@ function inicializarFormAuth() {
       return;
     }
 
-    VozIngles.usarVozGoogle(config.vozGoogle);
+    VozIngles.usarVozServidor(config.vozServidor || (config.vozGoogle ? ["en", "es"] : []));
 
     const clientId = config.googleClientId;
     if (!clientId || !window.google || !google.accounts) return;

@@ -154,6 +154,11 @@ aplicación funciona en cualquier navegador moderno.
 - **CEFR-J Wordlist 1.5** — nivel A1–B2 de cada palabra. *The CEFR-J Wordlist Version 1.5. Compiled by
   Yukio Tono, Tokyo University of Foreign Studies. Retrieved from http://www.cefr-j.org/download.html*
 - **ts-fsrs** (MIT) — algoritmo FSRS para el repaso espaciado.
+- **Voz en inglés del servidor** — modelo Piper `en_US-hfc_female-medium` (corpus Hi-Fi-CAPTAIN del NICT,
+  [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)) ejecutado con
+  [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) (Apache 2.0) y convertido a MP3 con lamejs (LGPL).
+  Se descarga sola al construir el backend (`npm run build`) o al arrancar, en `src/backend/voces/`.
+  Uso académico, sin fines comerciales; si la app se comercializa, hay que cambiar de voz.
 
 Los archivos listos están en `src/backend/src/data/`. Para regenerarlos:
 `node src/backend/scripts/preparar-datos.js <cefrj.csv> <sentences.tsv>`.

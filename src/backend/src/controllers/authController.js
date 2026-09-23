@@ -2,6 +2,7 @@ const AuthService = require("../services/authService");
 const RecuperacionService = require("../services/recuperacionService");
 const { GoogleService, googleConfigurado } = require("../services/googleService");
 const { vozGoogleConfigurada } = require("../services/vozGoogleService");
+const { idiomasConVoz } = require("../services/vozServidor");
 const { reportarError } = require("../utils/errores");
 const { correoValido, contrasenaValida, LARGO_MINIMO } = require("../utils/recuperacion");
 const { aceptoPolitica } = require("../utils/politica");
@@ -78,6 +79,8 @@ const AuthController = {
     res.json({
       googleClientId: googleConfigurado() ? process.env.GOOGLE_CLIENT_ID : null,
       vozGoogle: vozGoogleConfigurada(),
+      // Idiomas que lee el servidor con una voz clara; el resto los lee el navegador
+      vozServidor: idiomasConVoz(),
     });
   },
 

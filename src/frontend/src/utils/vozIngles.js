@@ -106,16 +106,21 @@ function prepararVoz(utterance, voces, idioma = "en") {
   return voz;
 }
 
-/* ─────────── las voces de Google, cuando la app las tiene ─────────── */
+// Voz del servidor (Google o la propia en inglés), cuando la app la tiene
 
 const RITMO_INGLES = 0.9;
 
-let vozGoogleDisponible = false;
+let idiomasDelServidor = [];
 let audioActual = null;
 
-/** Enciende las voces de Google; si no están, todo sigue con la del navegador. */
+/** Dice en qué idiomas lee el servidor con voz clara; el resto sigue con la del navegador. */
+function usarVozServidor(idiomas) {
+  idiomasDelServidor = Array.isArray(idiomas) ? idiomas.map((i) => String(i).slice(0, 2)) : [];
+}
+
+/** Lo de antes: con Google encendido el servidor lee inglés y español. */
 function usarVozGoogle(disponible) {
-  vozGoogleDisponible = !!disponible;
+  usarVozServidor(disponible ? ["en", "es"] : []);
 }
 
 /** Corta lo que se esté leyendo, venga de Google o del navegador. */
@@ -159,7 +164,7 @@ async function leerConElNavegador(texto, idioma, velocidad) {
 }
 
 /**
- * Lee un texto en voz alta. Intenta con Google, que se entiende mucho mejor, y
+ * Lee un texto en voz alta. Intenta con la voz del servidor, que se entiende mucho mejor, y
  * si no hay o falla, cae a la voz del navegador sin que el usuario note nada.
  */
 async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
@@ -169,7 +174,8 @@ async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
   // El inglés va un poco más despacio para quien lo está aprendiendo
   velocidad = idioma === "es" ? velocidad : Math.round(velocidad * RITMO_INGLES * 100) / 100;
 
-  if (vozGoogleDisponible && typeof VozAPI !== "undefined" && VozAPI.hablar) {
+  const lengua = idioma === "es" ? "es" : "en";
+  if (idiomasDelServidor.includes(lengua) && typeof VozAPI !== "undefined" && VozAPI.hablar) {
     try {
       const { audio } = await VozAPI.hablar({ texto, idioma, velocidad });
       if (audio) {
@@ -178,7 +184,7 @@ async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
         return true;
       }
     } catch (e) {
-      // Cualquier problema con Google cae al navegador, que siempre está
+      // Cualquier problema con el servidor cae al navegador, que siempre está
     }
   }
 
@@ -187,7 +193,7 @@ async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
 
 const VozIngles = {
   elegirVoz, elegirVozIngles, prepararVoz, puntajeDeVoz, recordarVoces, esperarVoces,
-  leer, callar, usarVozGoogle, leerConElNavegador, RITMO_INGLES,
+  leer, callar, usarVozServidor, usarVozGoogle, leerConElNavegador, RITMO_INGLES,
 };
 
 if (typeof window !== "undefined") {
