@@ -223,7 +223,7 @@ const VisualController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         Math.round(precision / 10),
-        { perfecto },
+        { perfecto, modulo: "visual" },
       );
 
       res.json({

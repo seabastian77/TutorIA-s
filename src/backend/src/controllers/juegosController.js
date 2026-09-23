@@ -137,6 +137,7 @@ async function cerrarAhorcado(partida) {
 
   const gamificacion = await registrarActividad(partida.usuarioId, puntos, {
     perfecto,
+    modulo: "juegos",
   });
 
   return {
@@ -410,7 +411,7 @@ const JuegosController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         encontradas * 2,
-        { perfecto },
+        { perfecto, modulo: "juegos" },
       );
 
       const faltantes = partida.colocadas
@@ -534,7 +535,7 @@ const JuegosController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         partida.total,
-        { perfecto: partida.errores === 0 },
+        { perfecto: partida.errores === 0, modulo: "juegos" },
       );
 
       res.json({

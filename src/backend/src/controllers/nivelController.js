@@ -146,7 +146,7 @@ const DiagnosticoController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         puntosGanados,
-        { perfecto: promedioGeneral >= 90 },
+        { perfecto: promedioGeneral >= 90, modulo: "nivel" },
       );
 
       res.json({

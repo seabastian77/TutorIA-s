@@ -24,7 +24,7 @@ function diasEntre(desdeISO, hastaISO) {
 
 /** Registra una actividad: suma XP y monedas, mueve la racha y alimenta la liga. */
 async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
-  const { perfecto = false } = opciones;
+  const { perfecto = false, modulo = "otro" } = opciones;
 
   const { rows } = await pool.query(
     `SELECT puntos, racha_dias, racha_maxima, ultima_actividad,
@@ -107,6 +107,16 @@ async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
     await sumarXpSemanal(usuarioId, xpGanado);
   } catch (error) {
     reportarError("No se pudo sumar XP a la liga semanal", error);
+  }
+
+  // El registro para las métricas del estudio tampoco puede tumbarla
+  try {
+    await pool.query(
+      "INSERT INTO actividades (usuario_id, modulo, xp, perfecto) VALUES ($1, $2, $3, $4)",
+      [usuarioId, modulo, xpGanado, perfecto],
+    );
+  } catch (error) {
+    reportarError("No se pudo registrar la actividad para las métricas", error);
   }
 
   return {

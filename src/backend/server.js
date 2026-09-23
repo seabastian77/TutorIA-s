@@ -30,6 +30,7 @@ const juegosRoutes = require("./src/routes/juegosRoutes");
 const visualRoutes = require("./src/routes/visualRoutes");
 const mentorRoutes = require("./src/routes/mentorRoutes");
 const historialRoutes = require("./src/routes/historialRoutes");
+const metricasRoutes = require("./src/routes/metricasRoutes");
 const { ejecutarMigraciones } = require("./src/config/migraciones");
 
 const app = express();
@@ -69,6 +70,7 @@ app.use("/api/juegos", juegosRoutes);
 app.use("/api/visual", visualRoutes);
 app.use("/api/mentor", mentorRoutes);
 app.use("/api/historial", historialRoutes);
+app.use("/api/metricas", metricasRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ estado: "ok", mensaje: "TutorIA's backend funcionando" });

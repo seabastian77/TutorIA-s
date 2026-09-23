@@ -198,7 +198,7 @@ const BibliotecaController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         aciertos * 5,
-        { perfecto },
+        { perfecto, modulo: "biblioteca" },
       );
 
       res.json({

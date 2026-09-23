@@ -103,7 +103,7 @@ const EscenaController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         puntosGanados,
-        { perfecto: (evaluacion.puntuacion || 0) >= 90 },
+        { perfecto: (evaluacion.puntuacion || 0) >= 90, modulo: "escena" },
       );
 
       res.json({

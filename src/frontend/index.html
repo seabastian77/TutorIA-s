@@ -227,6 +227,7 @@
         </div>
         <button type="button" id="btn-menu-progreso" class="menu-cuenta-opcion"><i class="fa-solid fa-chart-line"></i>My progress</button>
         <button type="button" id="btn-menu-tema" class="menu-cuenta-opcion menu-solo-movil"><i class="fa-solid fa-sun"></i><span id="menu-tema-texto">Dark mode</span></button>
+        <button type="button" id="btn-menu-metricas" class="menu-cuenta-opcion oculto"><i class="fa-solid fa-chart-column"></i>Métricas del estudio</button>
         <button type="button" id="btn-cerrar-sesion" class="menu-cuenta-opcion"><i class="fa-solid fa-log-out"></i>Log out</button>
       </div>
     </div>
@@ -970,6 +971,74 @@
     <button id="btn-salir-visual" class="btn-secundario" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
+  <!-- Vista: métricas del estudio, solo para el equipo -->
+  <div id="vista-metricas" class="pantalla-principal oculto" data-seccion="Métricas" lang="es">
+    <div class="cabecera-seccion cabecera-modulo">
+      <div>
+        <h2>Métricas del estudio</h2>
+        <p>Cifras agregadas y anónimas de todos los estudiantes, para el capítulo de resultados del trabajo de grado.</p>
+      </div>
+      <div class="metricas-acciones">
+        <button type="button" id="btn-metricas-actualizar" class="btn-secundario"><i class="fa-solid fa-rotate"></i>Actualizar</button>
+        <button type="button" id="btn-metricas-csv" class="btn-secundario"><i class="fa-solid fa-download"></i>Descargar CSV</button>
+      </div>
+    </div>
+    <p id="metricas-estado" class="metricas-estado" role="status"></p>
+
+    <div id="metricas-cifras" class="metricas-cifras"></div>
+
+    <div id="metricas-graficas" class="metricas-graficas">
+      <section id="grafica-semanas" class="grafica grafica-ancha" aria-labelledby="t-semanas">
+        <h3 id="t-semanas">Actividades por semana</h3>
+        <p class="grafica-nota">Últimas 8 semanas · pase el puntero o use Tab para ver cada semana</p>
+        <div class="grafica-zona"></div>
+        <div class="grafica-tip" hidden></div>
+        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+      </section>
+
+      <section id="grafica-aciertos" class="grafica" aria-labelledby="t-aciertos">
+        <h3 id="t-aciertos">Porcentaje de aciertos por semana</h3>
+        <p id="nota-aciertos" class="grafica-nota"></p>
+        <div class="grafica-zona"></div>
+        <div class="grafica-tip" hidden></div>
+        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+      </section>
+
+      <section id="grafica-modulos" class="grafica" aria-labelledby="t-modulos">
+        <h3 id="t-modulos">Uso por módulo</h3>
+        <p class="grafica-nota">Actividades terminadas desde el inicio</p>
+        <div class="grafica-zona"></div>
+        <div class="grafica-tip" hidden></div>
+        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+      </section>
+
+      <section class="grafica grafica-ancha" aria-labelledby="t-cambio">
+        <h3 id="t-cambio">¿Mejoró su nivel?</h3>
+        <p class="grafica-nota">Primer diagnóstico frente al último, de quienes lo han hecho dos o más veces</p>
+        <div id="metricas-cambio" class="metricas-cambio"></div>
+      </section>
+
+      <section id="grafica-habilidades" class="grafica" aria-labelledby="t-habilidades">
+        <h3 id="t-habilidades">Habilidades: antes y ahora</h3>
+        <p id="nota-habilidades" class="grafica-nota"></p>
+        <p class="grafica-leyenda"><span class="clave clave-2"></span>Primer diagnóstico <span class="clave clave-1"></span>Último diagnóstico</p>
+        <div class="grafica-zona"></div>
+        <div class="grafica-tip" hidden></div>
+        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+      </section>
+
+      <section id="grafica-niveles" class="grafica" aria-labelledby="t-niveles">
+        <h3 id="t-niveles">Nivel actual de los estudiantes</h3>
+        <p id="nota-niveles" class="grafica-nota"></p>
+        <div class="grafica-zona"></div>
+        <div class="grafica-tip" hidden></div>
+        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+      </section>
+    </div>
+
+    <button id="btn-salir-metricas" class="btn-secundario"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
+  </div>
+
   <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
   <script src="src/utils/iconos.js"></script>
   <script src="src/utils/validaciones.js"></script>
@@ -993,6 +1062,7 @@
   <script src="src/services/visualApi.js"></script>
   <script src="src/services/mentorApi.js"></script>
   <script src="src/services/historialApi.js"></script>
+  <script src="src/services/metricasApi.js"></script>
   <script src="src/components/formAuth.js"></script>
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
@@ -1012,5 +1082,6 @@
   <script src="src/components/mentor.js"></script>
   <script src="src/components/historial.js"></script>
   <script src="src/components/navegacion.js"></script>
+  <script src="src/components/metricas.js"></script>
 </body>
 </html>

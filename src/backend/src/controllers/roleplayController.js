@@ -114,6 +114,7 @@ const RoleplayController = {
 
       const gamificacion = await registrarActividad(req.usuario.id, 8, {
         perfecto: !resultado.correccion,
+        modulo: "roleplay",
       });
 
       res.json({

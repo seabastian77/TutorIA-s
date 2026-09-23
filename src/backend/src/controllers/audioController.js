@@ -92,7 +92,7 @@ const AudioController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         Math.round(resultado.porcentaje / 10),
-        { perfecto },
+        { perfecto, modulo: "audio" },
       );
 
       res.json({
@@ -190,7 +190,7 @@ const AudioController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         aciertos * 5,
-        { perfecto },
+        { perfecto, modulo: "audio" },
       );
 
       res.json({

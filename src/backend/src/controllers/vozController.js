@@ -51,7 +51,7 @@ const VozController = {
       );
 
       // Cada intercambio hablado suma puntos y mantiene viva la racha
-      const gamificacion = await registrarActividad(req.usuario.id, 8);
+      const gamificacion = await registrarActividad(req.usuario.id, 8, { modulo: "voz" });
 
       res.json({
         respuesta: resultado.respuesta,

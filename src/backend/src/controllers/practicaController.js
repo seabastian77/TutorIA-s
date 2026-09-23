@@ -111,7 +111,7 @@ const PracticaController = {
       const gamificacion = await registrarActividad(
         req.usuario.id,
         puntosGanados,
-        { perfecto },
+        { perfecto, modulo: "practica" },
       );
 
       res.json({
