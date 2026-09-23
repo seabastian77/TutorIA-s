@@ -41,9 +41,14 @@ function mostrarPalabraActual() {
   const controles = document.getElementById("vocab-controles");
   const tarjeta = document.getElementById("vocab-tarjeta");
 
+  const nivelEl = document.getElementById("vocab-nivel");
+
   traduccionVisible = false;
   controles.classList.add("oculto");
   contextoEl.classList.add("oculto");
+  document.getElementById("vocab-ejemplo").classList.add("oculto");
+  pintarCreditoFrase(document.getElementById("vocab-credito"), null);
+  nivelEl.classList.add("oculto");
   resetearTarjeta();
 
   if (indicePalabra >= palabrasRepaso.length) {
@@ -59,7 +64,13 @@ function mostrarPalabraActual() {
 
   if (tarjeta) tarjeta.classList.remove("vocab-tarjeta-vacia");
   progresoEl.textContent = `Word ${indicePalabra + 1} of ${palabrasRepaso.length}`;
-  textoEl.textContent = palabrasRepaso[indicePalabra].palabra;
+  const actual = palabrasRepaso[indicePalabra];
+  textoEl.textContent = actual.palabra;
+  // El nivel sale de la lista CEFR-J; si la palabra no está en ella, no se muestra nada
+  if (actual.nivel) {
+    nivelEl.textContent = actual.nivel;
+    nivelEl.classList.remove("oculto");
+  }
   btnMostrar.classList.remove("oculto");
   marcarPila(palabrasRepaso.length - indicePalabra);
 }
@@ -79,6 +90,18 @@ function mostrarTraduccion() {
     ? `${palabra.traduccion} — "${palabra.contexto}"`
     : palabra.traduccion;
   contextoEl.classList.remove("oculto");
+
+  // Un ejemplo real de Tatoeba, con su traducción, para ver la palabra en uso
+  const ejemploEl = document.getElementById("vocab-ejemplo");
+  if (palabra.ejemplo) {
+    document.getElementById("vocab-ejemplo-en").textContent = palabra.ejemplo.ingles;
+    document.getElementById("vocab-ejemplo-es").textContent = palabra.ejemplo.espanol;
+    ejemploEl.classList.remove("oculto");
+  } else {
+    ejemploEl.classList.add("oculto");
+  }
+  pintarCreditoFrase(document.getElementById("vocab-credito"), palabra.ejemplo && palabra.ejemplo.credito);
+
   document.getElementById("vocab-btn-mostrar").classList.add("oculto");
   document.getElementById("vocab-controles").classList.remove("oculto");
   traduccionVisible = true;
@@ -89,6 +112,11 @@ async function responderPalabra(sabia) {
   if (!palabra) return;
 
   animarSalida(sabia);
+
+  // La que no sabía vuelve al final de la sesión, como en Anki; máximo dos veces para no volverse eterna
+  if (!sabia && (palabra.vueltas || 0) < 2) {
+    palabrasRepaso.push({ ...palabra, vueltas: (palabra.vueltas || 0) + 1 });
+  }
 
   try {
     await VocabularioAPI.responder({ id: palabra.id, sabia });

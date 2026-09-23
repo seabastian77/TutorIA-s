@@ -145,6 +145,21 @@ aplicación funciona en cualquier navegador moderno.
 
 ---
 
+## Datos y librerías abiertas
+
+- **Tatoeba** — frases reales en inglés con su traducción al español para el dictado (A1–B2) y los
+  ejemplos de Vocabulary. Licencia [CC BY 2.0 FR](https://creativecommons.org/licenses/by/2.0/fr/);
+  la app muestra el autor y el enlace de cada frase. Pares tomados de
+  [doozan/spanish_data](https://github.com/doozan/spanish_data).
+- **CEFR-J Wordlist 1.5** — nivel A1–B2 de cada palabra. *The CEFR-J Wordlist Version 1.5. Compiled by
+  Yukio Tono, Tokyo University of Foreign Studies. Retrieved from http://www.cefr-j.org/download.html*
+- **ts-fsrs** (MIT) — algoritmo FSRS para el repaso espaciado.
+
+Los archivos listos están en `src/backend/src/data/`. Para regenerarlos:
+`node src/backend/scripts/preparar-datos.js <cefrj.csv> <sentences.tsv>`.
+
+---
+
 ## Licencia
 
-MIT — ver [LICENSE](LICENSE).
+MIT — ver [LICENSE](LICENSE). Los datos de terceros conservan su propia licencia (sección anterior).

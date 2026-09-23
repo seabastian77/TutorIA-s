@@ -4677,3 +4677,70 @@ button,
   .datos-tarjeta { padding: 18px; }
   .btn-peligro { width: 100%; }
 }
+
+/* ═══ FRASES REALES (Tatoeba) Y NIVEL CEFR-J ═══ */
+
+.vocab-nivel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--primario-tinta);
+  border: 1px solid var(--primario-borde);
+  color: var(--primario);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.vocab-ejemplo {
+  width: 100%;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--negro);
+  border: 1px solid var(--borde);
+  text-align: left;
+}
+
+.vocab-ejemplo p { margin: 0; }
+
+.vocab-ejemplo-en {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--blanco);
+}
+
+.vocab-ejemplo-es,
+.dictado-traduccion {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--gris);
+  font-style: italic;
+}
+
+.dictado-traduccion { margin: 6px 0 0; }
+
+.credito-frase,
+.pantalla-principal > p.credito-frase {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--gris);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+#dictado-credito { text-align: left; }
+.pantalla-principal > p.credito-frase { max-width: 460px; margin: 12px auto 0; }
+
+.credito-frase a { color: var(--gris); text-decoration: underline; }
+.credito-frase a:hover { color: var(--primario); }
+
+@media (max-width: 620px) {
+  .vocab-ejemplo { padding: 12px 14px; }
+  .vocab-ejemplo-en { font-size: 15px; }
+}

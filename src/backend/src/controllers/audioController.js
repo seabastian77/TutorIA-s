@@ -8,20 +8,52 @@ const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const { obtenerPerfil } = require("../utils/perfil");
 const { compararDictado } = require("../utils/textoDictado");
 const { reportarError } = require("../utils/errores");
+const { fraseDeDictado, credito } = require("../utils/frasesTatoeba");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 const AudioController = {
-  /** Genera una frase para dictado y la guarda para poder corregirla después. */
+  /**
+   * Prepara una frase para dictado y la guarda para poder corregirla después.
+   * De A1 a B2 usa frases reales de Tatoeba escritas por nativos; en C1 y C2, o si algo falla, la IA.
+   */
   async dictado(req, res) {
     try {
       const { nivel } = await obtenerPerfil(req.usuario.id);
-      const generado = await generarDictado({ nivel });
 
-      if (!generado || !generado.frase) {
-        return res
-          .status(502)
-          .json({ error: "La IA no devolvió una frase válida" });
+      const { rows: vistas } = await pool.query(
+        `SELECT contenido->>'frase' AS frase FROM ejercicios
+          WHERE usuario_id = $1 AND tipo = 'dictado'
+          ORDER BY fecha DESC LIMIT 400`,
+        [req.usuario.id],
+      );
+      const yaVistas = new Set(vistas.map((v) => v.frase));
+      let real = fraseDeDictado(nivel, yaVistas);
+
+      // C1 y C2 van con la IA; si la IA falla, mejor una frase B2 real que dejar a la persona sin dictado
+      let generado = null;
+      if (!real) {
+        generado = await generarDictado({ nivel }).catch((error) => {
+          reportarError("La IA no pudo generar el dictado", error);
+          return null;
+        });
+        if (!generado || !generado.frase) real = fraseDeDictado("B2", yaVistas);
+      }
+
+      let contenido;
+      let pista;
+      if (real) {
+        contenido = {
+          frase: real.en,
+          tema: "tatoeba",
+          fuente: "tatoeba",
+          traduccion: real.es,
+          credito: credito(real),
+        };
+        pista = `A real sentence written by a native speaker · ${real.nivel}`;
+      } else {
+        contenido = { frase: generado.frase, tema: generado.tema, fuente: "ia" };
+        pista = generado.pista || null;
       }
 
       const indiceNivel = NIVELES.indexOf(nivel);
@@ -31,16 +63,17 @@ const AudioController = {
         [
           req.usuario.id,
           indiceNivel >= 0 ? indiceNivel : 0,
-          JSON.stringify({ frase: generado.frase, tema: generado.tema }),
+          JSON.stringify(contenido),
         ],
       );
 
       res.json({
         ejercicioId: rows[0].id,
         nivel,
+        fuente: contenido.fuente,
         // El navegador necesita el texto para leerlo en voz alta
-        frase: generado.frase,
-        pista: generado.pista || null,
+        frase: contenido.frase,
+        pista,
       });
     } catch (error) {
       reportarError("Error en /audio/dictado", error);
@@ -67,7 +100,7 @@ const AudioController = {
         return res.status(404).json({ error: "Ese dictado no existe" });
       }
 
-      const frase = rows[0].contenido.frase;
+      const { frase, traduccion = null, credito: creditoFrase = null } = rows[0].contenido;
       const resultado = compararDictado(frase, texto);
       const perfecto = resultado.porcentaje === 100;
 
@@ -97,6 +130,9 @@ const AudioController = {
 
       res.json({
         frase,
+        // Las frases de Tatoeba traen su traducción y el crédito que exige la licencia
+        traduccion,
+        credito: creditoFrase,
         ...resultado,
         perfecto,
         xpGanado: gamificacion.xpGanado,

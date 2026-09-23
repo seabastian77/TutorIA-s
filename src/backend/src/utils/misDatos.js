@@ -9,7 +9,7 @@ const TABLAS_DEL_USUARIO = [
   { tabla: "conversaciones", clave: "conversaciones", columnas: "mensaje_usuario, respuesta_ia, correcciones, fecha", orden: "fecha" },
   { tabla: "roleplays", clave: "situaciones", columnas: "escenario, turnos, fecha", orden: "fecha" },
   { tabla: "lecturas_completadas", clave: "lecturas", columnas: "lectura_id, aciertos, total, fecha", orden: "fecha" },
-  { tabla: "vocabulario_usuario", clave: "vocabulario", columnas: "palabra, traduccion, contexto, nivel_dominio, proximo_repaso, fecha_creacion", orden: "fecha_creacion" },
+  { tabla: "vocabulario_usuario", clave: "vocabulario", columnas: "palabra, traduccion, contexto, nivel_dominio, proximo_repaso, ultimo_repaso, fsrs_repasos, fsrs_fallos, fecha_creacion", orden: "fecha_creacion" },
   { tabla: "liga_semanal", clave: "liga", columnas: "semana, liga, grupo, xp", orden: "semana" },
   { tabla: "compras_tienda", clave: "compras", columnas: "articulo_id, precio, fecha", orden: "fecha" },
   { tabla: "actividades", clave: "actividades", columnas: "modulo, xp, perfecto, fecha", orden: "fecha" },

@@ -582,10 +582,16 @@
       <div id="vocab-pila" class="vocab-pila oculto"></div>
       <div id="vocab-tarjeta" class="vocab-tarjeta">
         <span id="vocab-sello" class="vocab-sello oculto"></span>
+        <span id="vocab-nivel" class="vocab-nivel oculto" title="Nivel de la palabra según la lista CEFR-J"></span>
         <h3 id="vocab-tarjeta-texto">Loading...</h3>
         <p id="vocab-contexto" class="nivel-narrativa oculto"></p>
+        <div id="vocab-ejemplo" class="vocab-ejemplo oculto">
+          <p id="vocab-ejemplo-en" class="vocab-ejemplo-en" lang="en"></p>
+          <p id="vocab-ejemplo-es" class="vocab-ejemplo-es" lang="es"></p>
+        </div>
       </div>
     </div>
+    <p id="vocab-credito" class="credito-frase oculto"></p>
 
     <p class="vocab-ayuda">Drag the card right if you knew it, left if you didn't</p>
 
@@ -794,6 +800,8 @@
         <div id="dictado-frase-revelada" class="oculto" style="margin-top:18px;">
           <div id="dictado-palabras" class="dictado-palabras"></div>
           <p id="dictado-frase-original" class="dictado-original"></p>
+          <p id="dictado-traduccion" class="dictado-traduccion oculto" lang="es"></p>
+          <p id="dictado-credito" class="credito-frase oculto"></p>
         </div>
 
         <div id="dictado-resultado" class="nivel-feedback oculto"></div>
@@ -1090,6 +1098,7 @@
   <script src="src/utils/iconos.js"></script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/utils/vozIngles.js"></script>
+  <script src="src/utils/creditos.js"></script>
   <script src="src/store/tema.js"></script>
   <script src="src/store/sesion.js"></script>
   <script src="src/store/sesionVigilante.js"></script>

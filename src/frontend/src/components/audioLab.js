@@ -45,6 +45,8 @@ async function nuevoDictado() {
   document.getElementById("dictado-entrada").disabled = true;
   document.getElementById("dictado-resultado").classList.add("oculto");
   document.getElementById("dictado-frase-revelada").classList.add("oculto");
+  document.getElementById("dictado-traduccion").classList.add("oculto");
+  pintarCreditoFrase(document.getElementById("dictado-credito"), null);
   document.getElementById("btn-comprobar-dictado").disabled = true;
 
   try {
@@ -86,6 +88,12 @@ async function comprobarDictado() {
     });
 
     document.getElementById("dictado-frase-original").textContent = datos.frase;
+
+    // Las frases reales de Tatoeba traen su traducción y su crédito
+    const traduccion = document.getElementById("dictado-traduccion");
+    traduccion.textContent = datos.traduccion || "";
+    traduccion.classList.toggle("oculto", !datos.traduccion);
+    pintarCreditoFrase(document.getElementById("dictado-credito"), datos.credito);
     document.getElementById("dictado-frase-revelada").classList.remove("oculto");
 
     const resultado = document.getElementById("dictado-resultado");
