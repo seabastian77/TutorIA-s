@@ -95,6 +95,7 @@ async function abrirEscenario(escenarioId) {
     agregarBurbujaRoleplay("ia", datos.mensaje);
     pintarSugerencias(datos.sugerencias);
     document.getElementById("roleplay-entrada").value = "";
+    document.getElementById("roleplay-entrada").revisor?.limpiar();
     document.getElementById("roleplay-entrada").focus();
   } catch (err) {
     estado.textContent = "Could not start that situation.";
@@ -131,6 +132,7 @@ function pintarSugerencias(sugerencias) {
     chip.textContent = s;
     chip.addEventListener("click", () => {
       document.getElementById("roleplay-entrada").value = s;
+      document.getElementById("roleplay-entrada").revisor?.limpiar();
       document.getElementById("roleplay-entrada").focus();
     });
     zona.appendChild(chip);
@@ -146,6 +148,7 @@ async function enviarMensajeRoleplay() {
 
   agregarBurbujaRoleplay("usuario", texto);
   entrada.value = "";
+  entrada.revisor?.limpiar();
   entrada.disabled = true;
   boton.disabled = true;
   document.getElementById("roleplay-sugerencias").innerHTML = "";
@@ -194,6 +197,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const entrada = document.getElementById("roleplay-entrada");
   if (entrada) {
+    // Antes de enviar, el estudiante puede revisar su gramática y ortografía
+    RevisorEscritura.conectarRevisor(entrada, { despuesDe: entrada.closest(".roleplay-entrada-fila") });
     entrada.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();

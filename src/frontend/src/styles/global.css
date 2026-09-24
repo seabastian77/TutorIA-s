@@ -4744,3 +4744,98 @@ button,
   .vocab-ejemplo { padding: 12px 14px; }
   .vocab-ejemplo-en { font-size: 15px; }
 }
+
+/* ═══ REVISOR DE ESCRITURA (LanguageTool) ═══ */
+
+.revisor {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.revisor-boton { align-self: flex-start; min-height: 40px; padding: 0 16px; font-size: 13px; }
+.revisor-boton:disabled { opacity: 0.6; cursor: progress; }
+
+.revisor-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radio-chico);
+  background: var(--negro);
+  border: 1px solid var(--borde);
+}
+
+.revisor-titulo { margin: 0; font-size: 13px; font-weight: 700; color: var(--blanco); }
+
+.revisor-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--gris-tenue);
+  min-width: 0;
+}
+
+.revisor-ortografia { border-left-color: var(--rojo); }
+.revisor-gramatica { border-left-color: var(--amarillo); }
+.revisor-puntuacion,
+.revisor-mayusculas { border-left-color: var(--primario); }
+
+.revisor-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+
+.revisor-tipo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gris);
+}
+
+.revisor-fragmento { font-size: 14px; color: var(--gris); overflow-wrap: anywhere; }
+
+.revisor-fragmento mark {
+  padding: 0 3px;
+  border-radius: 4px;
+  background: var(--rosa-tinta);
+  color: var(--blanco);
+  font-weight: 700;
+}
+
+.revisor-mensaje { margin: 6px 0 0; font-size: 13px; line-height: 1.5; color: var(--blanco); }
+
+.revisor-sugerencias { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+.revisor-sugerencia {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--primario-borde);
+  background: var(--primario-tinta);
+  color: var(--primario);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.revisor-sugerencia:hover { border-color: var(--primario); }
+
+.revisor-bien {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--verde);
+}
+
+.revisor-bien .icono { width: 18px; height: 18px; }
+
+.revisor-aviso { margin: 0; font-size: 13px; color: var(--gris); }
+
+.revisor-pie { margin: 0; font-size: 11px; color: var(--gris); }
+.revisor-pie a { color: var(--gris); text-decoration: underline; }

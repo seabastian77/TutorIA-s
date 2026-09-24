@@ -71,6 +71,7 @@ async function pedirEjercicioVisual(tema) {
   document.getElementById("visual-resultado").classList.add("oculto");
   document.getElementById("visual-entrada").value = "";
   document.getElementById("visual-entrada").disabled = false;
+  document.getElementById("visual-entrada").revisor?.limpiar();
   document.getElementById("btn-comprobar-visual").disabled = false;
 
   const marco = document.getElementById("visual-marco");
@@ -235,6 +236,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnComprobar = document.getElementById("btn-comprobar-visual");
   if (btnComprobar) btnComprobar.addEventListener("click", comprobarVisual);
+
+  // Antes de enviar, el estudiante puede revisar su gramática y ortografía
+  RevisorEscritura.conectarRevisor(document.getElementById("visual-entrada"));
 
   const btnOtra = document.getElementById("btn-otra-visual");
   if (btnOtra)
