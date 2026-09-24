@@ -9,6 +9,7 @@ const { obtenerPerfil } = require("../utils/perfil");
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const { reportarError } = require("../utils/errores");
+const { idValido, marcarRespondido, YA_RESPONDIDO } = require("../utils/ejercicios");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
@@ -50,13 +51,20 @@ const PracticaController = {
         ? req.body.tema.slice(0, 80)
         : null;
 
-      if (tipo === "opcion_multiple") {
-        const pregunta = await generarPreguntaNivel(nivel, temasRecientes, { tema });
-        return res.json({ tipo, nivel, tema, contenido: pregunta });
-      } else {
-        const ejercicio = await generarPreguntaEscrita(nivel, temasRecientes, { tema });
-        return res.json({ tipo, nivel, tema, contenido: ejercicio });
-      }
+      const contenido =
+        tipo === "opcion_multiple"
+          ? await generarPreguntaNivel(nivel, temasRecientes, { tema })
+          : await generarPreguntaEscrita(nivel, temasRecientes, { tema });
+
+      // La pregunta queda guardada con su respuesta; al navegador solo le llega lo que debe ver
+      const { rows } = await pool.query(
+        `INSERT INTO ejercicios (usuario_id, tipo, nivel_dificultad, contenido)
+         VALUES ($1, $2, $3, $4) RETURNING id`,
+        [req.usuario.id, tipo, indice, JSON.stringify(contenido)],
+      );
+      const { respuestaCorrecta, ...visible } = contenido || {};
+
+      return res.json({ ejercicioId: rows[0].id, tipo, nivel, tema, contenido: visible });
     } catch (error) {
       reportarError("Error en /practica/pregunta", error);
       res.status(500).json({ error: "No se pudo generar el ejercicio" });
@@ -65,32 +73,45 @@ const PracticaController = {
 
   async responder(req, res) {
     try {
-      const { tipo, nivel, contenido, respuestaUsuario } = req.body;
+      const ejercicioId = idValido((req.body || {}).ejercicioId);
+      const respuestaUsuario = (req.body || {}).respuestaUsuario;
+      if (!ejercicioId || respuestaUsuario === undefined || respuestaUsuario === null) {
+        return res.status(400).json({ error: "Falta el ejercicio o la respuesta" });
+      }
+
+      // Se califica contra la pregunta guardada, nunca contra lo que mande el navegador
+      const { rows } = await pool.query(
+        `SELECT tipo, contenido, correcto FROM ejercicios
+          WHERE id = $1 AND usuario_id = $2 AND tipo IN ('opcion_multiple', 'escrita')`,
+        [ejercicioId, req.usuario.id],
+      );
+      if (rows.length === 0) {
+        return res.status(404).json({ error: "Ese ejercicio no existe" });
+      }
+      if (rows[0].correcto !== null) {
+        return res.status(409).json(YA_RESPONDIDO);
+      }
+
+      const { tipo, contenido } = rows[0];
       let correcto;
       let explicacion = null;
 
       if (tipo === "opcion_multiple") {
-        correcto = respuestaUsuario === contenido.respuestaCorrecta;
+        correcto = Number(respuestaUsuario) === Number(contenido.respuestaCorrecta);
       } else {
         const { ayudaEs } = await obtenerPerfil(req.usuario.id);
         const evaluacion = await evaluarRespuestaEscrita(
           contenido.frase,
-          respuestaUsuario,
+          String(respuestaUsuario).slice(0, 300),
           { ayudaEs },
         );
-        correcto = evaluacion.correcto;
+        correcto = Boolean(evaluacion.correcto);
         explicacion = evaluacion.explicacion;
       }
 
-      const nivelIndice = NIVELES.indexOf(nivel);
-
-      await EjercicioModel.registrar({
-        usuarioId: req.usuario.id,
-        tipo,
-        nivelDificultad: nivelIndice >= 0 ? nivelIndice : 2,
-        contenido,
-        correcto,
-      });
+      if (!(await marcarRespondido(ejercicioId, req.usuario.id, correcto))) {
+        return res.status(409).json(YA_RESPONDIDO);
+      }
 
       if (!correcto) {
         guardarPalabraSiFalla(req.usuario.id, tipo, contenido);
@@ -101,7 +122,8 @@ const PracticaController = {
       if (correcto) {
         const { rows: ultimos } = await pool.query(
           `SELECT correcto FROM ejercicios
-            WHERE usuario_id = $1 ORDER BY fecha DESC, id DESC LIMIT 5`,
+            WHERE usuario_id = $1 AND correcto IS NOT NULL
+            ORDER BY fecha DESC, id DESC LIMIT 5`,
           [req.usuario.id],
         );
         perfecto = ultimos.length === 5 && ultimos.every((e) => e.correcto);
@@ -117,6 +139,7 @@ const PracticaController = {
       res.json({
         correcto,
         explicacion,
+        respuestaCorrecta: tipo === "opcion_multiple" ? contenido.respuestaCorrecta : undefined,
         puntosGanados,
         perfecto,
         bonusPerfecto: gamificacion.bonusPerfecto,

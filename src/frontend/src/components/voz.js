@@ -90,7 +90,8 @@ async function manejarMensajeUsuario(texto) {
   try {
     const datos = await VozAPI.enviarMensaje({
       mensajeUsuario: texto,
-      historial: historialVoz,
+      // El mensaje nuevo va aparte; el historial solo lleva lo anterior
+      historial: historialVoz.slice(0, -1),
       nivel: null,
     });
 
@@ -104,6 +105,8 @@ async function manejarMensajeUsuario(texto) {
     hablar(datos.respuesta);
     mostrarEstadoMic("Presiona el micrófono para responder");
   } catch (err) {
+    // Lo que no llegó no queda en la conversación que ve la IA
+    if (historialVoz[historialVoz.length - 1]?.texto === texto) historialVoz.pop();
     mostrarEstadoMic("No se pudo procesar tu mensaje. Intenta de nuevo.");
   }
 }

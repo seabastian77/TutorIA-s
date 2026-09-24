@@ -12,6 +12,10 @@ function avisoDatos(id, mensaje, tipo) {
 
 /** Abre la pantalla y ajusta el formulario según la persona entre con clave o con Google. */
 async function abrirMisDatos() {
+  // Primero se cierra el módulo abierto con su propia salida: apaga micrófono, voz y relojes
+  if (typeof irAlInicio === "function") irAlInicio();
+  // Si el módulo pidió confirmar la salida y la persona dijo que no, se queda donde estaba
+  if ([...document.querySelectorAll(".pantalla-principal")].some((v) => v.id !== "vista-principal" && !v.classList.contains("oculto"))) return;
   document.querySelectorAll(".pantalla-principal").forEach((v) => v.classList.add("oculto"));
   document.getElementById("vista-datos").classList.remove("oculto");
   document.getElementById("form-borrar").reset();

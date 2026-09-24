@@ -75,7 +75,7 @@ const RoleplayController = {
       const resultado = await generarRespuestaRoleplay({
         escenario,
         historial: Array.isArray(historial)
-          ? historial.slice(-MAX_HISTORIAL)
+          ? historial.slice(-MAX_HISTORIAL).map((t) => ({ ...t, texto: String((t && t.texto) || "").slice(0, 500) }))
           : [],
         mensajeUsuario: mensajeUsuario.trim().slice(0, 500),
         nivel,

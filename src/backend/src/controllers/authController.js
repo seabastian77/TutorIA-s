@@ -43,7 +43,7 @@ const AuthController = {
       reportarError("Error en /registro", error);
       res
         .status(error.status || 500)
-        .json({ error: error.message || "Error en el servidor" });
+        .json({ error: error.status ? error.message : "Error en el servidor" });
     }
   },
 
@@ -66,7 +66,7 @@ const AuthController = {
       reportarError("Error en /login", error);
       res
         .status(error.status || 500)
-        .json({ error: error.message || "Error en el servidor" });
+        .json({ error: error.status ? error.message : "Error en el servidor" });
     }
   },
 
@@ -93,7 +93,7 @@ const AuthController = {
       if (!error.status) reportarError("Error entrando con Google", error);
       res
         .status(error.status || 500)
-        .json({ error: error.message || "No se pudo entrar con Google" });
+        .json({ error: error.status ? error.message : "No se pudo entrar con Google" });
     }
   },
 
@@ -129,7 +129,7 @@ const AuthController = {
       if (!error.status) reportarError("Error restableciendo la contraseña", error);
       res
         .status(error.status || 500)
-        .json({ error: error.message || "No se pudo cambiar la contraseña" });
+        .json({ error: error.status ? error.message : "No se pudo cambiar la contraseña" });
     }
   },
 };

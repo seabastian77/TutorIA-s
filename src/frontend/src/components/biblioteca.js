@@ -238,6 +238,8 @@ async function enviarRespuestasLectura() {
     resultado.textContent = datos.perfecto
       ? `Perfect! ${datos.aciertos}/${datos.total} — +${datos.xpGanado} XP`
       : `${datos.aciertos} of ${datos.total} correct — +${datos.xpGanado} XP`;
+    // Al releer un cuento se practica igual, pero el XP ya se ganó la primera vez
+    if (datos.repetida) resultado.textContent += " (you already read this story)";
     resultado.className = "nivel-feedback";
     resultado.classList.remove("oculto");
 

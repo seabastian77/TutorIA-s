@@ -19,7 +19,7 @@ const EjercicioModel = {
 
   async obtenerHistorialReciente(usuarioId, limite = 15) {
     const { rows } = await pool.query(
-      "SELECT tipo, nivel_dificultad, contenido, correcto, fecha FROM ejercicios WHERE usuario_id = $1 ORDER BY fecha DESC LIMIT $2",
+      "SELECT tipo, nivel_dificultad, contenido, correcto, fecha FROM ejercicios WHERE usuario_id = $1 AND correcto IS NOT NULL ORDER BY fecha DESC LIMIT $2",
       [usuarioId, limite],
     );
     return rows;

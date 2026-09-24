@@ -195,9 +195,7 @@ async function enviarRespuesta(respuestaUsuario) {
 
   try {
     const resultado = await PracticaAPI.enviarRespuesta({
-      tipo: ejercicioActual.tipo,
-      nivel: ejercicioActual.nivel,
-      contenido: ejercicioActual.contenido,
+      ejercicioId: ejercicioActual.ejercicioId,
       respuestaUsuario,
     });
 

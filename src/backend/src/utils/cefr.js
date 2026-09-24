@@ -1,11 +1,14 @@
 // Nivel MCER de palabras y frases con la lista CEFR-J (Tono, 2020), que va de A1 a B2
 
-const { palabras: LISTA } = require("../data/cefrj.json");
+const { palabras: CRUDA } = require("../data/cefrj.json");
+
+// Sin prototipo: una palabra como "constructor" no debe encontrar métodos de Object
+const LISTA = Object.assign(Object.create(null), CRUDA);
 
 const NIVELES = ["A1", "A2", "B1", "B2"];
 
 // Formas irregulares que la lista guarda solo en su forma base
-const IRREGULARES = {
+const IRREGULARES = Object.assign(Object.create(null), {
   am: "be", are: "be", is: "be", was: "be", were: "be", been: "be", being: "be",
   has: "have", had: "have", does: "do", did: "do", done: "do",
   went: "go", gone: "go", saw: "see", seen: "see", took: "take", taken: "take",
@@ -45,7 +48,7 @@ const IRREGULARES = {
   myself: "my", yourself: "your", himself: "him", herself: "her",
   itself: "it", ourselves: "our", yourselves: "your", themselves: "them",
   "won't": "will", "can't": "can", "shan't": "shall", cannot: "can",
-};
+});
 
 // Nombres muy repetidos en Tatoeba; se aceptan como A1 porque no son vocabulario que aprender
 const NOMBRES = new Set(["tom", "mary", "john", "alice"]);

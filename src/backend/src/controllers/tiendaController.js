@@ -112,18 +112,13 @@ const TiendaController = {
         });
       }
 
-      // UPDATE condicional: evita descontar dos veces con peticiones simultáneas
-      const nuevoValor = Math.min(
-        cuenta[articulo.campo] + articulo.cantidad,
-        articulo.maximo,
-      );
-
+      // UPDATE condicional y relativo: no descuenta dos veces ni pisa lo que otra petición cambió al tiempo
       const { rows } = await pool.query(
         `UPDATE usuarios
-            SET monedas = monedas - $1, ${articulo.campo} = $2
-          WHERE id = $3 AND monedas >= $1
+            SET monedas = monedas - $1, ${articulo.campo} = LEAST(${articulo.campo} + $2, $3)
+          WHERE id = $4 AND monedas >= $1 AND ${articulo.campo} < $3
       RETURNING monedas, escudos, pistas, vidas`,
-        [articulo.precio, nuevoValor, req.usuario.id],
+        [articulo.precio, articulo.cantidad, articulo.maximo, req.usuario.id],
       );
 
       if (rows.length === 0) {

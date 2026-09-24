@@ -60,7 +60,9 @@ const EscenaController = {
 
   async evaluarLinea(req, res) {
     try {
-      const { lineaObjetivo, transcripcion } = req.body;
+      // Una línea de escena es corta: con el tope nadie puede mandar textos gigantes a la IA ni al comparador
+      const lineaObjetivo = String((req.body || {}).lineaObjetivo || "").slice(0, 300);
+      const transcripcion = String((req.body || {}).transcripcion || "").slice(0, 300);
 
       if (!lineaObjetivo || !transcripcion) {
         return res.status(400).json({ error: "Faltan datos para evaluar" });

@@ -28,14 +28,14 @@ const HistorialController = {
                     COUNT(*)                        AS total,
                     COUNT(*) FILTER (WHERE correcto) AS correctos
                FROM ejercicios
-              WHERE usuario_id = $1
+              WHERE usuario_id = $1 AND correcto IS NOT NULL
                 AND fecha >= date_trunc('week', NOW()) - INTERVAL '${SEMANAS - 1} weeks'
               GROUP BY semana ORDER BY semana ASC`,
             [id],
           ),
           pool.query(
             `SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE correcto) AS correctos
-               FROM ejercicios WHERE usuario_id = $1`,
+               FROM ejercicios WHERE usuario_id = $1 AND correcto IS NOT NULL`,
             [id],
           ),
           pool.query("SELECT COUNT(*) AS total FROM conversaciones WHERE usuario_id = $1", [id]),

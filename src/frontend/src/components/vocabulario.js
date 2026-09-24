@@ -1,6 +1,9 @@
 let palabrasRepaso = [];
 let indicePalabra = 0;
 let traduccionVisible = false;
+let respondiendo = false; // evita que un doble clic o una tecla sostenida respondan dos veces la misma palabra
+let temporizadorSiguiente = null;
+let sesionVocab = 0; // cambia al volver a entrar, para ignorar respuestas de la sesión anterior
 
 const UMBRAL_ARRASTRE = 110;
 
@@ -16,15 +19,25 @@ async function iniciarVocabulario() {
   document.getElementById("vista-principal").classList.add("oculto");
   document.getElementById("vista-vocabulario").classList.remove("oculto");
 
+  // Se arranca limpio: nada de la sesión anterior puede responder ni pintarse
+  clearTimeout(temporizadorSiguiente);
+  const sesion = ++sesionVocab;
+  respondiendo = false;
+  palabrasRepaso = [];
   indicePalabra = 0;
+  resetearTarjeta();
   document.getElementById("vocab-progreso").textContent = "";
   document.getElementById("vocab-tarjeta-texto").textContent = "Loading...";
   document.getElementById("vocab-contexto").classList.add("oculto");
+  document.getElementById("vocab-ejemplo").classList.add("oculto");
+  document.getElementById("vocab-nivel").classList.add("oculto");
+  pintarCreditoFrase(document.getElementById("vocab-credito"), null);
   document.getElementById("vocab-btn-mostrar").classList.add("oculto");
   document.getElementById("vocab-controles").classList.add("oculto");
 
   try {
     const datos = await VocabularioAPI.obtenerRepaso();
+    if (sesion !== sesionVocab) return;
     palabrasRepaso = datos.palabras;
     mostrarPalabraActual();
   } catch (err) {
@@ -109,7 +122,9 @@ function mostrarTraduccion() {
 
 async function responderPalabra(sabia) {
   const palabra = palabrasRepaso[indicePalabra];
-  if (!palabra) return;
+  if (!palabra || respondiendo) return;
+  respondiendo = true;
+  const sesion = sesionVocab;
 
   animarSalida(sabia);
 
@@ -124,7 +139,10 @@ async function responderPalabra(sabia) {
     console.error("No se pudo actualizar la palabra:", err);
   }
 
-  setTimeout(() => {
+  if (sesion !== sesionVocab) return;
+  temporizadorSiguiente = setTimeout(() => {
+    respondiendo = false;
+    if (sesion !== sesionVocab) return;
     indicePalabra++;
     mostrarPalabraActual();
   }, 260);
@@ -248,6 +266,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const vista = document.getElementById("vista-vocabulario");
     if (!vista || vista.classList.contains("oculto")) return;
     if (indicePalabra >= palabrasRepaso.length) return;
+    // Ni teclas sostenidas, ni atajos del navegador, ni lo que se escribe en otro campo
+    if (e.repeat || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
+    if (e.key === " " && e.target.closest && e.target.closest("button, a")) return;
 
     if (e.key === "ArrowRight") responderPalabra(true);
     else if (e.key === "ArrowLeft") responderPalabra(false);
@@ -260,6 +282,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnSalirVocab = document.getElementById("btn-salir-vocabulario");
   if (btnSalirVocab) {
     btnSalirVocab.addEventListener("click", () => {
+      clearTimeout(temporizadorSiguiente);
+      sesionVocab += 1;
+      respondiendo = false;
       document.getElementById("vista-vocabulario").classList.add("oculto");
       document.getElementById("vista-principal").classList.remove("oculto");
       if (typeof cargarProgreso === "function") cargarProgreso();

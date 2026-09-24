@@ -7,6 +7,7 @@ const { reportarError } = require("../utils/errores");
 
 const KBPS_MP3 = 48; // voz hablada en mono: se oye clara y pesa poco
 const CACHE_MAXIMO_BYTES = 40 * 1024 * 1024;
+const MAX_EN_ESPERA = 8; // con más frases en fila, el navegador lee con su voz en vez de esperar
 
 let sherpa;
 try {
@@ -18,7 +19,9 @@ try {
 let lame = null;
 let motor = null;
 let cola = Promise.resolve();
+let enEspera = 0;
 const cache = new Map();
+const pendientes = new Map(); // la misma frase pedida a la vez por varios se genera una sola vez
 let bytesEnCache = 0;
 
 /** Dice si el servidor puede leer en inglés con su propia voz. */
@@ -61,9 +64,11 @@ async function aMp3(muestras, frecuencia) {
 
   const codificador = new Mp3Encoder(1, frecuencia, KBPS_MP3);
   const partes = [];
-  for (let i = 0; i < pcm.length; i += 1152) {
+  for (let i = 0, n = 0; i < pcm.length; i += 1152, n += 1) {
     const trozo = codificador.encodeBuffer(pcm.subarray(i, i + 1152));
     if (trozo.length) partes.push(Buffer.from(trozo));
+    // Cada tanto se suelta el hilo para que las demás peticiones del servidor no se congelen
+    if (n % 40 === 39) await new Promise((listo) => setImmediate(listo));
   }
   const final = codificador.flush();
   if (final.length) partes.push(Buffer.from(final));
@@ -72,6 +77,10 @@ async function aMp3(muestras, frecuencia) {
 
 /** Guarda en el caché sin pasar del tope de memoria. */
 function guardarEnCache(clave, audio) {
+  if (cache.has(clave)) {
+    bytesEnCache -= cache.get(clave).length;
+    cache.delete(clave);
+  }
   while (cache.size && bytesEnCache + audio.length > CACHE_MAXIMO_BYTES) {
     const [vieja, valor] = cache.entries().next().value;
     cache.delete(vieja);
@@ -89,7 +98,10 @@ async function sintetizarPiper(texto, velocidad) {
   const ritmo = velocidadValida(velocidad);
   const clave = `${ritmo}|${limpio}`;
   if (cache.has(clave)) return cache.get(clave);
+  if (pendientes.has(clave)) return pendientes.get(clave);
+  if (enEspera >= MAX_EN_ESPERA) return null;
 
+  enEspera += 1;
   const trabajo = cola.then(async () => {
     const tts = await obtenerMotor();
     const generado = await tts.generateAsync({ text: limpio, sid: 0, speed: ritmo });
@@ -99,12 +111,17 @@ async function sintetizarPiper(texto, velocidad) {
   });
   cola = trabajo.catch(() => {});
 
-  try {
-    return await trabajo;
-  } catch (error) {
-    reportarError("No se pudo leer con la voz del servidor", error);
-    return null;
-  }
+  const resultado = trabajo
+    .catch((error) => {
+      reportarError("No se pudo leer con la voz del servidor", error);
+      return null;
+    })
+    .finally(() => {
+      enEspera -= 1;
+      pendientes.delete(clave);
+    });
+  pendientes.set(clave, resultado);
+  return resultado;
 }
 
 module.exports = { vozPiperLista, precargarVoz, sintetizarPiper, aMp3, cache };

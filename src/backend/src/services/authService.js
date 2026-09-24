@@ -4,7 +4,11 @@ const UserModel = require("../models/userModel");
 const { entraConContrasena } = require("../utils/cuentaGoogle");
 const { POLITICA_VERSION } = require("../utils/politica");
 
-const JWT_SECRET = process.env.JWT_SECRET || "cambia_esta_clave_en_produccion";
+// Sin JWT_SECRET no se usa una clave conocida: se inventa una al azar (las sesiones se cierran al reiniciar)
+const JWT_SECRET = process.env.JWT_SECRET || (() => {
+  console.warn("Falta JWT_SECRET: se usa una clave temporal y las sesiones se cerrarán al reiniciar el servidor");
+  return require("crypto").randomBytes(48).toString("hex");
+})();
 const JWT_EXPIRA = "7d";
 
 const AuthService = {
@@ -65,7 +69,7 @@ const AuthService = {
   },
 
   verificarToken(token) {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
   },
 };
 

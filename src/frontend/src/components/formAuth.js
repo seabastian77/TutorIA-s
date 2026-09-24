@@ -77,7 +77,8 @@ function inicializarFormAuth() {
     }
 
     boton.disabled = true;
-    boton.textContent = "Ingresando...";
+    const textoBoton = boton.textContent;
+    boton.textContent = "Logging in...";
 
     try {
       const datos = await AuthAPI.login({ correo, contrasena });
@@ -87,7 +88,7 @@ function inicializarFormAuth() {
       mostrarError(err.message);
     } finally {
       boton.disabled = false;
-      boton.textContent = "Ingresar";
+      boton.textContent = textoBoton;
     }
   });
 
@@ -112,7 +113,8 @@ function inicializarFormAuth() {
     }
 
     boton.disabled = true;
-    boton.textContent = "Creando cuenta...";
+    const textoBoton = boton.textContent;
+    boton.textContent = "Creating account...";
 
     try {
       const datos = await AuthAPI.registrar({ nombre, correo, contrasena, aceptaPolitica });
@@ -122,7 +124,7 @@ function inicializarFormAuth() {
       mostrarError(err.message);
     } finally {
       boton.disabled = false;
-      boton.textContent = "Crear cuenta";
+      boton.textContent = textoBoton;
     }
   });
 
@@ -160,7 +162,8 @@ function inicializarFormAuth() {
     if (!Validaciones.correoValido(correo)) return mostrarError("Ingresa un correo válido");
 
     boton.disabled = true;
-    boton.textContent = "Enviando...";
+    const textoBoton = boton.textContent;
+    boton.textContent = "Sending...";
 
     try {
       const { mensaje } = await AuthAPI.pedirEnlace(correo);
@@ -172,7 +175,7 @@ function inicializarFormAuth() {
       mostrarError(err.message);
     } finally {
       boton.disabled = false;
-      boton.textContent = "Enviar el enlace";
+      boton.textContent = textoBoton;
     }
   });
 
@@ -190,7 +193,8 @@ function inicializarFormAuth() {
     if (contrasena !== repetida) return mostrarError("Las dos contraseñas no coinciden");
 
     boton.disabled = true;
-    boton.textContent = "Guardando...";
+    const textoBoton = boton.textContent;
+    boton.textContent = "Saving...";
 
     try {
       const { mensaje } = await AuthAPI.restablecer({ token: tokenDelEnlace(), contrasena });
@@ -202,7 +206,7 @@ function inicializarFormAuth() {
       mostrarError(err.message);
     } finally {
       boton.disabled = false;
-      boton.textContent = "Guardar mi contraseña";
+      boton.textContent = textoBoton;
     }
   });
 
@@ -297,8 +301,31 @@ function mostrarPantallaPrincipal(usuario) {
     `Hi, ${usuario.nombre}`;
 }
 
+/** Abre la política dentro de la página; si el navegador no sabe mostrar ventanitas, sigue el enlace normal. */
+function prepararDialogoPolitica() {
+  const dialogo = document.getElementById("dialogo-politica");
+  const marco = document.getElementById("marco-politica");
+  if (!dialogo || !marco || typeof dialogo.showModal !== "function") return;
+
+  document.addEventListener("click", (e) => {
+    const enlace = e.target.closest && e.target.closest('a[href="privacidad.html"]');
+    if (!enlace || dialogo.contains(enlace) || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    // Dentro de la casilla de aceptar, el clic abre la política sin marcar ni desmarcar la casilla
+    e.preventDefault();
+    if (!marco.getAttribute("src")) marco.setAttribute("src", "privacidad.html");
+    dialogo.showModal();
+  });
+
+  document.getElementById("btn-cerrar-politica").addEventListener("click", () => dialogo.close());
+  // Un clic en el fondo oscuro también la cierra
+  dialogo.addEventListener("click", (e) => {
+    if (e.target === dialogo) dialogo.close();
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   inicializarFormAuth();
+  prepararDialogoPolitica();
 
   // Si ya hay sesión guardada, saltar directo a la pantalla principal
   if (Sesion.estaAutenticado()) {

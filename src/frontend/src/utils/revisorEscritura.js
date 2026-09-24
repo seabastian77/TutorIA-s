@@ -95,8 +95,10 @@ function conectarRevisor(entrada, { despuesDe = entrada } = {}) {
   const etiqueta = boton.querySelector("span");
   const zona = caja.querySelector(".revisor-resultado");
   let hallazgos = [];
+  let turno = 0; // cada limpieza o revisión nueva deja sin efecto las respuestas que lleguen tarde
 
   const limpiar = () => {
+    turno += 1;
     hallazgos = [];
     zona.classList.add("oculto");
     zona.innerHTML = "";
@@ -170,6 +172,7 @@ function conectarRevisor(entrada, { despuesDe = entrada } = {}) {
           b.textContent = s === "" ? "(delete)" : s;
           b.title = "Use this";
           b.addEventListener("click", () => {
+            if (entrada.disabled) return;
             const r = aplicarSugerencia(entrada.value, hallazgos, i, s);
             entrada.value = r.texto;
             hallazgos = r.hallazgos;
@@ -188,16 +191,23 @@ function conectarRevisor(entrada, { despuesDe = entrada } = {}) {
 
   boton.addEventListener("click", async () => {
     const texto = entrada.value.trim();
+    if (entrada.disabled) return;
     if (!texto) {
       entrada.focus();
       return;
     }
+    const enviado = entrada.value;
+    const mio = ++turno;
     boton.disabled = true;
     etiqueta.textContent = "Checking...";
     try {
-      hallazgos = await revisarTexto(entrada.value);
+      const encontrados = await revisarTexto(enviado);
+      // Si el texto cambió mientras tanto, las posiciones ya no sirven
+      if (mio !== turno || entrada.value !== enviado) return;
+      hallazgos = encontrados;
       pintar();
     } catch (error) {
+      if (mio !== turno) return;
       zona.classList.remove("oculto");
       zona.innerHTML = "";
       const aviso = document.createElement("p");

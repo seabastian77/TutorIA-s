@@ -59,6 +59,7 @@
         <li><a href="#conservacion">Cuánto tiempo los guardamos</a></li>
         <li><a href="#navegador">Lo que se guarda en tu navegador</a></li>
         <li><a href="#cambios">Cambios a esta política</a></li>
+        <li><a href="#creditos">Créditos del contenido</a></li>
       </ol>
     </nav>
 
@@ -345,6 +346,13 @@
       <a href="./">← Volver a TutorIA's</a>
     </footer>
   </main>
+
+  <script>
+      // Dentro de la ventanita del registro no se muestran los "Volver": se cierra con la X
+      if (window.self !== window.top) {
+        document.querySelectorAll('a[href="./"]').forEach((a) => a.remove());
+      }
+    </script>
 
 </body>
 </html>

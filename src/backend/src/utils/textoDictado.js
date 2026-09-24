@@ -2,8 +2,9 @@
 
 /** Quita puntuación y tildes para comparar lo que escribió el usuario. */
 function normalizar(texto) {
-  return (texto || "")
+  return String(texto || "")
     .toLowerCase()
+    .replace(/[’‘`´]/g, "'") // el apóstrofo curvo que ponen los teclados de iPhone y Mac
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9\s']/g, " ")

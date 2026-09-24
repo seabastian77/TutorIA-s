@@ -476,7 +476,8 @@ function descargarCsv() {
   });
 
   const csv = filas
-    .map((f) => f.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";"))
+    // Excel en español usa coma decimal: 12.5 se escribe 12,5 para que lo lea como número
+    .map((f) => f.map((c) => `"${(typeof c === "number" ? String(c).replace(".", ",") : String(c ?? "")).replace(/"/g, '""')}"`).join(";"))
     .join("\r\n");
   const archivo = new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8" });
   const enlace = document.createElement("a");
@@ -505,6 +506,10 @@ async function cargarMetricas() {
 
 /** Abre el tablero desde el menú de la cuenta. */
 function abrirMetricas() {
+  // Primero se cierra el módulo abierto con su propia salida: apaga micrófono, voz y relojes
+  if (typeof irAlInicio === "function") irAlInicio();
+  // Si el módulo pidió confirmar la salida y la persona dijo que no, se queda donde estaba
+  if ([...document.querySelectorAll(".pantalla-principal")].some((v) => v.id !== "vista-principal" && !v.classList.contains("oculto"))) return;
   document.querySelectorAll(".pantalla-principal").forEach((v) => v.classList.add("oculto"));
   document.getElementById("vista-metricas").classList.remove("oculto");
   cargarMetricas();

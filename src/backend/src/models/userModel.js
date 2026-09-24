@@ -8,14 +8,15 @@ const UserModel = {
       VALUES ($1, $2, $3, NOW(), $4)
       RETURNING id, nombre, correo, nivel_mcer, fecha_registro
     `;
-    const { rows } = await pool.query(query, [nombre, correo, contrasenaHash, politicaVersion]);
+    const { rows } = await pool.query(query, [nombre, String(correo).trim().toLowerCase(), contrasenaHash, politicaVersion]);
     return rows[0];
   },
 
   async buscarPorCorreo(correo) {
+    // Sin distinguir mayúsculas: "Ana@Gmail.com" y "ana@gmail.com" son la misma cuenta
     const { rows } = await pool.query(
-      "SELECT * FROM usuarios WHERE correo = $1",
-      [correo],
+      "SELECT * FROM usuarios WHERE LOWER(correo) = LOWER($1) ORDER BY id LIMIT 1",
+      [String(correo || "").trim()],
     );
     return rows[0];
   },
@@ -47,15 +48,20 @@ const UserModel = {
       `INSERT INTO usuarios (nombre, correo, google_id, politica_aceptada_en, politica_version)
        VALUES ($1, $2, $3, NOW(), $4)
        RETURNING id, nombre, correo, nivel_mcer, fecha_registro`,
-      [nombre, correo, googleId, politicaVersion],
+      [nombre, String(correo).trim().toLowerCase(), googleId, politicaVersion],
     );
     return rows[0];
   },
 
-  /** Ata una cuenta que ya existía al Google del mismo correo verificado. */
+  /**
+   * Ata una cuenta que ya existía al Google del mismo correo verificado. La contraseña anterior se
+   * borra y sus sesiones se cierran: así nadie que haya creado la cuenta con un correo ajeno conserva acceso.
+   */
   async vincularGoogle(id, googleId) {
     const { rows } = await pool.query(
-      `UPDATE usuarios SET google_id = $2 WHERE id = $1
+      `UPDATE usuarios
+          SET google_id = $2, contrasena_hash = NULL, contrasena_cambiada_en = NOW()
+        WHERE id = $1
        RETURNING id, nombre, correo, nivel_mcer, fecha_registro`,
       [id, googleId],
     );

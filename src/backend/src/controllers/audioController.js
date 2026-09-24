@@ -8,6 +8,7 @@ const { guardarPalabraSiFalla } = require("../utils/vocabulario");
 const { obtenerPerfil } = require("../utils/perfil");
 const { compararDictado } = require("../utils/textoDictado");
 const { reportarError } = require("../utils/errores");
+const { idValido, marcarRespondido, YA_RESPONDIDO } = require("../utils/ejercicios");
 const { fraseDeDictado, credito } = require("../utils/frasesTatoeba");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
@@ -84,7 +85,8 @@ const AudioController = {
   /** Corrige el dictado contra la frase guardada, nunca contra lo que mande el cliente. */
   async responderDictado(req, res) {
     try {
-      const { ejercicioId, texto } = req.body;
+      const ejercicioId = idValido((req.body || {}).ejercicioId);
+      const texto = typeof (req.body || {}).texto === "string" ? req.body.texto.slice(0, 1000) : "";
 
       if (!ejercicioId) {
         return res.status(400).json({ error: "Falta el ejercicio" });
@@ -104,10 +106,9 @@ const AudioController = {
       const resultado = compararDictado(frase, texto);
       const perfecto = resultado.porcentaje === 100;
 
-      await pool.query("UPDATE ejercicios SET correcto = $1 WHERE id = $2", [
-        perfecto,
-        ejercicioId,
-      ]);
+      if (!(await marcarRespondido(ejercicioId, req.usuario.id, perfecto))) {
+        return res.status(409).json(YA_RESPONDIDO);
+      }
 
       if (!perfecto) {
         const falladas = resultado.detalle
@@ -191,7 +192,8 @@ const AudioController = {
 
   async responderComprension(req, res) {
     try {
-      const { ejercicioId, respuestas } = req.body;
+      const ejercicioId = idValido((req.body || {}).ejercicioId);
+      const { respuestas } = req.body || {};
 
       if (!ejercicioId || !Array.isArray(respuestas)) {
         return res.status(400).json({ error: "Faltan datos de la respuesta" });
@@ -218,10 +220,9 @@ const AudioController = {
       const total = preguntas.length;
       const perfecto = total > 0 && aciertos === total;
 
-      await pool.query("UPDATE ejercicios SET correcto = $1 WHERE id = $2", [
-        perfecto,
-        ejercicioId,
-      ]);
+      if (!(await marcarRespondido(ejercicioId, req.usuario.id, perfecto))) {
+        return res.status(409).json(YA_RESPONDIDO);
+      }
 
       const gamificacion = await registrarActividad(
         req.usuario.id,

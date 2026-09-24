@@ -51,6 +51,16 @@
     </symbol>
   </svg>
 
+  <!-- La política se lee aquí mismo, sin abrir otra pestaña ni perder lo escrito en el formulario -->
+  <dialog id="dialogo-politica" class="dialogo-politica" aria-labelledby="dialogo-politica-titulo">
+    <div class="dialogo-politica-barra">
+      <strong id="dialogo-politica-titulo">Política de tratamiento de datos</strong>
+      <a href="privacidad.html" target="_blank" rel="noopener">Abrir en otra pestaña</a>
+      <button type="button" id="btn-cerrar-politica" class="dialogo-politica-cerrar" aria-label="Cerrar">&times;</button>
+    </div>
+    <iframe id="marco-politica" title="Política de tratamiento de datos"></iframe>
+  </dialog>
+
   <!-- Vista de autenticación -->
   <div id="vista-auth" class="pantalla-auth">
 

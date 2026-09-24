@@ -1,5 +1,6 @@
 const pool = require("../config/db");
 const { reportarError } = require("../utils/errores");
+const { idValido, marcarRespondido, YA_RESPONDIDO } = require("../utils/ejercicios");
 const { obtenerPerfil } = require("../utils/perfil");
 const { registrarActividad } = require("../utils/gamificacion");
 const { guardarPalabraSiFalla } = require("../utils/vocabulario");
@@ -144,20 +145,26 @@ const VisualController = {
   /** Evalúa contra la imagen guardada en la base, nunca contra lo que mande el cliente. */
   async responder(req, res) {
     try {
-      const { ejercicioId, texto } = req.body;
+      const ejercicioId = idValido((req.body || {}).ejercicioId);
+      const texto = typeof (req.body || {}).texto === "string" ? req.body.texto.slice(0, 1500) : "";
 
-      if (!ejercicioId || !(texto || "").trim()) {
+      if (!ejercicioId || !texto.trim()) {
         return res.status(400).json({ error: "Falta lo que escribiste" });
       }
 
       const { rows } = await pool.query(
-        `SELECT contenido FROM ejercicios
+        `SELECT contenido, correcto FROM ejercicios
           WHERE id = $1 AND usuario_id = $2 AND tipo = 'visual'`,
         [ejercicioId, req.usuario.id],
       );
 
       if (rows.length === 0) {
         return res.status(404).json({ error: "Ese ejercicio no existe" });
+      }
+
+      // Ya calificado: no se vuelve a gastar la IA ni a dar XP
+      if (rows[0].correcto !== null) {
+        return res.status(409).json(YA_RESPONDIDO);
       }
 
       const { modo, tema, medioId } = rows[0].contenido;
@@ -202,10 +209,9 @@ const VisualController = {
       const precision = Math.max(0, Math.min(100, Number(evaluacion.precision) || 0));
       const perfecto = precision >= 90;
 
-      await pool.query("UPDATE ejercicios SET correcto = $1 WHERE id = $2", [
-        perfecto,
-        ejercicioId,
-      ]);
+      if (!(await marcarRespondido(ejercicioId, req.usuario.id, perfecto))) {
+        return res.status(409).json(YA_RESPONDIDO);
+      }
 
       // Las correcciones alimentan el vocabulario, igual que en los demás módulos
       const falladas = (evaluacion.correcciones || [])

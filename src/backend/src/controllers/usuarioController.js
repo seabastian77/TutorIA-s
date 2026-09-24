@@ -1,5 +1,6 @@
 const pool = require("../config/db");
 const { reportarError } = require("../utils/errores");
+const { actividadesDeHoy } = require("../utils/gamificacion");
 
 const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
 const META_DIARIA = 5; // actividades por día para completar la meta
@@ -77,7 +78,7 @@ const UsuarioController = {
   async progreso(req, res) {
     try {
       const { rows: urows } = await pool.query(
-        `SELECT puntos, racha_dias, racha_maxima, nivel_mcer, actividades_hoy,
+        `SELECT puntos, racha_dias, racha_maxima, nivel_mcer, actividades_hoy, ultima_actividad,
                 monedas, escudos, pistas, vidas, liga, ayuda_es
            FROM usuarios WHERE id = $1`,
         [req.usuario.id],
@@ -107,7 +108,7 @@ const UsuarioController = {
         // Todos arrancan en A1: el nivel solo cuenta como medido si hubo diagnóstico
         nivelMedido: diag.length > 0,
         tendencia,
-        actividadesHoy: Math.min(usuario.actividades_hoy || 0, META_DIARIA),
+        actividadesHoy: Math.min(actividadesDeHoy(usuario), META_DIARIA),
         metaDiaria: META_DIARIA,
         monedas: usuario.monedas || 0,
         escudos: usuario.escudos || 0,
@@ -162,7 +163,7 @@ const UsuarioController = {
           usuarioId,
         ]),
         pool.query(
-          "SELECT COUNT(*)::int AS total FROM ejercicios WHERE usuario_id = $1",
+          "SELECT COUNT(*)::int AS total FROM ejercicios WHERE usuario_id = $1 AND correcto IS NOT NULL",
           [usuarioId],
         ),
         pool.query(

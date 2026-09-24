@@ -1,6 +1,7 @@
 const pool = require("../config/db");
 const { sumarXpSemanal } = require("./ligas");
 const { reportarError } = require("./errores");
+const { diaLocal, fechaDeBase, diasEntre } = require("./fechas");
 
 const META_DIARIA = 5; // actividades para completar el día
 const XP_LECCION_PERFECTA = 5; // bonus por acertar sin fallar
@@ -8,28 +9,50 @@ const MONEDAS_POR_ACTIVIDAD = 1;
 const MONEDAS_POR_META_DIARIA = 15; // premio al completar la meta
 const MONEDAS_POR_RACHA_7 = 25; // premio cada 7 días de racha
 
-/** Fecha de hoy como 'YYYY-MM-DD', sin la hora. */
-function hoyISO() {
-  const d = new Date();
-  return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
-    .toISOString()
-    .slice(0, 10);
-}
-
-function diasEntre(desdeISO, hastaISO) {
-  const a = new Date(`${desdeISO}T00:00:00Z`);
-  const b = new Date(`${hastaISO}T00:00:00Z`);
-  return Math.round((b - a) / (1000 * 60 * 60 * 24));
-}
-
 /** Registra una actividad: suma XP y monedas, mueve la racha y alimenta la liga. */
 async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
   const { perfecto = false, modulo = "otro" } = opciones;
 
-  const { rows } = await pool.query(
+  // La fila queda bloqueada hasta guardar: dos respuestas o una compra al mismo tiempo no se pisan
+  const cliente = await pool.connect();
+  let resultado;
+  try {
+    await cliente.query("BEGIN");
+    resultado = await calcularYGuardar(cliente, usuarioId, puntosGanados, perfecto);
+    await cliente.query("COMMIT");
+  } catch (error) {
+    await cliente.query("ROLLBACK").catch(() => {});
+    throw error;
+  } finally {
+    cliente.release();
+  }
+
+  // La liga nunca debe tumbar la respuesta del ejercicio
+  try {
+    await sumarXpSemanal(usuarioId, resultado.xpGanado);
+  } catch (error) {
+    reportarError("No se pudo sumar XP a la liga semanal", error);
+  }
+
+  // El registro para las métricas del estudio tampoco puede tumbarla
+  try {
+    await pool.query(
+      "INSERT INTO actividades (usuario_id, modulo, xp, perfecto) VALUES ($1, $2, $3, $4)",
+      [usuarioId, modulo, resultado.xpGanado, perfecto],
+    );
+  } catch (error) {
+    reportarError("No se pudo registrar la actividad para las métricas", error);
+  }
+
+  return resultado;
+}
+
+/** Calcula XP, racha, meta y monedas con la fila bloqueada, y los guarda. */
+async function calcularYGuardar(cliente, usuarioId, puntosGanados, perfecto) {
+  const { rows } = await cliente.query(
     `SELECT puntos, racha_dias, racha_maxima, ultima_actividad,
             actividades_hoy, monedas, escudos
-       FROM usuarios WHERE id = $1`,
+       FROM usuarios WHERE id = $1 FOR UPDATE`,
     [usuarioId],
   );
 
@@ -38,7 +61,7 @@ async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
     throw new Error(`Usuario ${usuarioId} no encontrado`);
   }
 
-  const hoy = hoyISO();
+  const hoy = diaLocal();
 
   let racha = usuario.racha_dias || 0;
   let actividadesHoy = usuario.actividades_hoy || 0;
@@ -47,9 +70,7 @@ async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
   let rachaRota = false;
 
   if (usuario.ultima_actividad) {
-    const ultima = new Date(usuario.ultima_actividad)
-      .toISOString()
-      .slice(0, 10);
+    const ultima = fechaDeBase(usuario.ultima_actividad);
     const diferencia = diasEntre(ultima, hoy);
 
     if (diferencia === 0) {
@@ -93,7 +114,7 @@ async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
 
   const monedas = (usuario.monedas || 0) + monedasGanadas;
 
-  await pool.query(
+  await cliente.query(
     `UPDATE usuarios
         SET puntos = $1, racha_dias = $2, racha_maxima = $3,
             ultima_actividad = $4, actividades_hoy = $5,
@@ -101,23 +122,6 @@ async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
       WHERE id = $8`,
     [puntos, racha, rachaMaxima, hoy, actividadesHoy, monedas, escudos, usuarioId],
   );
-
-  // La liga nunca debe tumbar la respuesta del ejercicio
-  try {
-    await sumarXpSemanal(usuarioId, xpGanado);
-  } catch (error) {
-    reportarError("No se pudo sumar XP a la liga semanal", error);
-  }
-
-  // El registro para las métricas del estudio tampoco puede tumbarla
-  try {
-    await pool.query(
-      "INSERT INTO actividades (usuario_id, modulo, xp, perfecto) VALUES ($1, $2, $3, $4)",
-      [usuarioId, modulo, xpGanado, perfecto],
-    );
-  } catch (error) {
-    reportarError("No se pudo registrar la actividad para las métricas", error);
-  }
 
   return {
     puntos, // nombre histórico: XP total
@@ -136,8 +140,15 @@ async function registrarActividad(usuarioId, puntosGanados, opciones = {}) {
   };
 }
 
+/** Las actividades de hoy: si la última fue otro día, la meta arranca en cero. */
+function actividadesDeHoy(usuario) {
+  if (!usuario || fechaDeBase(usuario.ultima_actividad) !== diaLocal()) return 0;
+  return usuario.actividades_hoy || 0;
+}
+
 module.exports = {
   registrarActividad,
+  actividadesDeHoy,
   META_DIARIA,
   XP_LECCION_PERFECTA,
 };

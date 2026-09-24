@@ -2,7 +2,13 @@ let dictadoActual = null;
 let comprensionActual = null;
 let respuestasAudio = [];
 
-/** Lee un texto en voz alta: con Google si la app lo tiene, si no el navegador. */
+/** Dice si el estudiante sigue en Audio Lab; si ya salió, no se lee nada. */
+function sigueEnAudioLab() {
+  const vista = document.getElementById("vista-audio");
+  return Boolean(vista && !vista.classList.contains("oculto"));
+}
+
+/** Lee un texto en voz alta: con la voz del servidor si la app la tiene, si no el navegador. */
 function hablarIngles(texto, velocidad = 1) {
   VozIngles.leer(texto, { idioma: "en", velocidad });
   return true;
@@ -48,9 +54,11 @@ async function nuevoDictado() {
   document.getElementById("dictado-traduccion").classList.add("oculto");
   pintarCreditoFrase(document.getElementById("dictado-credito"), null);
   document.getElementById("btn-comprobar-dictado").disabled = true;
+  dictadoActual = null;
 
   try {
     dictadoActual = await AudioAPI.dictado();
+    if (!sigueEnAudioLab()) return;
     estado.textContent = "";
     document.getElementById("dictado-pista").textContent =
       dictadoActual.pista || "";
@@ -70,6 +78,7 @@ async function comprobarDictado() {
   const texto = document.getElementById("dictado-entrada").value;
   boton.disabled = true;
   boton.textContent = "Checking...";
+  let calificado = false;
 
   try {
     const datos = await AudioAPI.responderDictado(
@@ -105,13 +114,16 @@ async function comprobarDictado() {
 
     const chip = document.getElementById("progreso-monedas");
     if (chip && typeof datos.monedas === "number") chip.textContent = datos.monedas;
+    // Ya calificado: para otro intento se pide otra frase
+    calificado = true;
+    document.getElementById("dictado-entrada").disabled = true;
   } catch (err) {
     const resultado = document.getElementById("dictado-resultado");
     resultado.textContent = "Could not check your dictation.";
     resultado.className = "nivel-feedback";
     resultado.classList.remove("oculto");
   } finally {
-    boton.disabled = false;
+    boton.disabled = calificado;
     boton.textContent = "Check";
   }
 }
@@ -128,9 +140,12 @@ async function nuevaComprension() {
   document.getElementById("comprension-preguntas").innerHTML = "";
   document.getElementById("comprension-resultado").classList.add("oculto");
   document.getElementById("comprension-transcripcion").classList.add("oculto");
+  document.getElementById("btn-enviar-comprension").disabled = false;
+  comprensionActual = null;
 
   try {
     comprensionActual = await AudioAPI.comprension();
+    if (!sigueEnAudioLab()) return;
     respuestasAudio = new Array(comprensionActual.preguntas.length).fill(null);
     estado.textContent = "";
 
@@ -193,6 +208,7 @@ async function enviarRespuestasAudio() {
 
   boton.disabled = true;
   boton.textContent = "Checking...";
+  let calificado = false;
 
   try {
     const datos = await AudioAPI.responderComprension(
@@ -225,12 +241,13 @@ async function enviarRespuestasAudio() {
 
     const chip = document.getElementById("progreso-monedas");
     if (chip && typeof datos.monedas === "number") chip.textContent = datos.monedas;
+    calificado = true;
   } catch (err) {
     resultado.textContent = "Could not check your answers.";
     resultado.className = "nivel-feedback";
     resultado.classList.remove("oculto");
   } finally {
-    boton.disabled = false;
+    boton.disabled = calificado;
     boton.textContent = "Check answers";
   }
 }

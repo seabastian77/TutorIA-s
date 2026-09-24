@@ -155,9 +155,10 @@ async function enviarMensajeRoleplay() {
   document.getElementById("roleplay-estado").textContent = "Thinking...";
 
   try {
+    // El mensaje nuevo va aparte: el historial solo lleva lo anterior, para que la IA no lo lea dos veces
     const datos = await RoleplayAPI.responder(
       escenarioActivo.id,
-      historialRoleplay,
+      historialRoleplay.slice(0, -1),
       texto,
     );
 
@@ -179,6 +180,14 @@ async function enviarMensajeRoleplay() {
       document.getElementById("roleplay-sugerencias").innerHTML = "";
     }
   } catch (err) {
+    // Se devuelve el texto al campo para reintentar sin tener que escribirlo otra vez
+    const ultimo = historialRoleplay[historialRoleplay.length - 1];
+    if (ultimo && ultimo.rol === "usuario" && ultimo.texto === texto) {
+      historialRoleplay.pop();
+      const burbujas = document.querySelectorAll("#roleplay-chat .voz-burbuja-usuario");
+      if (burbujas.length) burbujas[burbujas.length - 1].remove();
+    }
+    entrada.value = texto;
     document.getElementById("roleplay-estado").textContent =
       "Could not send that. Try again.";
   } finally {

@@ -1,5 +1,6 @@
 const pool = require("../config/db");
 const { reportarError } = require("../utils/errores");
+const { actividadesDeHoy } = require("../utils/gamificacion");
 const { elegirConsejo } = require("../utils/mentorReglas");
 const { generarConsejoDelDia } = require("../services/mentorIA");
 const { responderCharla } = require("../services/charlaIA");
@@ -11,7 +12,7 @@ const DOMINIO_DEBIL = 1; // una palabra con dominio 0 o 1 todavía no se asienta
 /** Reúne en una sola consulta lo que el mentor necesita saber del estudiante. */
 async function leerEstado(usuarioId) {
   const { rows: usuarios } = await pool.query(
-    `SELECT nivel_mcer, racha_dias, actividades_hoy, monedas, ayuda_es
+    `SELECT nivel_mcer, racha_dias, actividades_hoy, ultima_actividad, monedas, ayuda_es
        FROM usuarios WHERE id = $1`,
     [usuarioId],
   );
@@ -37,7 +38,7 @@ async function leerEstado(usuarioId) {
   return {
     nivel: midioSuNivel ? u.nivel_mcer : null,
     racha: u.racha_dias || 0,
-    actividadesHoy: u.actividades_hoy || 0,
+    actividadesHoy: actividadesDeHoy(u),
     metaDiaria: META_DIARIA,
     monedas: u.monedas || 0,
     palabrasPorRepasar: Number(v.por_repasar) || 0,

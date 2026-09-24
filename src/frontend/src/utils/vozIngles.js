@@ -112,6 +112,7 @@ const RITMO_INGLES = 0.9;
 
 let idiomasDelServidor = [];
 let audioActual = null;
+let turnoVoz = 0; // cada lectura nueva o cada callar() deja sin efecto lo que venga llegando de antes
 
 /** Dice en qué idiomas lee el servidor con voz clara; el resto sigue con la del navegador. */
 function usarVozServidor(idiomas) {
@@ -125,6 +126,7 @@ function usarVozGoogle(disponible) {
 
 /** Corta lo que se esté leyendo, venga de Google o del navegador. */
 function callar() {
+  turnoVoz += 1;
   if (audioActual) {
     audioActual.pause();
     audioActual = null;
@@ -152,9 +154,10 @@ function esperarVoces(maximoMs = 1500) {
 }
 
 /** Lee con la voz del navegador: es el respaldo de siempre. */
-async function leerConElNavegador(texto, idioma, velocidad) {
+async function leerConElNavegador(texto, idioma, velocidad, turno = turnoVoz) {
   if (typeof window === "undefined" || !window.speechSynthesis) return false;
   await esperarVoces();
+  if (turno !== turnoVoz) return false;
   const mensaje = new SpeechSynthesisUtterance(texto);
   mensaje.lang = idioma === "es" ? "es-MX" : "en-US";
   mensaje.rate = velocidad;
@@ -169,6 +172,7 @@ async function leerConElNavegador(texto, idioma, velocidad) {
  */
 async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
   callar();
+  const mio = turnoVoz;
   if (!texto) return false;
 
   // El inglés va un poco más despacio para quien lo está aprendiendo
@@ -178,17 +182,21 @@ async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
   if (idiomasDelServidor.includes(lengua) && typeof VozAPI !== "undefined" && VozAPI.hablar) {
     try {
       const { audio } = await VozAPI.hablar({ texto, idioma, velocidad });
+      // Si mientras llegaba el audio se pidió otra lectura o silencio, este ya no suena
+      if (mio !== turnoVoz) return false;
       if (audio) {
-        audioActual = new Audio(`data:audio/mp3;base64,${audio}`);
-        await audioActual.play();
+        const sonido = new Audio(`data:audio/mp3;base64,${audio}`);
+        audioActual = sonido;
+        await sonido.play();
         return true;
       }
     } catch (e) {
-      // Cualquier problema con el servidor cae al navegador, que siempre está
+      // Si se detuvo a propósito no se repite con la otra voz; cualquier otro problema cae al navegador
+      if (mio !== turnoVoz || (e && e.name === "AbortError")) return false;
     }
   }
 
-  return leerConElNavegador(texto, idioma, velocidad);
+  return leerConElNavegador(texto, idioma, velocidad, mio);
 }
 
 const VozIngles = {

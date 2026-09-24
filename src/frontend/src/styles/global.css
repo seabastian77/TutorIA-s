@@ -4839,3 +4839,54 @@ button,
 
 .revisor-pie { margin: 0; font-size: 11px; color: var(--gris); }
 .revisor-pie a { color: var(--gris); text-decoration: underline; }
+
+/* ═══ POLÍTICA EN UNA VENTANA DENTRO DE LA PÁGINA ═══ */
+
+.dialogo-politica {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(760px, calc(100vw - 32px));
+  height: min(85vh, 900px);
+  padding: 0;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--panel);
+  color: var(--blanco);
+  overflow: hidden;
+}
+
+.dialogo-politica[open] { display: flex; flex-direction: column; }
+
+.dialogo-politica::backdrop { background: rgba(11, 27, 54, 0.55); }
+
+.dialogo-politica-barra {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px 12px 18px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.dialogo-politica-barra strong { flex: 1; font-size: 15px; min-width: 0; }
+.dialogo-politica-barra a { font-size: 13px; color: var(--primario); white-space: nowrap; }
+
+.dialogo-politica-cerrar {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--blanco);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dialogo-politica iframe { flex: 1; width: 100%; border: 0; background: var(--negro); }
+
+@media (max-width: 620px) {
+  .dialogo-politica { width: 100vw; height: 100dvh; max-width: none; max-height: none; border-radius: 0; }
+  .dialogo-politica-barra a { display: none; }
+}

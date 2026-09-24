@@ -25,6 +25,8 @@ const VozAPI = {
         Authorization: `Bearer ${Sesion.obtenerToken()}`,
       },
       body: JSON.stringify({ texto, idioma, velocidad }),
+      // Si el servidor se demora, mejor leer con la voz del navegador que dejar al estudiante esperando
+      signal: typeof AbortSignal !== "undefined" && AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined,
     });
     const datos = await resp.json();
     if (!resp.ok) throw new Error(datos.error || "No se pudo leer el texto");

@@ -160,7 +160,8 @@ const BibliotecaController = {
   /** Corrige las preguntas de comprensión y da la recompensa. */
   async responder(req, res) {
     try {
-      const { lecturaId, respuestas } = req.body;
+      const { respuestas } = req.body || {};
+      const lecturaId = Number.isInteger(Number((req.body || {}).lecturaId)) ? Number(req.body.lecturaId) : null;
 
       if (!lecturaId || !Array.isArray(respuestas)) {
         return res.status(400).json({ error: "Faltan datos de la respuesta" });
@@ -186,26 +187,28 @@ const BibliotecaController = {
       const total = preguntas.length;
       const perfecto = aciertos === total;
 
-      await pool.query(
+      const { rows: guardada } = await pool.query(
         `INSERT INTO lecturas_completadas (usuario_id, lectura_id, aciertos, total)
          VALUES ($1, $2, $3, $4)
          ON CONFLICT (usuario_id, lectura_id)
          DO UPDATE SET aciertos = GREATEST(lecturas_completadas.aciertos, $3),
-                       total = $4, fecha = NOW()`,
+                       total = $4, fecha = NOW()
+         RETURNING (xmax = 0) AS primera_vez`,
         [req.usuario.id, lecturaId, aciertos, total],
       );
 
-      const gamificacion = await registrarActividad(
-        req.usuario.id,
-        aciertos * 5,
-        { perfecto, modulo: "biblioteca" },
-      );
+      // Releer un cuento sirve para practicar, pero el XP y las monedas se ganan solo la primera vez
+      const primeraVez = Boolean(guardada[0] && guardada[0].primera_vez);
+      const gamificacion = primeraVez
+        ? await registrarActividad(req.usuario.id, aciertos * 5, { perfecto, modulo: "biblioteca" })
+        : { xpGanado: 0, monedasGanadas: 0, metaCompletada: false };
 
       res.json({
         aciertos,
         total,
         perfecto,
         correccion,
+        repetida: !primeraVez,
         xpGanado: gamificacion.xpGanado,
         puntosTotales: gamificacion.puntos,
         racha: gamificacion.racha,

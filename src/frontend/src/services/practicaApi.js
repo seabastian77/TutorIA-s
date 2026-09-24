@@ -17,7 +17,7 @@ const PracticaAPI = {
     return datos;
   },
 
-  async enviarRespuesta({ tipo, nivel, contenido, respuestaUsuario }) {
+  async enviarRespuesta({ ejercicioId, respuestaUsuario }) {
     const token = Sesion.obtenerToken();
     const resp = await fetch(`${URL_BASE_PRACTICA}/practica/responder`, {
       method: "POST",
@@ -25,7 +25,7 @@ const PracticaAPI = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ tipo, nivel, contenido, respuestaUsuario }),
+      body: JSON.stringify({ ejercicioId, respuestaUsuario }),
     });
     const datos = await resp.json();
     if (!resp.ok) throw new Error(datos.error || "Error evaluando respuesta");

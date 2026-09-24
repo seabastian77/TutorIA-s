@@ -22,7 +22,9 @@ const DiagnosticoController = {
       const escena = await generarEscenaDiagnostico({
         nivel: nivelValido,
         turno: turnoNum,
-        historialNarrativo: historialNarrativo || [],
+        historialNarrativo: (Array.isArray(historialNarrativo) ? historialNarrativo : [])
+          .slice(-2)
+          .map((t) => String(t || "").slice(0, 800)),
         habilidad,
       });
 
@@ -37,7 +39,9 @@ const DiagnosticoController = {
 
   async evaluarAbierta(req, res) {
     try {
-      const { pregunta, respuestaUsuario, nivel } = req.body;
+      const { nivel } = req.body || {};
+      const pregunta = String((req.body || {}).pregunta || "").slice(0, 800);
+      const respuestaUsuario = String((req.body || {}).respuestaUsuario || "").slice(0, 1000);
 
       if (!pregunta || !respuestaUsuario) {
         return res.status(400).json({ error: "Faltan datos para evaluar" });
@@ -89,9 +93,16 @@ const DiagnosticoController = {
 
   async finalizar(req, res) {
     try {
-      const { historial } = req.body;
+      // Cada turno se limpia: habilidad conocida y puntaje entre 0 y 100, para que nadie se ponga C2 a mano
+      const historial = (Array.isArray((req.body || {}).historial) ? req.body.historial : [])
+        .slice(0, 40)
+        .filter((t) => t && HABILIDADES.includes(t.habilidad))
+        .map((t) => ({
+          habilidad: t.habilidad,
+          puntuacion: Math.max(0, Math.min(100, Number(t.puntuacion) || 0)),
+        }));
 
-      if (!Array.isArray(historial) || historial.length === 0) {
+      if (historial.length === 0) {
         return res.status(400).json({ error: "Historial vacío" });
       }
 

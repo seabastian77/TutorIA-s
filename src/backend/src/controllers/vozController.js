@@ -23,16 +23,23 @@ const VozController = {
 
   async responder(req, res) {
     try {
-      const { mensajeUsuario, historial, nivel } = req.body;
+      const { historial, nivel } = req.body || {};
+      const mensajeUsuario = typeof (req.body || {}).mensajeUsuario === "string" ? req.body.mensajeUsuario.slice(0, 500) : "";
 
-      if (!mensajeUsuario || !mensajeUsuario.trim()) {
+      if (!mensajeUsuario.trim()) {
         return res.status(400).json({ error: "No llegó ningún mensaje" });
       }
 
-      const nivelUsuario = nivel || req.usuario.nivel_mcer || "B1";
+      const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
+      const nivelUsuario = NIVELES.includes(nivel) ? nivel : req.usuario.nivel_mcer || "B1";
+
+      // Solo los últimos turnos y cortos: la conversación sigue igual y la IA no recibe textos gigantes
+      const historialCorto = (Array.isArray(historial) ? historial : [])
+        .slice(-12)
+        .map((t) => ({ ...t, texto: String((t && t.texto) || "").slice(0, 500) }));
 
       const resultado = await generarRespuestaConversacion({
-        historial: historial || [],
+        historial: historialCorto,
         mensajeUsuario,
         nivel: nivelUsuario,
       });
