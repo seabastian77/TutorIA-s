@@ -58,6 +58,18 @@ app.use((req, res, next) => {
 
 // Railway pone un proxy delante: sin esto todas las peticiones parecerían venir de la misma IP
 app.set("trust proxy", 1);
+app.disable("x-powered-by");
+
+// Cabeceras básicas de seguridad para una API que solo responde JSON
+app.use((req, res, next) => {
+  res.set({
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Cross-Origin-Resource-Policy": "cross-origin",
+  });
+  next();
+});
 
 app.use(express.json({ limit: "64kb" }));
 
