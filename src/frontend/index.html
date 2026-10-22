@@ -314,7 +314,7 @@
             <path class="ic-onda ic-onda-2" d="M19.6 5.4a6.2 6.2 0 0 1 0 8.6" />
           </svg></span></span>
           <span class="modulo-titulo">Talk to the AI</span>
-          <span class="modulo-nota">Speak out loud, corrected in real time</span>
+          <span class="modulo-nota">Video tutoring with Numi, your AI teacher</span>
         </button>
         <button id="btn-roleplay" class="modulo btn-roleplay" type="button">
           <span class="modulo-cabeza"><span class="modulo-icono"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -525,22 +525,72 @@
   <div id="vista-voz" class="pantalla-principal oculto" data-seccion="Practice">
     <header class="cabecera-modulo">
       <h2>Talk to the AI</h2>
-      <p>Press the microphone and speak. You get corrections while you talk.</p>
+      <p>A face-to-face session with Numi, your AI tutor. Ask about English, then answer out loud.</p>
     </header>
 
-    <div class="tarjeta-voz">
-      <div id="voz-aviso-navegador" class="voz-aviso oculto">
-        Your browser doesn't support voice recognition. Try Google Chrome or Microsoft Edge on desktop.
-      </div>
+    <div id="voz-aviso-navegador" class="voz-aviso oculto">
+      Your browser can't hear your voice. You can still type your questions, or open TutorIA's in Google Chrome or Microsoft Edge to talk.
+    </div>
 
-      <div id="voz-chat" class="voz-chat"></div>
+    <div class="tutoria">
+      <section id="tutoria-escenario" class="tutoria-escenario" data-estado="listo" aria-label="Video tutoring with Numi">
+        <div id="tutoria-avatar" class="tutoria-avatar"></div>
+        <video id="tutoria-video" class="tutoria-video oculto" autoplay playsinline></video>
+        <audio id="tutoria-audio" autoplay></audio>
 
-      <div class="voz-controles">
-        <button id="btn-mic" class="btn-mic">
+        <div class="tutoria-barra">
+          <span class="tutoria-nombre"><span class="tutoria-punto" aria-hidden="true"></span>Numi · English tutor</span>
+          <span id="tutoria-modo" class="tutoria-modo" title="">Demo avatar</span>
+          <span id="tutoria-tiempo" class="tutoria-tiempo" aria-label="Session time">00:00</span>
+        </div>
+
+        <div class="tutoria-estado" role="status" aria-live="polite">
+          <span class="tutoria-estado-icono" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span id="tutoria-estado-texto">Ready</span>
+        </div>
+
+        <p id="tutoria-subtitulo" class="tutoria-subtitulo oculto"></p>
+
+        <div id="tutoria-portada" class="tutoria-portada">
+          <p class="tutoria-portada-ceja">Video tutoring</p>
+          <h3>Meet Numi, your English tutor</h3>
+          <p>Ask about grammar, words or your homework, and practise speaking out loud. She corrects you as you go.</p>
+          <button id="btn-iniciar-tutoria" class="btn-principal" type="button">Start session</button>
+          <p class="tutoria-portada-nota">Your browser will ask for the microphone. Headphones help her hear you better.</p>
+        </div>
+      </section>
+
+      <div class="tutoria-controles">
+        <button id="btn-mic" class="btn-mic" type="button" aria-label="Talk to Numi" disabled>
           <i class="fa-solid fa-microphone"></i>
         </button>
-        <p id="voz-estado" class="voz-estado">Press the microphone and start talking</p>
+        <p id="voz-estado" class="voz-estado">Start the session to talk with Numi</p>
+        <div class="tutoria-acciones">
+          <label class="tutoria-interruptor">
+            <input type="checkbox" id="tutoria-auto" checked />
+            <span>Hands-free</span>
+          </label>
+          <button id="btn-terminar-tutoria" class="btn-secundario" type="button" disabled><i class="fa-solid fa-xmark"></i>End session</button>
+        </div>
       </div>
+
+      <aside class="tutoria-panel" aria-label="Conversation">
+        <div class="tutoria-panel-cabeza">
+          <h3>Conversation</h3>
+          <p>Your words, her answers and her tips</p>
+        </div>
+        <div id="voz-chat" class="voz-chat tutoria-chat" aria-live="polite"></div>
+        <div id="tutoria-sugerencias" class="tutoria-sugerencias" aria-label="Question ideas">
+          <button type="button" class="tutoria-chip">Explain the present perfect</button>
+          <button type="button" class="tutoria-chip">How do I introduce myself?</button>
+          <button type="button" class="tutoria-chip">Help me prepare for a job interview</button>
+          <button type="button" class="tutoria-chip">Is this right: I go to the park yesterday</button>
+        </div>
+        <form id="tutoria-form" class="tutoria-form">
+          <input id="tutoria-texto" type="text" maxlength="500" autocomplete="off" placeholder="Type a question for Numi..." aria-label="Type a question for Numi" disabled />
+          <button type="submit" class="tutoria-enviar" aria-label="Send" disabled><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </aside>
     </div>
     <button id="btn-salir-voz" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
@@ -1119,6 +1169,8 @@
   <script src="src/services/practicaApi.js"></script>
   <script src="src/services/usuarioApi.js"></script>
   <script src="src/services/vozApi.js"></script>
+  <script src="src/services/avatarApi.js"></script>
+  <script src="src/services/avatarSimli.js"></script>
   <script src="src/services/escenaApi.js"></script>
   <script src="src/services/vocabularioApi.js"></script>
   <script src="src/services/logrosApi.js"></script>
@@ -1135,6 +1187,8 @@
   <script src="src/components/pruebaNivel.js"></script>
   <script src="src/components/practica.js"></script>
   <script src="src/components/progreso.js"></script>
+  <script src="src/utils/labios.js"></script>
+  <script src="src/components/avatarTutor.js"></script>
   <script src="src/components/voz.js"></script>
   <script src="src/components/escena.js"></script>
   <script src="src/components/vocabulario.js"></script>

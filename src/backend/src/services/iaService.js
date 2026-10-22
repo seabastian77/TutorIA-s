@@ -207,6 +207,47 @@ Responde ÚNICAMENTE con un JSON válido, sin texto adicional, con esta forma ex
   return JSON.parse(completion.choices[0].message.content);
 }
 
+// Tutoría en video: la tutora explica dudas y conversa; lo que dice se lee en voz alta
+
+async function generarRespuestaTutor({ historial, mensajeUsuario, nivel, ayudaEs = true }) {
+  const historialTexto = historial
+    .slice(-8)
+    .map((h) => `${h.rol === "usuario" ? "Student" : "Numi"}: ${h.texto}`)
+    .join("\n");
+
+  const prompt = `You are Numi, a warm and patient private English tutor on a live video call with a Spanish-speaking student at CEFR level ${nivel}.
+The student speaks through a microphone, so the text below is an automatic transcript and may contain recognition mistakes.
+
+Recent conversation:
+${historialTexto || "(the session is just starting)"}
+
+The student just said: "${mensajeUsuario}"
+
+How to answer:
+- If the student asks about English (grammar, vocabulary, pronunciation, phrases, exams, writing), explain it clearly with one short example.
+- If the student asks about another school subject, give a brief, simple explanation in English and turn it into language practice.
+- Otherwise keep a natural conversation going.
+- Use vocabulary and grammar suited to level ${nivel}.
+- Your answer will be read aloud by a voice: plain spoken English only, no lists, no markdown, no emojis, no Spanish. At most 60 words.
+- End with one short question that invites the student to keep talking.
+
+If the student made a clear grammar or vocabulary mistake, write a short note about it ${ayudaEs ? "IN SPANISH" : "in simple English"}, showing the correct form. Otherwise use null.
+
+Reply ONLY with valid JSON, no extra text, in this exact shape:
+{
+  "respuesta": "what you say out loud",
+  "correccion": "short note about the student's mistake, or null"
+}`;
+
+  const completion = await groq.chat.completions.create({
+    model: MODELO,
+    messages: [{ role: "user", content: prompt }],
+    response_format: { type: "json_object" },
+  });
+
+  return JSON.parse(completion.choices[0].message.content);
+}
+
 // Modo escena: guiones originales generados por IA
 
 async function generarEscenaGuion({ nivel }) {
@@ -300,6 +341,7 @@ module.exports = {
   evaluarRespuestaAbierta,
   generarResumenFinal,
   generarRespuestaConversacion,
+  generarRespuestaTutor,
   generarEscenaGuion,
   evaluarLineaEscena,
   extraerPalabraVocabulario,

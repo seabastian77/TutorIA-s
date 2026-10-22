@@ -4890,3 +4890,313 @@ button,
   .dialogo-politica { width: 100vw; height: 100dvh; max-width: none; max-height: none; border-radius: 0; }
   .dialogo-politica-barra a { display: none; }
 }
+
+/* TUTORÍA EN VIDEO (Talk to the AI) */
+
+.tutoria {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  grid-template-areas: "escenario panel" "controles panel";
+  gap: 18px 22px;
+  align-items: start;
+}
+
+.tutoria-escenario {
+  grid-area: escenario;
+  position: relative;
+  aspect-ratio: 16 / 11;
+  min-height: 340px;
+  border-radius: var(--radio);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 42%, rgb(20 184 166 / 0.28), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 110%, rgb(245 179 1 / 0.10), transparent 70%),
+    var(--marca-fondo);
+  box-shadow: var(--sombra-2);
+  color: var(--marca-tinta);
+}
+
+/* Un borde de color dice de un vistazo si Numi escucha, piensa o habla */
+.tutoria-escenario::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 0 transparent;
+  transition: box-shadow 0.3s ease;
+}
+
+.tutoria-escenario[data-estado="escuchando"]::after { box-shadow: inset 0 0 0 4px #fb7185; }
+.tutoria-escenario[data-estado="pensando"]::after { box-shadow: inset 0 0 0 4px #f5b301; }
+.tutoria-escenario[data-estado="hablando"]::after { box-shadow: inset 0 0 0 4px #2dd4bf; }
+
+.tutoria-avatar,
+.tutoria-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tutoria-avatar svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.tutoria-video { object-fit: cover; background: #000; }
+
+.tutoria-barra {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.tutoria-nombre,
+.tutoria-modo,
+.tutoria-tiempo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 28px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: rgb(4 12 26 / 0.55);
+  border: 1px solid rgb(234 240 250 / 0.14);
+  backdrop-filter: blur(6px);
+}
+
+.tutoria-punto { width: 8px; height: 8px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 3px rgb(52 211 153 / 0.25); }
+
+.tutoria-modo { color: #fcd34d; border-color: rgb(245 179 1 / 0.45); }
+.tutoria-modo.tutoria-modo-real { color: #6ee7b7; border-color: rgb(52 211 153 / 0.5); }
+
+.tutoria-tiempo { margin-left: auto; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.tutoria-estado {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  padding: 0 15px 0 12px;
+  border-radius: 999px;
+  background: rgb(4 12 26 / 0.66);
+  border: 1px solid rgb(234 240 250 / 0.16);
+  backdrop-filter: blur(6px);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tutoria-estado-icono { display: inline-flex; align-items: center; gap: 3px; height: 16px; }
+.tutoria-estado-icono i { width: 3px; height: 6px; border-radius: 2px; background: var(--marca-tinta); opacity: 0.6; }
+
+.tutoria-escenario[data-estado="escuchando"] .tutoria-estado-icono i { background: #ff8fa8; opacity: 1; animation: tutoria-onda 0.9s ease-in-out infinite; }
+.tutoria-escenario[data-estado="hablando"] .tutoria-estado-icono i { background: #5eead4; opacity: 1; animation: tutoria-onda 0.7s ease-in-out infinite; }
+.tutoria-escenario[data-estado="pensando"] .tutoria-estado-icono i { width: 5px; height: 5px; border-radius: 50%; background: #fcd34d; opacity: 1; animation: tutoria-punto 1.2s ease-in-out infinite; }
+.tutoria-estado-icono i:nth-child(2) { animation-delay: 0.15s !important; }
+.tutoria-estado-icono i:nth-child(3) { animation-delay: 0.3s !important; }
+.tutoria-estado-icono i:nth-child(4) { animation-delay: 0.45s !important; }
+.tutoria-escenario[data-estado="pensando"] .tutoria-estado-icono i:nth-child(4) { display: none; }
+
+@keyframes tutoria-onda { 0%, 100% { height: 5px; } 50% { height: 16px; } }
+@keyframes tutoria-punto { 0%, 100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-4px); opacity: 1; } }
+
+.tutoria-subtitulo {
+  position: absolute;
+  left: 50%;
+  bottom: 62px;
+  transform: translateX(-50%);
+  width: min(88%, 640px);
+  padding: 10px 16px;
+  border-radius: var(--radio-chico);
+  background: rgb(4 12 26 / 0.74);
+  color: #f8fafc;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.45;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tutoria-subtitulo[data-quien="estudiante"] { color: #ffd5de; font-style: italic; }
+
+.tutoria-portada {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  background: linear-gradient(180deg, rgb(11 27 54 / 0.35), rgb(11 27 54 / 0.88) 62%);
+}
+
+.tutoria-portada-ceja { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--marca-realce); }
+.tutoria-portada h3 { font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+.tutoria-portada p { max-width: 440px; font-size: 15px; line-height: 1.55; color: rgb(234 240 250 / 0.82); }
+.tutoria-portada .btn-principal { width: auto; min-width: 200px; margin-top: 8px; }
+.tutoria-portada .tutoria-portada-nota { font-size: 12px; color: rgb(234 240 250 / 0.6); }
+
+.tutoria-controles {
+  grid-area: controles;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: var(--radio);
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra-1);
+}
+
+.tutoria-controles .btn-mic { width: 64px; height: 64px; }
+.tutoria-controles .voz-estado { text-align: left; text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 600; color: var(--gris); }
+.btn-mic:disabled { opacity: 0.45; cursor: not-allowed; transform: none; filter: none; }
+
+.tutoria-acciones { display: flex; align-items: center; gap: 12px; }
+.tutoria-acciones .btn-secundario { min-height: 40px; padding: 0 16px; }
+.tutoria-acciones .btn-secundario:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.tutoria-interruptor { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--gris); cursor: pointer; white-space: nowrap; }
+.tutoria-interruptor input { width: 16px; height: 16px; accent-color: var(--primario); }
+
+.tutoria-panel {
+  grid-area: panel;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* El panel no estira la rejilla: toma el alto del video y los controles, y la charla se desplaza dentro */
+  height: 0;
+  min-height: 100%;
+  padding: 18px;
+  border-radius: var(--radio);
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra-1);
+}
+
+.tutoria-panel-cabeza h3 { font-size: 16px; font-weight: 800; color: var(--blanco); }
+.tutoria-panel-cabeza p { font-size: 13px; color: var(--gris-tenue); margin-top: 2px; }
+
+.tutoria-chat { flex: 1 1 auto; min-height: 0; max-height: none; margin-bottom: 0; }
+.tutoria-chat .voz-burbuja { max-width: 92%; font-size: 15px; padding: 11px 14px; }
+.voz-burbuja-ia { color: var(--blanco); }
+
+.voz-burbuja-aviso {
+  align-self: stretch;
+  background: var(--amarillo-tinta);
+  border: 1px solid var(--amarillo-borde);
+  color: var(--amarillo);
+  font-size: 13px;
+}
+
+.tutoria-chat:empty::before {
+  content: "Start the session and say hi to Numi. Everything you talk about shows up here.";
+  margin: auto;
+  max-width: 240px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gris-tenue);
+}
+
+.tutoria-panel-cabeza, .tutoria-sugerencias, .tutoria-form { flex-shrink: 0; }
+.tutoria-sugerencias { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+
+.tutoria-chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--primario-borde);
+  background: var(--primario-tinta);
+  color: var(--primario);
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 600;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.16s ease, transform 0.14s ease;
+}
+
+.tutoria-chip:hover:not(:disabled) { border-color: var(--primario); transform: translateY(-1px); }
+.tutoria-chip:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.tutoria-form { display: flex; gap: 8px; }
+
+.tutoria-form input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--borde-campo);
+  background: var(--panel);
+  color: var(--blanco);
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+
+.tutoria-form input:focus { outline: none; border-color: var(--primario); box-shadow: 0 0 0 4px var(--primario-tinta); }
+.tutoria-form input:disabled { opacity: 0.6; }
+
+.tutoria-enviar {
+  flex: 0 0 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primario);
+  color: var(--primario-tinta);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.tutoria-enviar:hover:not(:disabled) { background: var(--primario-hover); }
+.tutoria-enviar:disabled { opacity: 0.45; cursor: not-allowed; }
+.tutoria-enviar .icono { width: 18px; height: 18px; }
+
+:root[data-tema="oscuro"] .tutoria-enviar,
+:root[data-tema="oscuro"] .tutoria-controles .btn-mic:not(.escuchando) { color: #08121f; }
+
+@media (max-width: 960px) {
+  .tutoria {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "escenario" "controles" "panel";
+  }
+  .tutoria-panel { height: auto; min-height: 0; }
+  .tutoria-chat { min-height: 160px; max-height: 360px; }
+}
+
+@media (max-width: 620px) {
+  .tutoria-escenario { aspect-ratio: 4 / 5; min-height: 0; border-radius: var(--radio-chico); }
+  .tutoria-barra { top: 10px; left: 10px; right: 10px; gap: 6px; font-size: 11px; }
+  .tutoria-nombre, .tutoria-modo, .tutoria-tiempo { min-height: 26px; padding: 0 9px; }
+  .tutoria-subtitulo { bottom: 56px; font-size: 14px; width: 92%; }
+  .tutoria-portada p { font-size: 14px; }
+  .tutoria-controles { grid-template-columns: auto 1fr; padding: 12px 14px; gap: 12px; }
+  .tutoria-acciones { grid-column: 1 / -1; justify-content: flex-start; gap: 18px; }
+  .tutoria-panel { padding: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tutoria-escenario::after { transition: none; }
+  .tutoria-estado-icono i { animation: none !important; }
+  .tutoria-chip { transition: none; }
+}

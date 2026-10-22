@@ -1,4 +1,5 @@
-const { generarRespuestaConversacion } = require("../services/iaService");
+const { generarRespuestaConversacion, generarRespuestaTutor } = require("../services/iaService");
+const { obtenerPerfil } = require("../utils/perfil");
 const { registrarActividad } = require("../utils/gamificacion");
 const pool = require("../config/db");
 const { reportarError } = require("../utils/errores");
@@ -38,11 +39,23 @@ const VozController = {
         .slice(-12)
         .map((t) => ({ ...t, texto: String((t && t.texto) || "").slice(0, 500) }));
 
-      const resultado = await generarRespuestaConversacion({
-        historial: historialCorto,
-        mensajeUsuario,
-        nivel: nivelUsuario,
-      });
+      // La tutoría en video explica dudas; sin modo sigue la conversación de siempre
+      const modoTutor = (req.body || {}).modo === "tutor";
+      const resultado = modoTutor
+        ? await generarRespuestaTutor({
+          historial: historialCorto,
+          mensajeUsuario,
+          nivel: nivelUsuario,
+          ayudaEs: (await obtenerPerfil(req.usuario.id)).ayudaEs,
+        })
+        : await generarRespuestaConversacion({
+          historial: historialCorto,
+          mensajeUsuario,
+          nivel: nivelUsuario,
+        });
+      if (!resultado || typeof resultado.respuesta !== "string" || !resultado.respuesta.trim()) {
+        throw new Error("La IA no devolvió una respuesta");
+      }
 
       await pool.query(
         `INSERT INTO conversaciones (usuario_id, mensaje_usuario, respuesta_ia, correcciones)

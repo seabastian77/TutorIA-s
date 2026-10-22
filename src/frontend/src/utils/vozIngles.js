@@ -119,6 +119,11 @@ function usarVozServidor(idiomas) {
   idiomasDelServidor = Array.isArray(idiomas) ? idiomas.map((i) => String(i).slice(0, 2)) : [];
 }
 
+/** Dice si el servidor tiene voz propia para ese idioma. */
+function servidorLee(idioma = "en") {
+  return idiomasDelServidor.includes(idioma === "es" ? "es" : "en");
+}
+
 /** Lo de antes: con Google encendido el servidor lee inglés y español. */
 function usarVozGoogle(disponible) {
   usarVozServidor(disponible ? ["en", "es"] : []);
@@ -153,8 +158,8 @@ function esperarVoces(maximoMs = 1500) {
   });
 }
 
-/** Lee con la voz del navegador: es el respaldo de siempre. */
-async function leerConElNavegador(texto, idioma, velocidad, turno = turnoVoz) {
+/** Lee con la voz del navegador: es el respaldo de siempre. Los eventos opcionales avisan inicio, palabras y fin. */
+async function leerConElNavegador(texto, idioma, velocidad, turno = turnoVoz, eventos = null) {
   if (typeof window === "undefined" || !window.speechSynthesis) return false;
   await esperarVoces();
   if (turno !== turnoVoz) return false;
@@ -162,6 +167,12 @@ async function leerConElNavegador(texto, idioma, velocidad, turno = turnoVoz) {
   mensaje.lang = idioma === "es" ? "es-MX" : "en-US";
   mensaje.rate = velocidad;
   prepararVoz(mensaje, null, idioma);
+  if (eventos) {
+    mensaje.onstart = eventos.alEmpezar || null;
+    mensaje.onboundary = eventos.alPalabra || null;
+    mensaje.onend = eventos.alTerminar || null;
+    mensaje.onerror = eventos.alTerminar || null;
+  }
   window.speechSynthesis.speak(mensaje);
   return true;
 }
@@ -201,7 +212,7 @@ async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
 
 const VozIngles = {
   elegirVoz, elegirVozIngles, prepararVoz, puntajeDeVoz, recordarVoces, esperarVoces,
-  leer, callar, usarVozServidor, usarVozGoogle, leerConElNavegador, RITMO_INGLES,
+  leer, callar, usarVozServidor, usarVozGoogle, leerConElNavegador, servidorLee, RITMO_INGLES,
 };
 
 if (typeof window !== "undefined") {

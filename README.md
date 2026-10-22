@@ -17,8 +17,11 @@ te da tu nivel MCER (A1 a b2) y una puntuación por habilidad.
 estudiar hoy entre 18 temas: gramática, vocabulario o situaciones de la vida
 real. La dificultad sube cuando aciertas y baja cuando fallas.
 
-**Conversación por voz.** Hablas al micrófono y la IA te responde y te corrige
-en tiempo real.
+**Tutoría en video (Talk to the AI).** Numi, una tutora animada, te escucha por
+el micrófono, te explica, te corrige y te responde en voz alta moviendo los
+labios, parpadeando y gesticulando. Sin configurar nada usa su avatar de
+demostración, que corre en el navegador; con un proveedor de video (Simli)
+pasa a un avatar realista en vivo.
 
 **Situaciones reales.** Cinco escenarios de roleplay: pedir un café, pasar
 migración en el aeropuerto, una entrevista de trabajo, el check-in de un hotel
@@ -110,7 +113,14 @@ JWT_SECRET=una_clave_larga_y_secreta
 GROQ_API_KEY=tu_clave_de_groq
 SENTRY_DSN=          # opcional: sin él, el backend corre igual
 PEXELS_API_KEY=      # opcional: sin él, los ejercicios con imagen no aparecen
+AVATAR_PROVEEDOR=    # opcional: "simli" para el avatar en video real
+SIMLI_API_KEY=       # opcional: clave de Simli, solo vive en el backend
+SIMLI_FACE_ID=       # opcional: la cara del avatar creada en Simli
+AVATAR_MAX_SEGUNDOS= # opcional: tope de cada sesión de video (600 por defecto)
 ```
+
+Si falta alguna de las tres primeras variables del avatar, Talk to the AI sigue
+funcionando con el avatar de demostración y lo dice en pantalla ("Demo avatar").
 
 No hace falta crear las tablas a mano. Al arrancar, el backend corre solo
 `schema.sql` y todas las migraciones de `src/backend/src/config/`:
