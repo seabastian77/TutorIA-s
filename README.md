@@ -122,6 +122,15 @@ AVATAR_MAX_SEGUNDOS= # opcional: tope de cada sesión de video (600 por defecto)
 Si falta alguna de las tres primeras variables del avatar, Talk to the AI sigue
 funcionando con el avatar de demostración y lo dice en pantalla ("Demo avatar").
 
+### Videos de Numi (opcional)
+
+Si en `src/frontend/assets/numi/` hay videos cortos de Numi, el avatar de
+demostración los usa en vez de la foto animada y los alterna según lo que esté
+pasando. Los nombres que reconoce son `reposo.mp4`, `escucha.mp4`, `piensa.mp4`
+y `habla-1.mp4` a `habla-4.mp4` (también `reposo-2.mp4` y `escucha-2.mp4`). Con
+`reposo.mp4` y al menos un `habla-N.mp4` ya funciona; los que falten se cubren
+con el de reposo. Sin videos, Numi sigue con su foto animada.
+
 No hace falta crear las tablas a mano. Al arrancar, el backend corre solo
 `schema.sql` y todas las migraciones de `src/backend/src/config/`:
 

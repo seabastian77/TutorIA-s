@@ -1,4 +1,4 @@
-// Avatar animado de Numi sobre su retrato: parpadea, mueve la cabeza y abre la boca al ritmo de su voz
+// Avatar animado de Numi: usa sus videos si existen y, si no, anima su retrato (parpadeo, cabeza y boca al ritmo de su voz)
 
 const AvatarTutor = (() => {
   const RETRATO = "assets/numi.webp";
@@ -98,6 +98,7 @@ const AvatarTutor = (() => {
     let vivo = true;
     let ancho = 0;
     let alto = 0;
+    let conClips = false; // con videos de Numi la foto animada deja de pintarse
 
     // Fuente de la boca: audio medido, voz del navegador estimada, o nada
     let analizador = null;
@@ -312,7 +313,7 @@ const AvatarTutor = (() => {
         if (k === "abierta") actual.abierta = Labios.suavizar(actual.abierta, objetivo.abierta, 0.6, 0.3);
         else actual[k] = mezclar(actual[k], objetivo[k], 0.07);
       });
-      pintar();
+      if (!conClips) pintar();
       cuadro = requestAnimationFrame(cuadroAnimacion);
     }
 
@@ -376,16 +377,19 @@ const AvatarTutor = (() => {
       gesto = null;
       proximoGesto = performance.now() + azar(400, 1200);
       lienzo.dataset.estado = nuevo;
+      if (clips) clips.estado(nuevo);
     }
 
     function destruir() {
       vivo = false;
       cancelAnimationFrame(cuadro);
       callar();
+      if (clips) clips.destruir();
       if (observador) observador.disconnect();
       else window.removeEventListener("resize", medir);
     }
 
+    const clips = window.AvatarClips ? AvatarClips.montar(contenedor, { alActivar: () => { conClips = true; } }) : null;
     cuadro = requestAnimationFrame(cuadroAnimacion);
 
     return {
