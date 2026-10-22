@@ -4940,7 +4940,7 @@ button,
   height: 100%;
 }
 
-.tutoria-avatar svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.tutoria-avatar .avatar-lienzo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .tutoria-video { object-fit: cover; background: #000; }
 
 .tutoria-barra {
