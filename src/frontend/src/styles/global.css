@@ -581,8 +581,12 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   font-size: 16px;
   text-align: left;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: border-color 0.16s ease, background 0.16s ease;
 }
+
+.nivel-opciones button:active { transform: scale(0.99); }
 
 .nivel-opciones button:hover {
   border-color: var(--blanco);
@@ -1770,9 +1774,19 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   line-height: 1.5;
 }
 
-.opcion-nivel.elegida {
-  border-color: var(--amarillo);
-  background: var(--amarillo-tinta);
+/* La opción elegida gana incluso con el mouse encima, para que se marque al instante */
+.nivel-opciones button.elegida:not(.correcta):not(.incorrecta),
+.nivel-opciones button.elegida:not(.correcta):not(.incorrecta):hover {
+  border-color: var(--primario);
+  background: var(--primario-tinta);
+  box-shadow: inset 0 0 0 1px var(--primario);
+  transition: none;
+}
+
+.nivel-opciones button.elegida:not(.correcta):not(.incorrecta)::before {
+  border-color: var(--primario);
+  background: var(--primario);
+  box-shadow: inset 0 0 0 4px var(--panel);
 }
 
 .opcion-nivel.correcta {
