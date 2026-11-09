@@ -1,33 +1,32 @@
-// Tuti en 3D: un solo modelo con poses, expresiones, accesorios y animaciones
+// Tuti en 3D: un solo modelo tierno con poses, expresiones, accesorios y animaciones
 import * as THREE from "../vendor/three.module.min.js";
 
 const COLORES = {
-  verde: 0x22b35b,
-  verdeOscuro: 0x15803d,
-  verdeClaro: 0x4ade80,
-  crema: 0xfff0b3,
-  mejilla: 0xffd166,
-  pico: 0xffb020,
-  picoOscuro: 0xf08c00,
-  pata: 0xf59e0b,
-  ojo: 0xffffff,
-  iris: 0x3b2a1a,
-  pupila: 0x0b0f14,
-  ceja: 0x14532d,
+  cuerpo: 0x34b866,
+  ala: 0x23964f,
+  copete: 0x6fd690,
+  barriga: 0xffe8b5,
+  pico: 0xffb52e,
+  picoBajo: 0xf39a12,
+  pata: 0xffa928,
+  mejilla: 0xff92a5,
+  ojo: 0x1c1512,
   oro: 0xf5b301,
   tinta: 0x0b3d24,
+  verdeOscuro: 0x15803d,
+  verdeClaro: 0x4ade80,
 };
 
 /** Material de vinilo suave: el acabado de un juguete de diseño. */
 function vinilo(color, extra = {}) {
   return new THREE.MeshPhysicalMaterial({
     color,
-    roughness: 0.42,
+    roughness: 0.38,
     metalness: 0,
-    clearcoat: 0.35,
-    clearcoatRoughness: 0.35,
-    sheen: 0.4,
-    sheenRoughness: 0.6,
+    clearcoat: 0.5,
+    clearcoatRoughness: 0.28,
+    sheen: 0.35,
+    sheenRoughness: 0.5,
     sheenColor: new THREE.Color(0xffffff),
     ...extra,
   });
@@ -41,53 +40,66 @@ function capsula(radio, largo, material) {
   return new THREE.Mesh(new THREE.CapsuleGeometry(radio, largo, 12, 24), material);
 }
 
-/** Pluma con forma de gota: base ancha y punta redondeada. */
+/** Pluma redondeada: base ancha y punta suave. */
 function pluma(largo, ancho, material) {
   const perfil = [];
-  for (let i = 0; i <= 16; i++) {
-    const t = i / 16;
-    perfil.push(new THREE.Vector2(Math.sin(Math.PI * t) * ancho * (1 - t * 0.55), t * largo));
+  for (let i = 0; i <= 20; i++) {
+    const t = i / 20;
+    perfil.push(new THREE.Vector2(Math.sin(Math.PI * t) * ancho * (1 - t * 0.35), t * largo));
   }
-  return new THREE.Mesh(new THREE.LatheGeometry(perfil, 24), material);
+  return new THREE.Mesh(new THREE.LatheGeometry(perfil, 28), material);
 }
 
-/** Un ojo completo: globo, iris, pupila, brillos y párpado que baja al parpadear. */
-function crearOjo(mat, lado) {
+/** Perfil de huevo para el torno: la cabeza sale de girarlo una vez. */
+function perfilHuevo({ radio, abajo, arriba }) {
+  const puntos = [];
+  for (let i = 0; i <= 64; i++) {
+    const a = -Math.PI / 2 + (Math.PI * i) / 64;
+    puntos.push(new THREE.Vector2(Math.max(radio * Math.cos(a), 0.0001), (a < 0 ? abajo : arriba) * Math.sin(a)));
+  }
+  return puntos;
+}
+
+/** Radio de la cabeza a cierta altura, para pegar las piezas a la superficie. */
+function radioEn(y, f) {
+  const s = Math.max(-1, Math.min(1, y / (y < 0 ? f.abajo : f.arriba)));
+  return f.radio * Math.cos(Math.asin(s));
+}
+
+/** Pone una pieza sobre la cara, mirando hacia afuera. */
+function sobreCara(pieza, f, { y, giro, hundir = 0.04 }) {
+  const r = radioEn(y, f) - hundir;
+  pieza.position.set(Math.sin(giro) * r * f.ancho, y, Math.cos(giro) * r * f.fondo);
+  pieza.rotation.y = giro;
+  return pieza;
+}
+
+/** Ojo tierno: brillante y oscuro, sin blanco alrededor, con dos brillos. */
+function crearOjo(mat, tam) {
   const ojo = new THREE.Group();
-  const globo = esfera(0.3, mat.ojo);
-  globo.scale.set(1, 1.12, 0.85);
-  ojo.add(globo);
+  const forma = new THREE.Group();
+  const globo = esfera(0.2 * tam, mat.ojo, 40);
+  globo.scale.set(1, 1.2, 0.5);
+  forma.add(globo);
 
+  // Los brillos se corren un poco hacia donde mira
   const mirada = new THREE.Group();
-  const iris = esfera(0.17, mat.iris);
-  iris.scale.set(1, 1.1, 0.5);
-  iris.position.z = 0.215;
-  const pupila = esfera(0.1, mat.pupila);
-  pupila.scale.set(1, 1.1, 0.5);
-  pupila.position.z = 0.255;
-  const brillo = esfera(0.055, mat.brillo, 16);
-  brillo.position.set(0.06 * lado, 0.08, 0.3);
-  const brilloChico = esfera(0.026, mat.brillo, 12);
-  brilloChico.position.set(-0.05 * lado, -0.06, 0.3);
-  mirada.add(iris, pupila, brillo, brilloChico);
-  ojo.add(mirada);
+  const brillo = esfera(0.07 * tam, mat.brillo, 20);
+  brillo.scale.set(1, 1, 0.4);
+  brillo.position.set(0.065 * tam, 0.095 * tam, 0.085 * tam);
+  const brilloChico = esfera(0.032 * tam, mat.brillo, 14);
+  brilloChico.scale.set(1, 1, 0.4);
+  brilloChico.position.set(-0.06 * tam, -0.085 * tam, 0.09 * tam);
+  mirada.add(brillo, brilloChico);
+  forma.add(mirada);
+  ojo.add(forma);
 
-  // Párpado: casquete del color del plumaje que gira para cerrar el ojo
-  const parpado = new THREE.Mesh(
-    new THREE.SphereGeometry(0.312, 40, 24, 0, Math.PI * 2, 0, Math.PI * 0.5),
-    mat.cabeza,
-  );
-  parpado.scale.set(1, 1.12, 0.87);
-  parpado.rotation.x = -1.75;
-  ojo.add(parpado);
-
-  // Ojo feliz: un arco que reemplaza el globo cuando Tuti sonríe con los ojos
-  const arco = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.04, 12, 32, Math.PI), mat.pupila);
-  arco.position.z = 0.24;
+  // Ojo feliz: un arco que reemplaza al ojo cuando Tuti sonríe
+  const arco = new THREE.Mesh(new THREE.TorusGeometry(0.14 * tam, 0.035 * tam, 12, 32, Math.PI), mat.ojo);
+  arco.position.z = 0.06 * tam;
   arco.visible = false;
   ojo.add(arco);
-
-  return { ojo, mirada, parpado, globo, arco };
+  return { ojo, forma, mirada, arco };
 }
 
 /** Accesorios que Tuti usa según la actividad. */
@@ -95,36 +107,36 @@ function crearAccesorios(mat) {
   const acc = {};
 
   const birrete = new THREE.Group();
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.46, 0.22, 40), mat.tinta);
-  const tabla = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.06, 1.15), mat.tinta);
-  tabla.position.y = 0.14;
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.44, 0.2, 40), mat.tinta);
+  const tabla = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.06, 1.05), mat.tinta);
+  tabla.position.y = 0.13;
   tabla.rotation.y = Math.PI / 4;
   const boton = esfera(0.05, mat.oro, 16);
-  boton.position.y = 0.19;
-  const cordon = capsula(0.018, 0.42, mat.oro);
-  cordon.position.set(0.38, -0.02, 0.18);
+  boton.position.y = 0.18;
+  const cordon = capsula(0.018, 0.38, mat.oro);
+  cordon.position.set(0.36, -0.02, 0.16);
   cordon.rotation.z = 0.15;
-  const borla = esfera(0.06, mat.oro, 16);
-  borla.position.set(0.41, -0.26, 0.18);
+  const borla = esfera(0.065, mat.oro, 16);
+  borla.position.set(0.39, -0.25, 0.16);
   birrete.add(base, tabla, boton, cordon, borla);
-  birrete.position.set(0, 1.0, -0.05);
-  birrete.rotation.set(-0.12, 0, 0.1);
+  birrete.position.set(0, 0.98, -0.05);
+  birrete.rotation.set(-0.1, 0, 0.12);
   acc.birrete = birrete;
 
   const audifonos = new THREE.Group();
-  const diadema = new THREE.Mesh(new THREE.TorusGeometry(1.14, 0.075, 16, 64, Math.PI), mat.tinta);
-  diadema.position.y = 0.05;
+  const radio = 1.24;
+  const diadema = new THREE.Mesh(new THREE.TorusGeometry(radio, 0.075, 16, 64, Math.PI), mat.tinta);
+  diadema.scale.y = 0.95;
   audifonos.add(diadema);
   for (const lado of [-1, 1]) {
     const copa = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.27, 0.2, 40), mat.tinta);
     copa.rotation.z = Math.PI / 2;
-    copa.position.set(1.14 * lado, 0, 0);
-    const almohada = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.08, 16, 40), mat.verdeClaro);
+    copa.position.set(radio * lado, 0, 0);
+    const almohada = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.08, 16, 40), mat.verdeClaro);
     almohada.rotation.y = Math.PI / 2;
-    almohada.position.set(1.04 * lado, 0, 0);
+    almohada.position.set((radio - 0.1) * lado, 0, 0);
     audifonos.add(copa, almohada);
   }
-  audifonos.position.set(0, -0.02, -0.05);
   acc.audifonos = audifonos;
 
   const libro = new THREE.Group();
@@ -138,9 +150,9 @@ function crearAccesorios(mat) {
   const franja2 = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.05, 0.02), mat.oro);
   franja2.position.set(0.04, -0.02, 0.06);
   libro.add(tapa, hojas, lomo, franja, franja2);
-  libro.position.set(0.05, -1.0, 0.98);
-  libro.rotation.set(-0.15, 0.25, 0.08);
-  libro.scale.setScalar(0.82);
+  libro.position.set(0, -1.05, 1.1);
+  libro.rotation.set(-0.15, 0.2, 0.06);
+  libro.scale.setScalar(0.85);
   acc.libro = libro;
 
   const microfono = new THREE.Group();
@@ -151,7 +163,7 @@ function crearAccesorios(mat) {
   aro.position.y = 0.28;
   aro.rotation.x = Math.PI / 2;
   microfono.add(mango, cabezaMic, aro);
-  microfono.position.set(0.74, -0.62, 0.72);
+  microfono.position.set(0.85, -0.7, 0.85);
   microfono.rotation.set(0.35, 0, -0.42);
   acc.microfono = microfono;
 
@@ -172,8 +184,8 @@ function crearAccesorios(mat) {
     trofeo.add(asa);
   }
   trofeo.add(copaTrofeo, fondo, pie, pedestal, estrella);
-  trofeo.position.set(-1.05, -0.62, 0.6);
-  trofeo.scale.setScalar(1.15);
+  trofeo.position.set(-1.12, -0.7, 0.7);
+  trofeo.scale.setScalar(1.1);
   acc.trofeo = trofeo;
 
   for (const k of Object.keys(acc)) acc[k].visible = false;
@@ -183,157 +195,120 @@ function crearAccesorios(mat) {
 /** Arma el personaje completo y devuelve sus partes animables. */
 function crearTuti() {
   const mat = {
-    cabeza: vinilo(COLORES.verde),
-    cuerpo: vinilo(COLORES.verde),
-    oscuro: vinilo(COLORES.verdeOscuro),
-    verdeClaro: vinilo(COLORES.verdeClaro),
-    verdeOscuro: vinilo(COLORES.verdeOscuro),
-    crema: vinilo(COLORES.crema, { roughness: 0.55, clearcoat: 0.1 }),
-    mejilla: vinilo(COLORES.mejilla, { roughness: 0.6, clearcoat: 0 }),
-    pico: vinilo(COLORES.pico, { roughness: 0.3, clearcoat: 0.6 }),
-    picoOscuro: vinilo(COLORES.picoOscuro, { roughness: 0.35 }),
+    cuerpo: vinilo(COLORES.cuerpo),
+    ala: vinilo(COLORES.ala),
+    copete: vinilo(COLORES.copete),
+    // Un toque de emisión compensa el tono fílmico, que apaga los cremas
+    barriga: vinilo(COLORES.barriga, { roughness: 0.55, clearcoat: 0.2, emissive: COLORES.barriga, emissiveIntensity: 0.14 }),
+    pico: vinilo(COLORES.pico, { roughness: 0.3, clearcoat: 0.7 }),
+    picoBajo: vinilo(COLORES.picoBajo, { roughness: 0.35 }),
     pata: vinilo(COLORES.pata, { roughness: 0.4 }),
-    ojo: new THREE.MeshPhysicalMaterial({ color: COLORES.ojo, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.05 }),
-    iris: new THREE.MeshPhysicalMaterial({ color: COLORES.iris, roughness: 0.25, clearcoat: 1 }),
-    pupila: new THREE.MeshStandardMaterial({ color: COLORES.pupila, roughness: 0.2 }),
+    mejilla: new THREE.MeshStandardMaterial({ color: COLORES.mejilla, roughness: 0.7 }),
+    ojo: new THREE.MeshPhysicalMaterial({ color: COLORES.ojo, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.04 }),
     brillo: new THREE.MeshBasicMaterial({ color: 0xffffff }),
-    ceja: vinilo(COLORES.ceja, { roughness: 0.6 }),
     oro: new THREE.MeshPhysicalMaterial({ color: COLORES.oro, metalness: 0.25, roughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.15 }),
     tinta: vinilo(COLORES.tinta, { roughness: 0.5 }),
+    verdeOscuro: vinilo(COLORES.verdeOscuro),
+    verdeClaro: vinilo(COLORES.verdeClaro),
     papel: new THREE.MeshStandardMaterial({ color: 0xfffdf5, roughness: 0.9 }),
     metal: new THREE.MeshPhysicalMaterial({ color: 0xb8c2cc, metalness: 0.3, roughness: 0.35, clearcoat: 0.6 }),
   };
 
   const tuti = new THREE.Group();
 
-  // Cuerpo en forma de huevo con barriga crema
+  // Cuerpo chico con barriga crema
   const cuerpo = new THREE.Group();
-  const torso = esfera(0.86, mat.cuerpo, 64);
-  torso.scale.set(1, 1.0, 0.92);
-  const barriga = esfera(0.66, mat.crema, 48);
-  barriga.scale.set(0.95, 1.08, 0.55);
-  barriga.position.set(0, -0.02, 0.5);
+  const torso = esfera(0.92, mat.cuerpo, 64);
+  torso.scale.set(1.02, 0.98, 0.94);
+  const barriga = esfera(0.7, mat.barriga, 48);
+  barriga.scale.set(0.95, 1.05, 0.4);
+  barriga.position.set(0, -0.08, 0.6);
   cuerpo.add(torso, barriga);
-  cuerpo.position.y = -0.98;
+  cuerpo.position.y = -1.0;
   tuti.add(cuerpo);
 
-  // Alas que salen del hombro: el pivote está arriba para poder saludar
+  // Cabeza grande hecha en torno, con su propio pivote para girar
+  const cabeza = new THREE.Group();
+  cabeza.position.y = 0.32;
+  const f = { radio: 1.14, abajo: 1.06, arriba: 1.1, ancho: 1.04, fondo: 0.94 };
+  const craneo = new THREE.Mesh(new THREE.LatheGeometry(perfilHuevo(f), 96), mat.cuerpo);
+  craneo.scale.set(f.ancho, 1, f.fondo);
+  cabeza.add(craneo);
+
+  const ojos = [];
+  for (const lado of [-1, 1]) {
+    const o = crearOjo(mat, 1.05);
+    cabeza.add(sobreCara(o.ojo, f, { y: 0.06, giro: 0.4 * lado, hundir: 0.03 }));
+    ojos.push(o);
+  }
+
+  for (const lado of [-1, 1]) {
+    const mejilla = esfera(0.16, mat.mejilla, 28);
+    mejilla.scale.set(1.25, 0.72, 0.28);
+    cabeza.add(sobreCara(mejilla, f, { y: -0.27, giro: 0.7 * lado, hundir: 0.025 }));
+  }
+
+  // Pico chiquito de dos partes, para hablar y sonreír
+  const pico = new THREE.Group();
+  const picoArriba = esfera(0.16, mat.pico, 32);
+  picoArriba.scale.set(1.25, 0.72, 1.05);
+  const picoAbajo = esfera(0.105, mat.picoBajo, 24);
+  picoAbajo.scale.set(1.15, 0.6, 0.9);
+  picoAbajo.position.set(0, -0.09, -0.02);
+  pico.add(picoAbajo, picoArriba);
+  cabeza.add(sobreCara(pico, f, { y: -0.18, giro: 0, hundir: -0.06 }));
+
+  // Copete de hojitas
+  const copete = new THREE.Group();
+  [[-0.14, 0.38, 0.5, mat.copete], [0.02, 0.5, -0.05, mat.cuerpo], [0.16, 0.34, -0.55, mat.copete]].forEach(([x, largo, giro, m]) => {
+    const p = pluma(largo, 0.15, m);
+    p.position.set(x, 0, 0);
+    p.rotation.set(-0.3, 0, giro);
+    copete.add(p);
+  });
+  copete.position.set(0, 1.0, 0.05);
+  cabeza.add(copete);
+  tuti.add(cabeza);
+
+  // Alitas con el pivote arriba para poder saludar
   const alas = [];
   for (const lado of [-1, 1]) {
     const pivote = new THREE.Group();
-    pivote.position.set(0.76 * lado, -0.66, 0.05);
-    const ala = esfera(0.42, mat.oscuro, 40);
-    ala.scale.set(0.42, 1, 0.75);
-    ala.position.set(0.12 * lado, -0.38, 0);
-    ala.rotation.z = 0.25 * lado;
-    const punta = pluma(0.38, 0.13, mat.oscuro);
-    punta.rotation.z = Math.PI + 0.35 * lado;
-    punta.position.set(0.18 * lado, -0.72, -0.02);
-    pivote.add(ala, punta);
-    pivote.rotation.z = 0.12 * lado;
+    pivote.position.set(0.8 * lado, -0.72, 0.05);
+    const ala = esfera(0.4, mat.ala, 40);
+    ala.scale.set(0.36, 0.95, 0.68);
+    ala.position.set(0.06 * lado, -0.32, 0);
+    ala.rotation.z = 0.2 * lado;
+    pivote.add(ala);
+    pivote.rotation.z = 0.1 * lado;
     alas.push(pivote);
     tuti.add(pivote);
   }
 
-  // Patas
+  // Patitas redondas que asoman al frente
   for (const lado of [-1, 1]) {
-    const pata = new THREE.Group();
-    for (const dedo of [-0.35, 0, 0.35]) {
-      const d = capsula(0.065, 0.18, mat.pata);
-      d.rotation.x = Math.PI / 2;
-      d.rotation.y = dedo;
-      d.position.set(Math.sin(dedo) * 0.12, 0, 0.12);
-      pata.add(d);
-    }
-    pata.position.set(0.32 * lado, -1.82, 0.25);
+    const pata = capsula(0.11, 0.18, mat.pata);
+    pata.rotation.x = Math.PI / 2;
+    pata.scale.set(1.15, 1, 0.75);
+    pata.position.set(0.36 * lado, -1.86, 0.32);
     tuti.add(pata);
   }
 
-  // Cola
+  // Colita
   const cola = new THREE.Group();
-  for (const giro of [-0.35, 0, 0.35]) {
-    const p = pluma(0.55, 0.16, mat.oscuro);
-    p.rotation.set(-2.2, 0, giro);
+  for (const giro of [-0.4, 0, 0.4]) {
+    const p = pluma(0.42, 0.13, mat.ala);
+    p.rotation.set(-2.1, 0, giro);
     cola.add(p);
   }
   cola.position.set(0, -1.35, -0.7);
   tuti.add(cola);
 
-  // Cabeza grande, como un personaje chibi, con su propio pivote para girar
-  const cabeza = new THREE.Group();
-  cabeza.position.y = 0.26;
-  const craneo = esfera(1.05, mat.cabeza, 72);
-  craneo.scale.set(1.08, 0.97, 0.97);
-  cabeza.add(craneo);
-
-  // Antifaz claro alrededor de los ojos y mejillas
-  for (const lado of [-1, 1]) {
-    const mejilla = esfera(0.2, mat.mejilla, 32);
-    mejilla.scale.set(1, 0.72, 0.35);
-    mejilla.position.set(0.66 * lado, -0.3, 0.74);
-    mejilla.rotation.y = 0.62 * lado;
-    cabeza.add(mejilla);
-    const antifaz = esfera(0.42, mat.verdeClaro, 40);
-    antifaz.scale.set(0.95, 1.02, 0.42);
-    antifaz.position.set(0.36 * lado, 0.12, 0.7);
-    antifaz.rotation.y = 0.32 * lado;
-    cabeza.add(antifaz);
-  }
-
-
-  // Ojos
-  const ojos = [];
-  for (const lado of [-1, 1]) {
-    const o = crearOjo(mat, lado);
-    o.ojo.position.set(0.36 * lado, 0.12, 0.86);
-    o.ojo.rotation.y = 0.32 * lado;
-    cabeza.add(o.ojo);
-    ojos.push(o);
-  }
-
-  // Cejas para dar expresión
-  const cejas = [];
-  for (const lado of [-1, 1]) {
-    const c = capsula(0.036, 0.16, mat.ceja);
-    c.rotation.z = Math.PI / 2 - 0.12 * lado;
-    c.position.set(0.37 * lado, 0.52, 0.98);
-    c.rotation.y = 0.3 * lado;
-    cabeza.add(c);
-    cejas.push(c);
-  }
-
-  // Pico de dos partes para poder hablar y sonreír
-  const pico = new THREE.Group();
-  const picoArriba = esfera(0.31, mat.pico, 40);
-  picoArriba.scale.set(1.1, 0.72, 1.0);
-  const puntaPico = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.34, 32), mat.pico);
-  puntaPico.rotation.x = Math.PI / 2 + 0.9;
-  puntaPico.position.set(0, -0.12, 0.2);
-  const picoAbajo = esfera(0.2, mat.picoOscuro, 32);
-  picoAbajo.scale.set(1.05, 0.5, 0.8);
-  picoAbajo.position.set(0, -0.12, 0.02);
-  pico.add(picoArriba, puntaPico, picoAbajo);
-  pico.position.set(0, -0.2, 1.0);
-  cabeza.add(pico);
-
-  // Copete de tres plumas, como el Tuti de siempre
-  const copete = new THREE.Group();
-  [[-0.2, 0.42, 0.42], [0, 0.55, 0], [0.2, 0.42, -0.42]].forEach(([x, largo, giro]) => {
-    const p = pluma(largo, 0.13, x === 0 ? mat.cuerpo : mat.verdeClaro);
-    p.position.set(x, 0, 0);
-    p.rotation.set(-0.25, 0, giro);
-    copete.add(p);
-  });
-  copete.position.set(0, 0.92, 0.1);
-  cabeza.add(copete);
-
-  tuti.add(cabeza);
-
   const accesorios = crearAccesorios(mat);
   cabeza.add(accesorios.birrete, accesorios.audifonos);
   tuti.add(accesorios.libro, accesorios.microfono, accesorios.trofeo);
 
-  return { tuti, cuerpo, cabeza, alas, ojos, cejas, picoAbajo, copete, cola, accesorios };
+  return { tuti, cuerpo, cabeza, alas, ojos, picoAbajo, copete, cola, accesorios, piso: -1.95 };
 }
 
 const POSES = {
@@ -365,7 +340,7 @@ export function montarTuti(contenedor, opciones = {}) {
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, opciones.dpr || 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
+  renderer.toneMappingExposure = 1.05;
   renderer.domElement.className = "tuti3d-lienzo";
   renderer.domElement.setAttribute("role", "img");
   renderer.domElement.setAttribute("aria-label", opciones.etiqueta || "Tuti, your English tutor");
@@ -374,29 +349,32 @@ export function montarTuti(contenedor, opciones = {}) {
   const escena = new THREE.Scene();
   const camara = new THREE.PerspectiveCamera(28, 1, 0.1, 50);
   if (opciones.encuadre === "cara") {
-    camara.position.set(0, 0.32, 5.6);
-    camara.lookAt(0, 0.22, 0);
+    camara.position.set(0, 0.42, 5.5);
+    camara.lookAt(0, 0.36, 0);
   } else {
-    camara.position.set(0, 0.05, 9.2);
-    camara.lookAt(0, -0.35, 0);
+    camara.position.set(0, 0.1, 9.6);
+    camara.lookAt(0, -0.3, 0);
   }
 
   // Luz de estudio: principal cálida, relleno frío, contraluz que separa del fondo
-  escena.add(new THREE.HemisphereLight(0xffffff, 0xd8f5e3, 1.25));
-  const principal = new THREE.DirectionalLight(0xfff4e0, 2.4);
+  escena.add(new THREE.HemisphereLight(0xffffff, 0xd8f5e3, 1.3));
+  const principal = new THREE.DirectionalLight(0xfff4e0, 2.3);
   principal.position.set(3, 5, 6);
-  const relleno = new THREE.DirectionalLight(0xe0f2ff, 0.8);
+  const relleno = new THREE.DirectionalLight(0xe0f2ff, 0.85);
   relleno.position.set(-5, 1, 4);
-  const contraluz = new THREE.DirectionalLight(0xffffff, 1.6);
+  const contraluz = new THREE.DirectionalLight(0xffffff, 1.5);
   contraluz.position.set(-2, 4, -6);
   escena.add(principal, relleno, contraluz);
+
+  const p = crearTuti();
+  escena.add(p.tuti);
 
   // Sombra de contacto suave bajo las patas
   const lienzoSombra = document.createElement("canvas");
   lienzoSombra.width = lienzoSombra.height = 128;
   const g = lienzoSombra.getContext("2d");
   const grad = g.createRadialGradient(64, 64, 4, 64, 64, 64);
-  grad.addColorStop(0, "rgba(6,60,32,0.35)");
+  grad.addColorStop(0, "rgba(6,60,32,0.32)");
   grad.addColorStop(1, "rgba(6,60,32,0)");
   g.fillStyle = grad;
   g.fillRect(0, 0, 128, 128);
@@ -405,11 +383,8 @@ export function montarTuti(contenedor, opciones = {}) {
     new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(lienzoSombra), transparent: true, depthWrite: false }),
   );
   sombra.rotation.x = -Math.PI / 2;
-  sombra.position.y = -1.86;
+  sombra.position.y = p.piso + 0.02;
   escena.add(sombra);
-
-  const p = crearTuti();
-  escena.add(p.tuti);
 
   const estado = {
     pose: "normal",
@@ -427,18 +402,12 @@ export function montarTuti(contenedor, opciones = {}) {
     estado.expresion = nombre;
     const feliz = nombre === "contento";
     p.ojos.forEach((o) => {
-      o.globo.visible = !feliz;
-      o.mirada.visible = !feliz;
-      o.parpado.visible = !feliz;
+      o.forma.visible = !feliz;
       o.arco.visible = feliz;
+      // Atento abre un poco más los ojos
+      o.ojo.scale.setScalar(nombre === "atento" ? 1.06 : 1);
     });
-    const altura = { atento: 0.56, curioso: 0.6, piensa: 0.58, feliz: 0.54 }[nombre] || 0.52;
-    p.cejas.forEach((c, i) => {
-      const lado = i === 0 ? -1 : 1;
-      c.position.y = altura;
-      c.rotation.z = Math.PI / 2 + (nombre === "piensa" ? (lado > 0 ? 0.3 : -0.12) : -0.12 * lado);
-    });
-    p.picoAbajo.position.y = nombre === "feliz" || nombre === "contento" ? -0.16 : -0.12;
+    p.picoAbajo.position.y = nombre === "feliz" || nombre === "contento" ? -0.11 : -0.09;
   }
 
   function ponerPose(nombre) {
@@ -472,45 +441,44 @@ export function montarTuti(contenedor, opciones = {}) {
     // Respiración y balanceo de reposo
     const resp = Math.sin(t * 2.1);
     p.cuerpo.scale.set(1 + resp * 0.012, 1 - resp * 0.018, 1);
-    p.tuti.position.y = 0;
-    p.tuti.rotation.y = Math.sin(t * 0.6) * 0.08;
+    p.tuti.rotation.y = (quieto ? -0.12 : 0) + Math.sin(t * 0.6) * 0.08;
 
     // La cabeza sigue al puntero con suavidad, o hace su propio vaivén
     const objetivoY = estado.mirarX * 0.45 + Math.sin(t * 0.9) * 0.06;
     const objetivoX = -estado.mirarY * 0.25 + Math.sin(t * 1.3) * 0.03;
-    p.cabeza.rotation.y += (objetivoY - p.cabeza.rotation.y) * 0.08;
-    p.cabeza.rotation.x += (objetivoX - p.cabeza.rotation.x) * 0.08;
-    p.cabeza.rotation.z = Math.sin(t * 0.9 + 1) * 0.05 + (estado.expresion === "piensa" ? 0.18 : 0) + (estado.expresion === "curioso" ? -0.14 : 0);
+    p.cabeza.rotation.y += (objetivoY - p.cabeza.rotation.y) * (quieto ? 1 : 0.08);
+    p.cabeza.rotation.x += (objetivoX - p.cabeza.rotation.x) * (quieto ? 1 : 0.08);
+    p.cabeza.rotation.z = Math.sin(t * 0.9 + 1) * 0.05 + (estado.expresion === "piensa" ? 0.14 : 0) + (estado.expresion === "curioso" ? -0.14 : 0);
     p.ojos.forEach((o) => {
-      o.mirada.position.x = estado.mirarX * 0.05;
-      o.mirada.position.y = estado.mirarY * 0.04 + (estado.expresion === "piensa" ? 0.06 : 0);
+      o.mirada.position.x = estado.mirarX * 0.03 + (estado.expresion === "piensa" ? 0.02 : 0);
+      o.mirada.position.y = estado.mirarY * 0.025 + (estado.expresion === "piensa" ? 0.03 : 0);
     });
     p.copete.rotation.z = Math.sin(t * 2.4) * 0.05;
     p.cola.rotation.y = Math.sin(t * 1.8) * 0.12;
 
-    // Parpadeo a intervalos naturales
+    // Parpadeo a intervalos naturales: el ojo se aplana y vuelve
     if (t > estado.proximoParpadeo && estado.parpadeoDesde < 0) estado.parpadeoDesde = t;
     let cierre = 0;
     if (estado.parpadeoDesde >= 0) {
-      const f = (t - estado.parpadeoDesde) / 0.16;
-      cierre = f < 1 ? Math.sin(f * Math.PI) : 0;
-      if (f >= 1) {
+      const fase = (t - estado.parpadeoDesde) / 0.16;
+      cierre = fase < 1 ? Math.sin(fase * Math.PI) : 0;
+      if (fase >= 1) {
         estado.parpadeoDesde = -1;
         estado.proximoParpadeo = t + 2.2 + Math.random() * 3.2;
       }
     }
-    p.ojos.forEach((o) => (o.parpado.rotation.x = -1.75 + cierre * 1.6));
+    p.ojos.forEach((o) => (o.forma.scale.y = 1 - cierre * 0.9));
 
     // Alas en reposo, saludo o celebración
-    let alaDer = 0.12;
-    let alaIzq = -0.12;
+    let alaDer = 0.1;
+    let alaIzq = -0.1;
     let salto = 0;
     if (estado.gesto) {
       const d = quieto ? (estado.gesto === "celebrar" ? 0.6 : 0.9) : t - estado.gestoDesde;
       if (estado.gesto === "saludar") {
         if (d < 2.2) {
           const subida = Math.min(1, d / 0.25) * Math.min(1, (2.2 - d) / 0.3);
-          alaDer = 0.12 + subida * (2.0 + Math.sin(d * 14) * 0.35);
+          alaDer = 0.1 + subida * (2.0 + Math.sin(d * 14) * 0.35);
         } else estado.gesto = null;
       } else if (estado.gesto === "celebrar") {
         if (d < 1.8) {
@@ -534,7 +502,7 @@ export function montarTuti(contenedor, opciones = {}) {
     sombra.scale.setScalar(1 - salto * 0.6);
 
     // Pico que se mueve mientras habla
-    if (estado.hablando) p.picoAbajo.position.y = -0.12 - Math.abs(Math.sin(t * 16)) * 0.08;
+    if (estado.hablando) p.picoAbajo.position.y = -0.09 - Math.abs(Math.sin(t * 16)) * 0.05;
 
     renderer.render(escena, camara);
   }
