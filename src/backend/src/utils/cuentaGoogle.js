@@ -9,17 +9,17 @@ function datosDePerfilGoogle(payload) {
   const p = payload || {};
 
   if (!p.sub) {
-    const error = new Error("El token de Google no trae usuario");
+    const error = new Error("The Google token has no user");
     error.status = 401;
     throw error;
   }
   if (!p.email) {
-    const error = new Error("El token de Google no trae correo");
+    const error = new Error("The Google token has no email");
     error.status = 401;
     throw error;
   }
   if (p.email_verified !== true && p.email_verified !== "true") {
-    const error = new Error("Google no ha verificado ese correo");
+    const error = new Error("Google hasn't verified that email");
     error.status = 401;
     throw error;
   }

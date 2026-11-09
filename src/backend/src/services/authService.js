@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("../models/userModel");
 const { entraConContrasena } = require("../utils/cuentaGoogle");
 const { POLITICA_VERSION } = require("../utils/politica");
+const { RONDAS_BCRYPT } = require("../config/seguridad");
+const { reportarError } = require("../utils/errores");
 
 // Sin JWT_SECRET no se usa una clave conocida: se inventa una al azar (las sesiones se cierran al reiniciar)
 const JWT_SECRET = process.env.JWT_SECRET || (() => {
@@ -10,17 +12,18 @@ const JWT_SECRET = process.env.JWT_SECRET || (() => {
   return require("crypto").randomBytes(48).toString("hex");
 })();
 const JWT_EXPIRA = "7d";
+const HASH_DE_RELLENO = bcrypt.hashSync("tutorias-relleno", RONDAS_BCRYPT);
 
 const AuthService = {
   async registrar({ nombre, correo, contrasena }) {
     const existente = await UserModel.buscarPorCorreo(correo);
     if (existente) {
-      const error = new Error("Ese correo ya está registrado");
+      const error = new Error("That email is already registered");
       error.status = 409;
       throw error;
     }
 
-    const contrasenaHash = await bcrypt.hash(contrasena, 10);
+    const contrasenaHash = await bcrypt.hash(contrasena, RONDAS_BCRYPT);
     const usuario = await UserModel.crear({
       nombre,
       correo,
@@ -35,7 +38,9 @@ const AuthService = {
   async login({ correo, contrasena }) {
     const usuario = await UserModel.buscarPorCorreo(correo);
     if (!usuario) {
-      const error = new Error("Correo o contraseña incorrectos");
+      // Se compara igual contra un hash de relleno: así el tiempo no delata qué correos existen
+      await bcrypt.compare(String(contrasena), HASH_DE_RELLENO);
+      const error = new Error("Incorrect email or password");
       error.status = 401;
       throw error;
     }
@@ -43,23 +48,34 @@ const AuthService = {
     // Quien se registró con Google no tiene contraseña: hay que decírselo en
     // vez de dejarlo probando claves que nunca van a servir
     if (!entraConContrasena(usuario)) {
-      const error = new Error("Esta cuenta entra con Google. Usa el botón de Google.");
+      const error = new Error("This account signs in with Google. Use the Google button.");
       error.status = 401;
       throw error;
     }
 
     const coincide = await bcrypt.compare(contrasena, usuario.contrasena_hash);
     if (!coincide) {
-      const error = new Error("Correo o contraseña incorrectos");
+      const error = new Error("Incorrect email or password");
       error.status = 401;
       throw error;
     }
 
+    await this.mejorarHash(usuario, contrasena);
     await UserModel.actualizarUltimoAcceso(usuario.id);
     const token = this.generarToken(usuario);
 
     delete usuario.contrasena_hash;
     return { usuario, token };
+  },
+
+  /** Pasa las cuentas viejas al costo actual de bcrypt sin pedirle nada al estudiante; si falla, entra igual. */
+  async mejorarHash(usuario, contrasena) {
+    try {
+      if (bcrypt.getRounds(usuario.contrasena_hash) >= RONDAS_BCRYPT) return;
+      await UserModel.actualizarHash(usuario.id, await bcrypt.hash(contrasena, RONDAS_BCRYPT));
+    } catch (error) {
+      reportarError("No se pudo actualizar el hash de la contraseña", error);
+    }
   },
 
   generarToken(usuario) {

@@ -62,13 +62,13 @@ const HistorialController = {
         hayHistorial: hayHistorial(resumen),
         niveles: serieDeNiveles(diagnosticos.rows),
         semanas: aciertoPorSemana(semanas.rows, SEMANAS),
-        habilidades: compararHabilidades(diagnosticos.rows, enEspanol),
+        habilidades: compararHabilidades(diagnosticos.rows, false),
         ultimoResumen: (ultimo && ultimo.resumen) || null,
         enEspanol,
       });
     } catch (error) {
       reportarError("Error en /historial/progreso", error);
-      res.status(500).json({ error: "No se pudo cargar tu historial" });
+      res.status(500).json({ error: "Could not load your history" });
     }
   },
 };

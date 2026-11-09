@@ -42,20 +42,19 @@ const { precargarVoz } = require("./src/services/vozPiperService");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "*" }));
-
-// Cabeceras CORS para todas las peticiones
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-
-  next();
-});
+// Con CORS_ORIGENES (separados por coma) solo esos sitios pueden llamar a la API; sin la variable queda abierta
+const origenesPermitidos = (process.env.CORS_ORIGENES || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+app.use(
+  cors({
+    origin: origenesPermitidos.length ? origenesPermitidos : "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 600,
+  }),
+);
 
 // Railway pone un proxy delante: sin esto todas las peticiones parecerían venir de la misma IP
 app.set("trust proxy", 1);
@@ -77,7 +76,7 @@ app.use(express.json({ limit: "64kb" }));
 // Límites por minuto: entrar y recuperar la clave por IP y correo, la IA y la voz por sesión
 const porIpYCorreo = (req) => `${req.ip}|${String((req.body || {}).correo || "").trim().toLowerCase()}`;
 app.use(["/api/auth/login", "/api/auth/olvide"], limitar({ ventanaMs: 15 * 60 * 1000, max: 10, clave: porIpYCorreo,
-  mensaje: "Demasiados intentos. Espera unos minutos y vuelve a intentar." }));
+  mensaje: "Too many attempts. Wait a few minutes and try again." }));
 app.use(["/api/auth/registro", "/api/auth/restablecer", "/api/auth/google"], limitar({ ventanaMs: 15 * 60 * 1000, max: 60 }));
 app.use(["/api/nivel", "/api/practica", "/api/voz/responder", "/api/escena", "/api/roleplay", "/api/visual",
   "/api/mentor", "/api/audio", "/api/biblioteca", "/api/juegos/ahorcado/nueva", "/api/juegos/sopa/nueva",
@@ -111,7 +110,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).json({ error: "Ruta no encontrada" });
+  res.status(404).json({ error: "Route not found" });
 });
 
 // El manejador de errores de Sentry va de último, después de todas las rutas
@@ -123,7 +122,7 @@ if (process.env.SENTRY_DSN) {
 app.use((err, req, res, next) => {
   if (res.headersSent) return next(err);
   const estado = err.status || err.statusCode || 500;
-  res.status(estado).json({ error: estado === 413 ? "El mensaje es demasiado largo" : estado < 500 ? "Solicitud inválida" : "Error en el servidor" });
+  res.status(estado).json({ error: estado === 413 ? "The message is too long" : estado < 500 ? "Invalid request" : "Server error" });
 });
 
 /** Pone la base al día y solo entonces empieza a atender peticiones. */

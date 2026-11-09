@@ -44,9 +44,9 @@ async function cargarSiguienteEscena() {
   const btnSiguiente = document.getElementById("btn-siguiente-turno");
   const textareaRespuesta = document.getElementById("nivel-texto-usuario");
 
-  progreso.textContent = `Escena ${turnoActual + 1} de ${TOTAL_TURNOS}`;
+  progreso.textContent = `Scene ${turnoActual + 1} of ${TOTAL_TURNOS}`;
   narrativaEl.textContent = "...";
-  textoPregunta.textContent = "Cargando siguiente parte de la historia...";
+  textoPregunta.textContent = "Loading the next part of the story\u2026";
   contenedorOpciones.innerHTML = "";
   contenedorAbierta.classList.add("oculto");
   feedbackEl.classList.add("oculto");
@@ -85,7 +85,7 @@ async function cargarSiguienteEscena() {
   } catch (err) {
     if (pruebaAbandonada) return;
     textoPregunta.textContent =
-      "Hubo un error generando la historia. Intenta de nuevo.";
+      "We couldn\u2019t load the story. Please try again.";
   }
 }
 
@@ -112,8 +112,8 @@ function responderOpcionMultiple(indiceElegido, btnElegido) {
 
   mostrarFeedback(
     esCorrecta
-      ? "¡Correcto! Vas muy bien."
-      : "Casi, no era esa — mira la opción marcada en verde.",
+      ? "Correct! You\u2019re doing great."
+      : "Not quite \u2014 the right answer is marked in green.",
   );
 
   if (!esCorrecta) {
@@ -148,7 +148,7 @@ async function responderAbierta() {
 
     let mensaje = evaluacion.feedback;
     if (evaluacion.correccionSugerida) {
-      mensaje += ` (Versión corregida: "${evaluacion.correccionSugerida}")`;
+      mensaje += ` (Better: "${evaluacion.correccionSugerida}")`;
     }
     mostrarFeedback(mensaje);
 
@@ -158,7 +158,7 @@ async function responderAbierta() {
     });
     ajustarNivelPorPuntuacion(evaluacion.puntuacion);
   } catch (err) {
-    mostrarFeedback("No pudimos evaluar tu respuesta, pero seguimos.");
+    mostrarFeedback("We couldn\u2019t check that answer, but let\u2019s keep going.");
     historialResultados.push({
       habilidad: escenaVigente.habilidad,
       puntuacion: 50,
@@ -193,7 +193,7 @@ async function finalizarDiagnostico() {
   document.getElementById("vista-resultado-nivel").classList.remove("oculto");
   document.getElementById("resultado-nivel-valor").textContent = "...";
   document.getElementById("resultado-resumen").textContent =
-    "Generando tu diagnóstico...";
+    "Preparing your results\u2026";
   document.getElementById("resultado-habilidades").innerHTML = "";
 
   try {
@@ -204,12 +204,13 @@ async function finalizarDiagnostico() {
       resultado.nivel;
     document.getElementById("resultado-resumen").textContent =
       resultado.resumen;
+    if (typeof celebrarConTuti === "function") celebrarConTuti("Level Check complete!", `Your level: ${resultado.nivel}`);
 
     const nombresHabilidad = {
-      vocabulario: "Vocabulario",
-      gramatica: "Gramática",
-      comprension: "Comprensión",
-      fluidez: "Fluidez escrita",
+      vocabulario: "Vocabulary",
+      gramatica: "Grammar",
+      comprension: "Comprehension",
+      fluidez: "Writing fluency",
     };
 
     const contenedor = document.getElementById("resultado-habilidades");
@@ -232,7 +233,7 @@ async function finalizarDiagnostico() {
     document.getElementById("resultado-nivel-valor").textContent =
       NIVELES[indiceNivelActual];
     document.getElementById("resultado-resumen").textContent =
-      "No pudimos generar el resumen completo, pero tu nivel quedó guardado.";
+      "We couldn\u2019t write the full summary, but your level was saved.";
   }
 }
 

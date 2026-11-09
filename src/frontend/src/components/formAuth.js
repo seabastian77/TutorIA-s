@@ -73,7 +73,7 @@ function inicializarFormAuth() {
     const boton = formLogin.querySelector('button[type="submit"]');
 
     if (!Validaciones.correoValido(correo)) {
-      return mostrarError("Ingresa un correo válido");
+      return mostrarError("Enter a valid email address");
     }
 
     boton.disabled = true;
@@ -102,14 +102,14 @@ function inicializarFormAuth() {
     const aceptaPolitica = document.getElementById("registro-politica").checked;
     const boton = formRegistro.querySelector('button[type="submit"]');
 
-    if (!nombre) return mostrarError("Ingresa tu nombre");
+    if (!nombre) return mostrarError("Enter your name");
     if (!Validaciones.correoValido(correo))
-      return mostrarError("Ingresa un correo válido");
+      return mostrarError("Enter a valid email address");
     if (!Validaciones.contrasenaValida(contrasena)) {
-      return mostrarError("La contraseña debe tener al menos 6 caracteres");
+      return mostrarError("Your password needs at least 8 characters");
     }
     if (!aceptaPolitica) {
-      return mostrarError("Debes aceptar la política de tratamiento de datos");
+      return mostrarError("Please accept the data policy to continue");
     }
 
     boton.disabled = true;
@@ -159,7 +159,7 @@ function inicializarFormAuth() {
 
     const correo = document.getElementById("olvide-correo").value.trim();
     const boton = formOlvide.querySelector('button[type="submit"]');
-    if (!Validaciones.correoValido(correo)) return mostrarError("Ingresa un correo válido");
+    if (!Validaciones.correoValido(correo)) return mostrarError("Enter a valid email address");
 
     boton.disabled = true;
     const textoBoton = boton.textContent;
@@ -188,9 +188,9 @@ function inicializarFormAuth() {
     const boton = formRestablecer.querySelector('button[type="submit"]');
 
     if (!Validaciones.contrasenaValida(contrasena)) {
-      return mostrarError("La contraseña debe tener al menos 6 caracteres");
+      return mostrarError("Your password needs at least 8 characters");
     }
-    if (contrasena !== repetida) return mostrarError("Las dos contraseñas no coinciden");
+    if (contrasena !== repetida) return mostrarError("The two passwords don\u2019t match");
 
     boton.disabled = true;
     const textoBoton = boton.textContent;

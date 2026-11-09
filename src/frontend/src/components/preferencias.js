@@ -1,45 +1,58 @@
-/** Interruptor de ayuda en español; el valor real vive en el servidor. */
+// Ayuda en español: un botón en la barra superior; el valor real vive en el servidor
 
+/** Pinta el botón y prende o apaga en toda la app las explicaciones y la traducción con un toque. */
 function pintarInterruptorEspanol(activo) {
-  const contenedor = document.getElementById("ayuda-espanol");
-  const casilla = document.getElementById("ayuda-espanol-check");
-  if (!contenedor || !casilla) return;
+  const boton = document.getElementById("btn-espanol");
+  if (boton) {
+    boton.classList.remove("oculto");
+    boton.setAttribute("aria-pressed", String(!!activo));
+    boton.title = activo
+      ? "Spanish help is on: explanations in Spanish and tap any word to translate it"
+      : "Turn on Spanish help: explanations in Spanish and tap any word to translate it";
+  }
 
-  casilla.checked = !!activo;
-  contenedor.classList.toggle("activo", !!activo);
-  contenedor.classList.remove("oculto");
-
-  const texto = document.getElementById("ayuda-espanol-texto");
-  if (texto) texto.textContent = "Explanations in Spanish";
+  document.body.classList.toggle("ayuda-es", !!activo);
+  if (!activo && typeof Traductor !== "undefined") Traductor.cerrar();
 }
 
-async function cambiarAyudaEspanol(activo) {
-  const contenedor = document.getElementById("ayuda-espanol");
-  const casilla = document.getElementById("ayuda-espanol-check");
+/** Dice si la ayuda en español está prendida ahora mismo. */
+function ayudaEspanolActiva() {
+  return document.body.classList.contains("ayuda-es");
+}
 
-  // Se pinta de una para que se sienta instantáneo, y se revierte si falla
+/** Guarda el cambio; se pinta de una para que se sienta instantáneo y se revierte si falla. */
+async function cambiarAyudaEspanol(activo) {
+  const boton = document.getElementById("btn-espanol");
   pintarInterruptorEspanol(activo);
-  casilla.disabled = true;
+  if (boton) boton.disabled = true;
 
   try {
     const datos = await PreferenciasAPI.guardarAyudaEspanol(activo);
     pintarInterruptorEspanol(datos.ayudaEspanol);
+    if (typeof avisoConTuti === "function") {
+      avisoConTuti(
+        datos.ayudaEspanol ? "Spanish help is on" : "Spanish help is off",
+        datos.ayudaEspanol
+          ? "Explanations come in Spanish, and you can tap any English word to translate it."
+          : "Explanations stay in English. Turn it back on whenever you need it.",
+        { pose: "lee", confeti: false },
+      );
+    }
     // El mentor habla en el mismo idioma: que cambie sin esperar a la próxima vuelta
     if (typeof refrescarMentor === "function") refrescarMentor();
   } catch (err) {
     pintarInterruptorEspanol(!activo);
-    const texto = document.getElementById("ayuda-espanol-texto");
-    if (texto) texto.textContent = "Could not save that setting";
+    if (typeof avisoConTuti === "function") {
+      avisoConTuti("Could not save that setting", "Check your connection and try again.", { pose: "piensa", confeti: false });
+    }
   } finally {
-    casilla.disabled = false;
+    if (boton) boton.disabled = false;
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const casilla = document.getElementById("ayuda-espanol-check");
-  if (casilla) {
-    casilla.addEventListener("change", (e) =>
-      cambiarAyudaEspanol(e.target.checked),
-    );
+  const boton = document.getElementById("btn-espanol");
+  if (boton) {
+    boton.addEventListener("click", () => cambiarAyudaEspanol(!ayudaEspanolActiva()));
   }
 });

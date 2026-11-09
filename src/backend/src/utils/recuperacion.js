@@ -4,7 +4,7 @@ const crypto = require("crypto");
 
 const TOKEN_BYTES = 32;
 const VIGENCIA_MINUTOS = 60;
-const LARGO_MINIMO = 6; // el mismo que pide el registro
+const LARGO_MINIMO = 8; // el mismo que pide el registro
 const SOLICITUDES_POR_HORA = 3;
 
 /**

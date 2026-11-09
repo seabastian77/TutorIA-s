@@ -12,7 +12,7 @@ const VozAPI = {
       body: JSON.stringify({ mensajeUsuario, historial, nivel, modo }),
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Error procesando tu mensaje");
+    if (!resp.ok) throw new Error(datos.error || "Could not process your message");
     return datos;
   },
 
@@ -29,7 +29,7 @@ const VozAPI = {
       signal: typeof AbortSignal !== "undefined" && AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined,
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "No se pudo leer el texto");
+    if (!resp.ok) throw new Error(datos.error || "Could not read the text aloud");
     return datos;
   },
 };

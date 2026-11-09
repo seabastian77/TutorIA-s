@@ -33,7 +33,7 @@ const DiagnosticoController = {
       reportarError("Error en /nivel/escena", error);
       res
         .status(500)
-        .json({ error: "No se pudo generar la escena. Intenta de nuevo." });
+        .json({ error: "Could not create the scene. Please try again." });
     }
   },
 
@@ -44,7 +44,7 @@ const DiagnosticoController = {
       const respuestaUsuario = String((req.body || {}).respuestaUsuario || "").slice(0, 1000);
 
       if (!pregunta || !respuestaUsuario) {
-        return res.status(400).json({ error: "Faltan datos para evaluar" });
+        return res.status(400).json({ error: "Some data is missing to check your answer" });
       }
 
       const evaluacion = await evaluarRespuestaAbierta({
@@ -64,7 +64,7 @@ const DiagnosticoController = {
       res.json(evaluacion);
     } catch (error) {
       reportarError("Error en /nivel/evaluar-abierta", error);
-      res.status(500).json({ error: "No se pudo evaluar tu respuesta." });
+      res.status(500).json({ error: "Could not check your answer." });
     }
   },
 
@@ -74,7 +74,7 @@ const DiagnosticoController = {
       const { pregunta, opciones, respuestaCorrecta, tema } = req.body;
 
       if (!pregunta || !Array.isArray(opciones)) {
-        return res.status(400).json({ error: "Faltan datos" });
+        return res.status(400).json({ error: "Some data is missing" });
       }
 
       guardarPalabraSiFalla(req.usuario.id, "opcion_multiple", {
@@ -87,7 +87,7 @@ const DiagnosticoController = {
       res.json({ ok: true });
     } catch (error) {
       reportarError("Error en /nivel/fallo-opcion", error);
-      res.status(500).json({ error: "No se pudo registrar" });
+      res.status(500).json({ error: "Could not create your account" });
     }
   },
 
@@ -103,7 +103,7 @@ const DiagnosticoController = {
         }));
 
       if (historial.length === 0) {
-        return res.status(400).json({ error: "Historial vacío" });
+        return res.status(400).json({ error: "Empty history" });
       }
 
       const promedios = {};
@@ -176,7 +176,7 @@ const DiagnosticoController = {
       });
     } catch (error) {
       reportarError("Error en /nivel/finalizar", error);
-      res.status(500).json({ error: "No se pudo guardar el diagnóstico" });
+      res.status(500).json({ error: "Could not save your results" });
     }
   },
 };

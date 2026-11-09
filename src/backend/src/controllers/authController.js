@@ -9,28 +9,36 @@ const { aceptoPolitica } = require("../utils/politica");
 
 // La misma respuesta exista o no la cuenta: así nadie averigua quién está registrado
 const RESPUESTA_NEUTRA =
-  "Si ese correo tiene una cuenta, le llegará un enlace para cambiar la contraseña.";
+  "If that email has an account, a link to reset the password is on its way.";
 
 const AuthController = {
   async registrar(req, res) {
     try {
-      const { nombre, correo, contrasena, aceptaPolitica } = req.body;
+      const { correo, contrasena, aceptaPolitica } = req.body;
+      const nombre = typeof req.body.nombre === "string" ? req.body.nombre.trim() : "";
 
       if (!nombre || !correo || !contrasena) {
         return res
           .status(400)
-          .json({ error: "Nombre, correo y contraseña son obligatorios" });
+          .json({ error: "Name, email and password are required" });
       }
-      if (contrasena.length < 6) {
+      // Los mismos límites que tiene la base de datos, para responder 400 y no un error del servidor
+      if (nombre.length > 100) {
+        return res.status(400).json({ error: "Your name can have up to 100 characters" });
+      }
+      if (!correoValido(correo) || correo.trim().length > 150) {
+        return res.status(400).json({ error: "Enter a valid email address" });
+      }
+      if (!contrasenaValida(contrasena) || contrasena.length > 72) {
         return res
           .status(400)
-          .json({ error: "La contraseña debe tener al menos 6 caracteres" });
+          .json({ error: `Your password needs between ${LARGO_MINIMO} and 72 characters` });
       }
       // La ley exige autorización previa y expresa antes de guardar cualquier dato
       if (!aceptoPolitica(aceptaPolitica)) {
         return res
           .status(400)
-          .json({ error: "Debes aceptar la política de tratamiento de datos" });
+          .json({ error: "Please accept the data policy to continue" });
       }
 
       const { usuario, token } = await AuthService.registrar({
@@ -43,7 +51,7 @@ const AuthController = {
       reportarError("Error en /registro", error);
       res
         .status(error.status || 500)
-        .json({ error: error.status ? error.message : "Error en el servidor" });
+        .json({ error: error.status ? error.message : "Server error" });
     }
   },
 
@@ -51,10 +59,10 @@ const AuthController = {
     try {
       const { correo, contrasena } = req.body;
 
-      if (!correo || !contrasena) {
+      if (typeof correo !== "string" || typeof contrasena !== "string" || !correo || !contrasena) {
         return res
           .status(400)
-          .json({ error: "Correo y contraseña son obligatorios" });
+          .json({ error: "Email and password are required" });
       }
 
       const { usuario, token } = await AuthService.login({
@@ -66,7 +74,7 @@ const AuthController = {
       reportarError("Error en /login", error);
       res
         .status(error.status || 500)
-        .json({ error: error.status ? error.message : "Error en el servidor" });
+        .json({ error: error.status ? error.message : "Server error" });
     }
   },
 
@@ -101,7 +109,7 @@ const AuthController = {
   async olvide(req, res) {
     const { correo } = req.body || {};
     if (!correoValido(correo)) {
-      return res.status(400).json({ error: "Escribe un correo válido" });
+      return res.status(400).json({ error: "Enter a valid email address" });
     }
 
     try {
@@ -119,17 +127,17 @@ const AuthController = {
     if (!contrasenaValida(contrasena)) {
       return res
         .status(400)
-        .json({ error: `La contraseña debe tener al menos ${LARGO_MINIMO} caracteres` });
+        .json({ error: `Your password needs at least ${LARGO_MINIMO} characters` });
     }
 
     try {
       await RecuperacionService.restablecer(token, contrasena);
-      res.json({ mensaje: "Tu contraseña quedó cambiada. Ya puedes entrar con ella." });
+      res.json({ mensaje: "Your password was changed. You can log in with it now." });
     } catch (error) {
       if (!error.status) reportarError("Error restableciendo la contraseña", error);
       res
         .status(error.status || 500)
-        .json({ error: error.status ? error.message : "No se pudo cambiar la contraseña" });
+        .json({ error: error.status ? error.message : "Could not change your password" });
     }
   },
 };

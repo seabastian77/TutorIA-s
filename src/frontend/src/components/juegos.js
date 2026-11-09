@@ -160,6 +160,7 @@ function cerrarAhorcado(datos) {
 
   const resultado = document.getElementById("ahorcado-resultado");
   const gano = datos.estado === "ganada";
+  if (gano) if (typeof celebrarConTuti === "function") celebrarConTuti("You saved the word!", "Tuti knew you could do it.");
 
   resultado.className = `nivel-feedback ${gano ? "feedback-correcto" : "feedback-incorrecto"}`;
   resultado.textContent = gano

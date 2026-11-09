@@ -161,7 +161,7 @@ const JuegosController = {
       if (!elegida) {
         return res
           .status(502)
-          .json({ error: "No se pudo elegir una palabra para el ahorcado" });
+          .json({ error: "Could not pick a word for hangman" });
       }
 
       const { rows } = await pool.query(
@@ -190,7 +190,7 @@ const JuegosController = {
       });
     } catch (error) {
       reportarError("Error en /juegos/ahorcado/nueva", error);
-      res.status(500).json({ error: "No se pudo empezar el ahorcado" });
+      res.status(500).json({ error: "Could not start hangman" });
     }
   },
 
@@ -200,15 +200,15 @@ const JuegosController = {
       const partida = leerPartida(partidaId, req.usuario.id, "ahorcado");
 
       if (!partida) {
-        return res.status(404).json({ error: "Esa partida ya no existe" });
+        return res.status(404).json({ error: "That game no longer exists" });
       }
       if (partida.terminada) {
-        return res.status(400).json({ error: "Esa partida ya terminó" });
+        return res.status(400).json({ error: "That game is already over" });
       }
 
       const elegida = (letra || "").toUpperCase();
       if (!/^[A-Z]$/.test(elegida)) {
-        return res.status(400).json({ error: "Eso no es una letra" });
+        return res.status(400).json({ error: "That isn't a letter" });
       }
 
       if (partida.letras.includes(elegida)) {
@@ -226,7 +226,7 @@ const JuegosController = {
       res.json({ acerto: partida.palabra.includes(elegida), ...vista, ...cierre });
     } catch (error) {
       reportarError("Error en /juegos/ahorcado/letra", error);
-      res.status(500).json({ error: "No se pudo revisar la letra" });
+      res.status(500).json({ error: "Could not check that letter" });
     }
   },
 
@@ -237,15 +237,15 @@ const JuegosController = {
       const partida = leerPartida(partidaId, req.usuario.id, "ahorcado");
 
       if (!partida) {
-        return res.status(404).json({ error: "Esa partida ya no existe" });
+        return res.status(404).json({ error: "That game no longer exists" });
       }
       if (partida.terminada) {
-        return res.status(400).json({ error: "Esa partida ya terminó" });
+        return res.status(400).json({ error: "That game is already over" });
       }
 
       const revelada = letraParaRevelar(partida.palabra, partida.letras);
       if (!revelada) {
-        return res.status(400).json({ error: "Ya no quedan letras por revelar" });
+        return res.status(400).json({ error: "There are no letters left to reveal" });
       }
 
       // El descuento va condicionado para que dos toques seguidos no dejen pistas en negativo
@@ -258,7 +258,7 @@ const JuegosController = {
 
       if (rows.length === 0) {
         return res.status(400).json({
-          error: "No te quedan pistas",
+          error: "You have no hints left",
           codigo: "sin_pistas",
         });
       }
@@ -281,7 +281,7 @@ const JuegosController = {
       res.json({ ...respuesta, ...cierre });
     } catch (error) {
       reportarError("Error en /juegos/ahorcado/pista", error);
-      res.status(500).json({ error: "No se pudo usar la pista" });
+      res.status(500).json({ error: "Could not use the hint" });
     }
   },
 
@@ -306,7 +306,7 @@ const JuegosController = {
       if (colocadas.length === 0) {
         return res
           .status(502)
-          .json({ error: "No se pudo armar la sopa de letras" });
+          .json({ error: "Could not build the word search" });
       }
 
       const partidaId = guardarPartida(req.usuario.id, {
@@ -329,7 +329,7 @@ const JuegosController = {
       });
     } catch (error) {
       reportarError("Error en /juegos/sopa/nueva", error);
-      res.status(500).json({ error: "No se pudo empezar la sopa de letras" });
+      res.status(500).json({ error: "Could not start the word search" });
     }
   },
 
@@ -339,10 +339,10 @@ const JuegosController = {
       const partida = leerPartida(partidaId, req.usuario.id, "sopa");
 
       if (!partida) {
-        return res.status(404).json({ error: "Esa partida ya no existe" });
+        return res.status(404).json({ error: "That game no longer exists" });
       }
       if (partida.terminada) {
-        return res.status(400).json({ error: "Esa partida ya terminó" });
+        return res.status(400).json({ error: "That game is already over" });
       }
 
       const coordenadas = [fila, columna, filaFin, columnaFin];
@@ -350,7 +350,7 @@ const JuegosController = {
         (n) => Number.isInteger(n) && n >= 0 && n < TAMANO_SOPA,
       );
       if (!validas) {
-        return res.status(400).json({ error: "Selección fuera del tablero" });
+        return res.status(400).json({ error: "That selection is outside the board" });
       }
 
       const segmento = leerSegmento(
@@ -385,7 +385,7 @@ const JuegosController = {
       });
     } catch (error) {
       reportarError("Error en /juegos/sopa/hallazgo", error);
-      res.status(500).json({ error: "No se pudo revisar la selección" });
+      res.status(500).json({ error: "Could not check your selection" });
     }
   },
 
@@ -396,10 +396,10 @@ const JuegosController = {
       const partida = leerPartida(partidaId, req.usuario.id, "sopa");
 
       if (!partida) {
-        return res.status(404).json({ error: "Esa partida ya no existe" });
+        return res.status(404).json({ error: "That game no longer exists" });
       }
       if (partida.terminada) {
-        return res.status(400).json({ error: "Esa partida ya terminó" });
+        return res.status(400).json({ error: "That game is already over" });
       }
 
       partida.terminada = true;
@@ -432,7 +432,7 @@ const JuegosController = {
       });
     } catch (error) {
       reportarError("Error en /juegos/sopa/terminar", error);
-      res.status(500).json({ error: "No se pudo cerrar la sopa de letras" });
+      res.status(500).json({ error: "Could not finish the word search" });
     }
   },
 
@@ -448,7 +448,7 @@ const JuegosController = {
       if (palabras.length < 2) {
         return res
           .status(502)
-          .json({ error: "No hay palabras suficientes para emparejar" });
+          .json({ error: "There aren't enough words to match yet" });
       }
 
       // Cada lado lleva su propia ficha al azar para que el id no delate la pareja
@@ -486,7 +486,7 @@ const JuegosController = {
       });
     } catch (error) {
       reportarError("Error en /juegos/emparejar/nueva", error);
-      res.status(500).json({ error: "No se pudo empezar el emparejamiento" });
+      res.status(500).json({ error: "Could not start the matching game" });
     }
   },
 
@@ -496,18 +496,18 @@ const JuegosController = {
       const partida = leerPartida(partidaId, req.usuario.id, "emparejar");
 
       if (!partida) {
-        return res.status(404).json({ error: "Esa partida ya no existe" });
+        return res.status(404).json({ error: "That game no longer exists" });
       }
       if (partida.terminada) {
-        return res.status(400).json({ error: "Esa partida ya terminó" });
+        return res.status(400).json({ error: "That game is already over" });
       }
 
       const esperada = partida.mapa[izquierdaId];
       if (!esperada) {
-        return res.status(400).json({ error: "Esa carta no es de la partida" });
+        return res.status(400).json({ error: "That card is not part of this game" });
       }
       if (partida.aciertos.includes(izquierdaId)) {
-        return res.status(400).json({ error: "Esa pareja ya estaba hecha" });
+        return res.status(400).json({ error: "That pair was already matched" });
       }
 
       const correcto = esperada === derechaId;
@@ -549,7 +549,7 @@ const JuegosController = {
       });
     } catch (error) {
       reportarError("Error en /juegos/emparejar/par", error);
-      res.status(500).json({ error: "No se pudo revisar la pareja" });
+      res.status(500).json({ error: "Could not check that pair" });
     }
   },
 };

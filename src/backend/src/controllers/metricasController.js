@@ -14,7 +14,7 @@ const MetricasController = {
       res.json(await obtenerMetricas());
     } catch (error) {
       reportarError("Error en /metricas/resumen", error);
-      res.status(500).json({ error: "No se pudieron calcular las métricas" });
+      res.status(500).json({ error: "Could not calculate the metrics" });
     }
   },
 };

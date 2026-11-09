@@ -7,7 +7,7 @@ const HistorialAPI = {
       headers: { Authorization: `Bearer ${Sesion.obtenerToken()}` },
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Error cargando el historial");
+    if (!resp.ok) throw new Error(datos.error || "Could not load your history");
     return datos;
   },
 };

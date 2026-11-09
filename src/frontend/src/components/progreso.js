@@ -49,6 +49,7 @@ function renderizarProgreso(datos) {
   contenedor.classList.remove("oculto");
 
   renderizarMetaDiaria(datos.actividadesHoy, datos.metaDiaria);
+  document.dispatchEvent(new CustomEvent("tutorias:progreso", { detail: datos }));
 }
 
 function renderizarMetaDiaria(actividadesHoy, metaDiaria) {

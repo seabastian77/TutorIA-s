@@ -40,10 +40,10 @@ const BibliotecaAPI = {
 
   lectura: (slug) => pedirContenido(`/biblioteca/lectura/${slug}`),
 
-  traducir: (palabra, contexto) =>
+  traducir: (palabra, contexto, guardar = true) =>
     pedirContenido("/biblioteca/traducir", {
       method: "POST",
-      body: JSON.stringify({ palabra, contexto }),
+      body: JSON.stringify({ palabra, contexto, guardar }),
     }),
 
   responder: (lecturaId, respuestas) =>

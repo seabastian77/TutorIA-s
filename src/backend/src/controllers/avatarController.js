@@ -15,7 +15,7 @@ const AvatarController = {
       const estado = error.status || 500;
       if (estado >= 500 && estado !== 503) reportarError("Error en /avatar/sesion", error);
       res.status(estado).json({
-        error: estado === 503 ? error.message : "No se pudo abrir el video del tutor; sigue el modo de demostración",
+        error: estado === 503 ? error.message : "Could not open the tutor video; the demo avatar stays on",
         modo: "demo",
       });
     }

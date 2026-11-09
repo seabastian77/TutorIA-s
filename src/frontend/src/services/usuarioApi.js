@@ -9,7 +9,7 @@ const UsuarioAPI = {
     });
     const datos = await resp.json();
     if (!resp.ok)
-      throw new Error(datos.error || "Error obteniendo el progreso");
+      throw new Error(datos.error || "Could not load your progress");
     return datos;
   },
 };

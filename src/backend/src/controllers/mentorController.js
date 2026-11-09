@@ -55,7 +55,7 @@ const MentorController = {
       res.json({ estado, consejo: elegirConsejo(estado) });
     } catch (error) {
       reportarError("Error en /mentor/estado", error);
-      res.status(500).json({ error: "No se pudo leer tu progreso" });
+      res.status(500).json({ error: "Could not load your progress" });
     }
   },
 
@@ -66,12 +66,12 @@ const MentorController = {
       estado = await leerEstado(req.usuario.id);
     } catch (error) {
       reportarError("Error leyendo el estado para el consejo del día", error);
-      return res.status(500).json({ error: "No se pudo leer tu progreso" });
+      return res.status(500).json({ error: "Could not load your progress" });
     }
 
     try {
       const texto = await generarConsejoDelDia(estado, estado.ayudaEspanol);
-      if (!texto) throw new Error("La IA devolvió un consejo vacío");
+      if (!texto) throw new Error("The AI returned an empty tip");
       res.json({ texto, origen: "ia" });
     } catch (error) {
       // Que la IA no responda no puede dejar al avatar mudo: cae al consejo de reglas
@@ -90,7 +90,7 @@ const MentorController = {
       });
     } catch (error) {
       reportarError("Error abriendo la charla con el mentor", error);
-      res.status(500).json({ error: "No se pudo abrir la charla" });
+      res.status(500).json({ error: "Could not open the chat" });
     }
   },
 
@@ -101,7 +101,7 @@ const MentorController = {
   async charla(req, res) {
     const mensaje = limpiarMensaje(req.body && req.body.mensaje);
     if (!mensajeUtil(mensaje)) {
-      return res.status(400).json({ error: "Escribe algo para que Tuti te responda" });
+      return res.status(400).json({ error: "Write something so Tuti can answer" });
     }
 
     let estado;
@@ -109,7 +109,7 @@ const MentorController = {
       estado = await leerEstado(req.usuario.id);
     } catch (error) {
       reportarError("Error leyendo el estado para la charla", error);
-      return res.status(500).json({ error: "No se pudo leer tu progreso" });
+      return res.status(500).json({ error: "Could not load your progress" });
     }
 
     const historial = [
@@ -121,7 +121,7 @@ const MentorController = {
 
     try {
       const texto = await responderCharla(estado, historial, estado.ayudaEspanol, voz);
-      if (!texto) throw new Error("La IA devolvió una respuesta vacía");
+      if (!texto) throw new Error("The AI returned an empty answer");
       res.json({ texto, origen: "ia", idioma });
     } catch (error) {
       // Si la IA no responde, Tuti no se queda mudo: contesta con el consejo de reglas

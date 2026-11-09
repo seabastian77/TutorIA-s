@@ -32,7 +32,7 @@ const VocabularioController = {
       res.json({ palabras });
     } catch (error) {
       reportarError("Error en /vocabulario/repaso", error);
-      res.status(500).json({ error: "No se pudo cargar tu vocabulario" });
+      res.status(500).json({ error: "Could not load your vocabulary" });
     }
   },
 
@@ -48,7 +48,7 @@ const VocabularioController = {
       );
 
       if (!rows[0]) {
-        return res.status(404).json({ error: "Palabra no encontrada" });
+        return res.status(404).json({ error: "Word not found" });
       }
 
       // FSRS calcula cuándo debe volver según lo difícil que ha sido esta palabra para esta persona
@@ -74,7 +74,7 @@ const VocabularioController = {
       });
     } catch (error) {
       reportarError("Error en /vocabulario/responder", error);
-      res.status(500).json({ error: "No se pudo actualizar la palabra" });
+      res.status(500).json({ error: "Could not update the word" });
     }
   },
 };

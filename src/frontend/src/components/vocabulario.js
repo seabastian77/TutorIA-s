@@ -70,12 +70,15 @@ function mostrarPalabraActual() {
       ? "You reviewed all your due words!"
       : "No words to review yet. Words you miss in your exercises will show up here.";
     btnMostrar.classList.add("oculto");
-    if (tarjeta) tarjeta.classList.add("vocab-tarjeta-vacia");
+    if (tarjeta) {
+      tarjeta.classList.add("vocab-tarjeta-vacia");
+      tarjeta.classList.toggle("vocab-tarjeta-hecha", palabrasRepaso.length > 0);
+    }
     marcarPila(0);
     return;
   }
 
-  if (tarjeta) tarjeta.classList.remove("vocab-tarjeta-vacia");
+  if (tarjeta) tarjeta.classList.remove("vocab-tarjeta-vacia", "vocab-tarjeta-hecha");
   progresoEl.textContent = `Word ${indicePalabra + 1} of ${palabrasRepaso.length}`;
   const actual = palabrasRepaso[indicePalabra];
   textoEl.textContent = actual.palabra;

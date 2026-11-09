@@ -3,7 +3,7 @@ function correoValido(correo) {
 }
 
 function contrasenaValida(contrasena) {
-  return typeof contrasena === 'string' && contrasena.length >= 6;
+  return typeof contrasena === 'string' && contrasena.length >= 8;
 }
 
 window.Validaciones = { correoValido, contrasenaValida };

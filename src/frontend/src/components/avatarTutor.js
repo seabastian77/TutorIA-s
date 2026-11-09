@@ -80,7 +80,7 @@ const AvatarTutor = (() => {
 
   /** Monta el avatar dentro de un contenedor y devuelve los controles de su animación y su voz. */
   function montar(contenedor) {
-    contenedor.innerHTML = '<canvas class="avatar-lienzo" role="img" aria-label="Numi, tu tutora de inglés"></canvas>';
+    contenedor.innerHTML = '<canvas class="avatar-lienzo" role="img" aria-label="Numi, your English tutor"></canvas>';
     const lienzo = contenedor.querySelector("canvas");
     const ctx = lienzo.getContext("2d");
     const img = cargarRetrato();

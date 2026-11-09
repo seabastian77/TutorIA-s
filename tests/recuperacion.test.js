@@ -110,8 +110,8 @@ describe("validaciones", () => {
   });
 
   test("la contraseña nueva pide lo mismo que el registro", () => {
-    expect(contrasenaValida("123456")).toBe(true);
-    expect(contrasenaValida("12345")).toBe(false);
+    expect(contrasenaValida("12345678")).toBe(true);
+    expect(contrasenaValida("1234567")).toBe(false);
     expect(contrasenaValida(null)).toBe(false);
   });
 });

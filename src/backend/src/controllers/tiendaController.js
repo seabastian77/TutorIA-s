@@ -77,7 +77,7 @@ const TiendaController = {
       res.json({ articulos: catalogoPublico(), ...cuenta });
     } catch (error) {
       reportarError("Error en /tienda/catalogo", error);
-      res.status(500).json({ error: "No se pudo cargar la tienda" });
+      res.status(500).json({ error: "Could not load the shop" });
     }
   },
 
@@ -87,19 +87,19 @@ const TiendaController = {
       const articulo = CATALOGO.find((a) => a.id === articuloId);
 
       if (!articulo) {
-        return res.status(400).json({ error: "Ese artículo no existe" });
+        return res.status(400).json({ error: "That item doesn't exist" });
       }
 
       // Doble seguro: el campo siempre sale del catálogo, nunca del cliente
       if (!CAMPOS_INVENTARIO.includes(articulo.campo)) {
-        return res.status(400).json({ error: "Artículo mal configurado" });
+        return res.status(400).json({ error: "This item is misconfigured" });
       }
 
       const cuenta = await leerCuenta(req.usuario.id);
 
       if (cuenta.monedas < articulo.precio) {
         return res.status(400).json({
-          error: "No tienes monedas suficientes",
+          error: "You don't have enough coins",
           codigo: "sin_monedas",
           faltan: articulo.precio - cuenta.monedas,
         });
@@ -107,7 +107,7 @@ const TiendaController = {
 
       if (cuenta[articulo.campo] >= articulo.maximo) {
         return res.status(400).json({
-          error: "Ya tienes el máximo de ese artículo",
+          error: "You already have the maximum of that item",
           codigo: "tope_alcanzado",
         });
       }
@@ -123,7 +123,7 @@ const TiendaController = {
 
       if (rows.length === 0) {
         return res.status(400).json({
-          error: "No tienes monedas suficientes",
+          error: "You don't have enough coins",
           codigo: "sin_monedas",
         });
       }
@@ -144,7 +144,7 @@ const TiendaController = {
       });
     } catch (error) {
       reportarError("Error en /tienda/comprar", error);
-      res.status(500).json({ error: "No se pudo completar la compra" });
+      res.status(500).json({ error: "Could not complete the purchase" });
     }
   },
 };

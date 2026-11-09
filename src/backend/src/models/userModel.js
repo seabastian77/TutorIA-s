@@ -68,6 +68,11 @@ const UserModel = {
     return rows[0];
   },
 
+  /** Guarda un hash nuevo de la misma contraseña; no cierra las sesiones abiertas. */
+  async actualizarHash(id, contrasenaHash) {
+    await pool.query("UPDATE usuarios SET contrasena_hash = $2 WHERE id = $1", [id, contrasenaHash]);
+  },
+
   async actualizarUltimoAcceso(id) {
     await pool.query(
       "UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = $1",

@@ -3,33 +3,11 @@
 const NIVELES_MCER = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 // Un solo acento para todo el módulo: el color nunca carga identidad, solo realce
-const TINTA_DATO = "#4338ca";
+const TINTA_DATO = "#15803d";
 const TINTA_ANTES = "#94a3b8";
 const SUPERFICIE = "#ffffff";
 
 const TEXTOS = {
-  es: {
-    titulo: "My progress",
-    bajada: "Todo lo que has hecho en TutorIA's, reunido.",
-    vacio: "Todavía no hay nada que mostrar",
-    vacioNota: "Haz el Level Check y unos cuantos ejercicios; aquí vas a ver cómo avanzas.",
-    ejercicios: "Ejercicios", acierto: "Acierto", conversaciones: "Conversaciones",
-    palabras: "Palabras", racha: "Mejor racha", dias: "días",
-    nivelTitulo: "Tu nivel a lo largo del tiempo",
-    nivelNota: "Cada punto es un diagnóstico terminado.",
-    nivelUno: "Con un solo diagnóstico todavía no hay línea. Repite el Level Check más adelante para verla.",
-    semanaTitulo: "Acierto por semana",
-    semanaNota: "Porcentaje de ejercicios correctos en las últimas 8 semanas.",
-    semanaVacio: "Aún no has resuelto ejercicios.",
-    habTitulo: "Tus cuatro habilidades",
-    habNota: "Del primer diagnóstico al último.",
-    habUno: "Con un solo diagnóstico se muestra el punto de partida.",
-    antes: "Primero", despues: "Último",
-    resumenTitulo: "Lo que dijo la IA en tu último diagnóstico",
-    verDatos: "Ver los datos en tabla", ocultarDatos: "Ocultar la tabla",
-    semana: "Semana", total: "Ejercicios", correctos: "Correctos", porcentaje: "Acierto",
-    sinDatos: "sin actividad", volver: "Back to Home",
-  },
   en: {
     titulo: "My progress",
     bajada: "Everything you've done on TutorIA's, in one place.",
@@ -62,17 +40,17 @@ const esc = (t) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
   );
 
-/** Pasa una fecha a un texto corto tipo "5 mar". */
-function fechaCorta(valor, enEspanol) {
+/** Pasa una fecha a un texto corto tipo "Mar 5". */
+function fechaCorta(valor) {
   const d = new Date(valor);
   if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleDateString(enEspanol ? "es-CO" : "en-US", {
+  return d.toLocaleDateString("en-US", {
     day: "numeric", month: "short", timeZone: "UTC",
   });
 }
 
 /** Línea escalonada con la evolución del nivel; una sola serie, sin leyenda. */
-function graficaNiveles(niveles, t, enEspanol) {
+function graficaNiveles(niveles, t) {
   if (!niveles.length) return "";
   if (niveles.length === 1) {
     return `<p class="grafica-aviso">${esc(t.nivelUno)} <b>${esc(niveles[0].nivel)}</b></p>`;
@@ -97,8 +75,8 @@ function graficaNiveles(niveles, t, enEspanol) {
     .map((p, i) => {
       const ultimo = i === niveles.length - 1;
       return `<g class="punto" tabindex="0" role="img"
-          aria-label="${esc(fechaCorta(p.fecha, enEspanol))}: ${esc(p.nivel)}">
-        <title>${esc(fechaCorta(p.fecha, enEspanol))} — ${esc(p.nivel)}</title>
+          aria-label="${esc(fechaCorta(p.fecha))}: ${esc(p.nivel)}">
+        <title>${esc(fechaCorta(p.fecha))} — ${esc(p.nivel)}</title>
         <circle cx="${x(i)}" cy="${y(p.posicion)}" r="6" class="punto-aro"/>
         <circle cx="${x(i)}" cy="${y(p.posicion)}" r="4" class="punto-dato"/>
         ${ultimo ? `<text x="${x(i)}" y="${y(p.posicion) - 14}" class="dato-etq" text-anchor="middle">${esc(p.nivel)}</text>` : ""}
@@ -109,7 +87,7 @@ function graficaNiveles(niveles, t, enEspanol) {
   const fechas = niveles
     .map((p, i) =>
       i === 0 || i === niveles.length - 1
-        ? `<text x="${x(i)}" y="${alto - 8}" class="eje-txt" text-anchor="${i ? "end" : "start"}">${esc(fechaCorta(p.fecha, enEspanol))}</text>`
+        ? `<text x="${x(i)}" y="${alto - 8}" class="eje-txt" text-anchor="${i ? "end" : "start"}">${esc(fechaCorta(p.fecha))}</text>`
         : "",
     )
     .join("");
@@ -120,7 +98,7 @@ function graficaNiveles(niveles, t, enEspanol) {
 }
 
 /** Columnas del acierto semanal; las semanas sin actividad quedan en blanco. */
-function graficaSemanas(semanas, t, enEspanol) {
+function graficaSemanas(semanas, t) {
   const conDatos = semanas.filter((s) => s.porcentaje !== null);
   if (!conDatos.length) return `<p class="grafica-aviso">${esc(t.semanaVacio)}</p>`;
 
@@ -143,7 +121,7 @@ function graficaSemanas(semanas, t, enEspanol) {
   const columnas = semanas
     .map((s, i) => {
       const cx = izq + banda * i + banda / 2;
-      const etq = fechaCorta(s.semana, enEspanol);
+      const etq = fechaCorta(s.semana);
       if (s.porcentaje === null) {
         return `<text x="${cx}" y="${alto - 8}" class="eje-txt tenue ${i % 2 ? "alterna" : ""}" text-anchor="middle">${esc(etq)}</text>`;
       }
@@ -228,7 +206,7 @@ function tarjeta(valor, etiqueta, sufijo = "") {
 
 function pintarHistorial(datos) {
   datosHistorial = datos;
-  const t = TEXTOS[datos.enEspanol ? "es" : "en"];
+  const t = TEXTOS.en;
   const caja = document.getElementById("historial-contenido");
   const r = datos.resumen;
 
@@ -236,7 +214,8 @@ function pintarHistorial(datos) {
   document.getElementById("btn-salir-historial").textContent = t.volver;
 
   if (!datos.hayHistorial) {
-    caja.innerHTML = `<div class="tarjeta-tip" style="margin-top:0">
+    caja.innerHTML = `<div class="tarjeta-tip tarjeta-vacia" style="margin-top:0">
+      <img class="tuti-vacio" src="assets/tuti/tuti-vacio-chico.webp" alt="" width="88" height="88">
       <div><p class="tarjeta-tip-titulo">${esc(t.vacio)}</p>
       <p class="tarjeta-tip-texto">${esc(t.vacioNota)}</p></div></div>`;
     return;
@@ -257,8 +236,8 @@ function pintarHistorial(datos) {
 
   caja.innerHTML = `
     <div class="cifras">${cifras}</div>
-    ${bloque(t.nivelTitulo, t.nivelNota, graficaNiveles(datos.niveles, t, datos.enEspanol))}
-    ${bloque(t.semanaTitulo, t.semanaNota, graficaSemanas(datos.semanas, t, datos.enEspanol))}
+    ${bloque(t.nivelTitulo, t.nivelNota, graficaNiveles(datos.niveles, t))}
+    ${bloque(t.semanaTitulo, t.semanaNota, graficaSemanas(datos.semanas, t))}
     ${bloque(t.habTitulo, datos.habilidades.length && r.diagnosticos === 1 ? t.habUno : t.habNota,
       graficaHabilidades(datos.habilidades, t))}
     ${!datos.ultimoResumen ? "" : `<section class="bloque-grafica">
@@ -273,7 +252,7 @@ function pintarHistorial(datos) {
 }
 
 function alternarTabla() {
-  const t = TEXTOS[datosHistorial && datosHistorial.enEspanol ? "es" : "en"];
+  const t = TEXTOS.en;
   tablaVisible = !tablaVisible;
   const boton = document.getElementById("btn-tabla-datos");
   document.getElementById("caja-tabla").classList.toggle("oculto", !tablaVisible);

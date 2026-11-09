@@ -3,40 +3,8 @@
 const MENTOR_NOMBRE = "Tuti";
 const MENTOR_MEMORIA = "tutorias_mentor_cerrado";
 
-// Un loro: el animal que aprende idiomas repitiendo, igual que el estudiante
-const MENTOR_CUERPO = `
-<svg class="mentor-ave" viewBox="0 0 72 72" fill="none" aria-hidden="true">
-  <g class="mentor-flota">
-    <g class="mentor-cresta" fill="#fbbf24">
-      <path d="M30.5 19c-1.5-3.5-.8-6.5 1.5-8 1.3 2.4 1.7 5.3 1 7.7z"/>
-      <path d="M36 17.5c-1-4 .3-7 2.8-8.2.8 2.7.6 5.7-.6 7.9z"/>
-      <path d="M41.5 19.2c-.3-3.8 1.2-6.4 3.8-7 .1 2.7-.9 5.4-2.6 7.2z"/>
-    </g>
-    <path class="mentor-ala" d="M18.5 34c-4.5 2.5-6 7.5-4 13 3.5-1.5 6.5-5 7.5-9.5z" fill="#0f766e"/>
-    <circle cx="36" cy="38" r="21" fill="#14b8a6"/>
-    <path d="M36 17a21 21 0 0 1 0 42z" fill="#0d9488" opacity=".55"/>
-    <ellipse cx="36" cy="47" rx="12.5" ry="10" fill="#fde68a"/>
-    <g class="mentor-ojos">
-      <circle cx="28" cy="33" r="5" fill="#ffffff"/>
-      <circle cx="44" cy="33" r="5" fill="#ffffff"/>
-      <circle class="mentor-pupila" cx="28.9" cy="33.6" r="2.5" fill="#12232b"/>
-      <circle class="mentor-pupila" cx="44.9" cy="33.6" r="2.5" fill="#12232b"/>
-      <circle cx="27.2" cy="32" r="1" fill="#ffffff"/>
-      <circle cx="43.2" cy="32" r="1" fill="#ffffff"/>
-    </g>
-    <g class="mentor-parpados">
-      <path d="M23.4 33h9.2" stroke="#0d9488" stroke-width="5.4" stroke-linecap="round"/>
-      <path d="M39.4 33h9.2" stroke="#0d9488" stroke-width="5.4" stroke-linecap="round"/>
-    </g>
-    <path class="mentor-pico" d="M31 39.5h10L36 49z" fill="#f59e0b"/>
-    <path class="mentor-pico" d="M31 39.5h10l-1.6 3H32.6z" fill="#fbbf24"/>
-    <g class="mentor-ceja" stroke="#0d9488" stroke-width="2.2" stroke-linecap="round">
-      <path d="M23.5 26.5 32 25"/>
-      <path d="M48.5 26.5 40 25"/>
-    </g>
-    <path class="mentor-nota" d="M55 16v8.5a3 3 0 1 1-1.9-2.8V16z" fill="#fbbf24"/>
-  </g>
-</svg>`;
+// Tuti es el mismo modelo 3D de toda la app, aquí en su imagen renderizada
+const MENTOR_CUERPO = `<img class="mentor-ave mentor-ave-3d" src="assets/tuti/tuti-cara-chico.webp" alt="" width="64" height="64" decoding="async">`;
 
 const MENTOR_HTML = `
 <div id="mentor" class="mentor oculto" data-animo="feliz">
@@ -79,9 +47,9 @@ const CHARLA_HTML = `
     <span class="charla-ave" aria-hidden="true">${MENTOR_CUERPO}</span>
     <span class="charla-quien">
       <strong id="charla-titulo">${MENTOR_NOMBRE}</strong>
-      <span id="charla-estado" class="charla-estado">En línea</span>
+      <span id="charla-estado" class="charla-estado">Online</span>
     </span>
-    <button id="charla-cerrar" class="charla-cerrar" type="button" aria-label="Cerrar la charla">
+    <button id="charla-cerrar" class="charla-cerrar" type="button" aria-label="Close the chat">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor"
               stroke-width="2" stroke-linecap="round"/>
@@ -90,16 +58,16 @@ const CHARLA_HTML = `
   </header>
 
   <div id="charla-mensajes" class="charla-mensajes" role="log" aria-live="polite"
-       aria-label="Conversación con ${MENTOR_NOMBRE}"></div>
+       aria-label="Conversation with ${MENTOR_NOMBRE}"></div>
 
   <p id="charla-aviso-mic" class="charla-aviso oculto">
-    Tu navegador no deja usar el micrófono aquí. Prueba con Chrome o Edge.
+    Your browser can\u2019t use the microphone here. Try Chrome or Edge.
   </p>
 
   <form id="charla-forma" class="charla-forma">
-    <label class="sr-solo" for="charla-entrada">Escríbele a ${MENTOR_NOMBRE}</label>
+    <label class="sr-solo" for="charla-entrada">Message ${MENTOR_NOMBRE}</label>
     <button id="charla-mic" class="charla-mic oculto" type="button"
-            aria-label="Hablar en inglés" title="Hablar en inglés">
+            aria-label="Speak in English" title="Speak in English">
       <span class="charla-mic-halo" aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor"
@@ -109,8 +77,8 @@ const CHARLA_HTML = `
       </svg>
     </button>
     <input id="charla-entrada" class="charla-entrada" type="text" autocomplete="off"
-           maxlength="400" placeholder="Escríbele a ${MENTOR_NOMBRE}...">
-    <button id="charla-enviar" class="charla-enviar" type="submit" aria-label="Enviar">
+           maxlength="400" placeholder="Message ${MENTOR_NOMBRE}...">
+    <button id="charla-enviar" class="charla-enviar" type="submit" aria-label="Send">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M20 12 4 4l6 8-6 8z" fill="none" stroke="currentColor"
               stroke-width="1.8" stroke-linejoin="round"/>
@@ -333,7 +301,7 @@ function pintarEscribiendo() {
   fila.innerHTML =
     '<p class="charla-globo"><span class="charla-punto"></span>' +
     '<span class="charla-punto"></span><span class="charla-punto"></span></p>';
-  fila.setAttribute("aria-label", "Tuti está escribiendo");
+  fila.setAttribute("aria-label", "Tuti is typing");
   lista.appendChild(fila);
   lista.scrollTop = lista.scrollHeight;
   return fila;
@@ -364,7 +332,7 @@ async function abrirCharla() {
     anotarTurno("tuti", texto);
   } catch (err) {
     pensando.remove();
-    anotarTurno("tuti", "¡Hola! Soy Tuti. ¿Cómo va tu inglés hoy?");
+    anotarTurno("tuti", "Hi! I\u2019m Tuti. How\u2019s your English going today?");
   }
 }
 
@@ -401,12 +369,12 @@ async function enviarCharla(evento, voz) {
     anotarTurno("tuti", respuesta.texto);
   } catch (err) {
     pensando.remove();
-    anotarTurno("tuti", "No pude responderte ahora mismo. Inténtalo otra vez en un momento.");
+    anotarTurno("tuti", "I couldn\u2019t answer right now. Try again in a moment.");
   } finally {
     charlaOcupada = false;
     campo.disabled = false;
     document.getElementById("charla-enviar").disabled = false;
-    document.getElementById("charla-estado").textContent = "En línea";
+    document.getElementById("charla-estado").textContent = "Online";
     campo.focus();
   }
 }
@@ -442,7 +410,7 @@ function prepararMicrofono() {
   charlaReconocimiento.onerror = (evento) => {
     pararMicrofono();
     document.getElementById("charla-estado").textContent =
-      evento.error === "not-allowed" ? "Sin permiso del micrófono" : "No te escuché bien";
+      evento.error === "not-allowed" ? "No microphone permission" : "I didn\u2019t catch that";
   };
 
   charlaReconocimiento.onend = pararMicrofono;
@@ -460,7 +428,7 @@ function alternarMicrofono() {
   charlaOyendo = true;
   document.getElementById("charla-mic").classList.add("oyendo");
   document.getElementById("charla-mic").setAttribute("aria-pressed", "true");
-  document.getElementById("charla-estado").textContent = "Te escucho... habla en inglés";
+  document.getElementById("charla-estado").textContent = "Listening\u2026 speak in English";
 }
 
 function pararMicrofono() {
@@ -478,7 +446,7 @@ function pararMicrofono() {
     boton.setAttribute("aria-pressed", "false");
   }
   const estado = document.getElementById("charla-estado");
-  if (estado && estado.textContent.startsWith("Te escucho")) estado.textContent = "En línea";
+  if (estado && estado.textContent.startsWith("Listening")) estado.textContent = "Online";
 }
 
 /** Al cerrar sesión la charla no puede quedar colgada en pantalla. */

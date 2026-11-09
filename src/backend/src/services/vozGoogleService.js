@@ -62,7 +62,7 @@ async function sintetizar(texto, idioma, velocidad) {
     if (!r.ok) throw new Error(`Google TTS respondió ${r.estado}: ${r.detalle}`);
 
     const audio = r.datos && r.datos.audioContent;
-    if (!audio) throw new Error("Google TTS no devolvió audio");
+    if (!audio) throw new Error("Google TTS returned no audio");
 
     guardarEnCache(clave, audio);
     return audio;

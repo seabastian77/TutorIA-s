@@ -78,7 +78,7 @@ const AudioController = {
       });
     } catch (error) {
       reportarError("Error en /audio/dictado", error);
-      res.status(500).json({ error: "No se pudo preparar el dictado" });
+      res.status(500).json({ error: "Could not prepare the dictation" });
     }
   },
 
@@ -89,7 +89,7 @@ const AudioController = {
       const texto = typeof (req.body || {}).texto === "string" ? req.body.texto.slice(0, 1000) : "";
 
       if (!ejercicioId) {
-        return res.status(400).json({ error: "Falta el ejercicio" });
+        return res.status(400).json({ error: "The exercise is missing" });
       }
 
       const { rows } = await pool.query(
@@ -99,7 +99,7 @@ const AudioController = {
       );
 
       if (rows.length === 0) {
-        return res.status(404).json({ error: "Ese dictado no existe" });
+        return res.status(404).json({ error: "That dictation doesn't exist" });
       }
 
       const { frase, traduccion = null, credito: creditoFrase = null } = rows[0].contenido;
@@ -145,7 +145,7 @@ const AudioController = {
       });
     } catch (error) {
       reportarError("Error en /audio/responder-dictado", error);
-      res.status(500).json({ error: "No se pudo revisar tu dictado" });
+      res.status(500).json({ error: "Could not check your dictation" });
     }
   },
 
@@ -158,7 +158,7 @@ const AudioController = {
       if (!generado || !generado.texto || !Array.isArray(generado.preguntas)) {
         return res
           .status(502)
-          .json({ error: "La IA devolvió un audio incompleto" });
+          .json({ error: "The AI returned incomplete audio content" });
       }
 
       const indiceNivel = NIVELES.indexOf(nivel);
@@ -186,7 +186,7 @@ const AudioController = {
       });
     } catch (error) {
       reportarError("Error en /audio/comprension", error);
-      res.status(500).json({ error: "No se pudo preparar el audio" });
+      res.status(500).json({ error: "Could not prepare the audio" });
     }
   },
 
@@ -196,7 +196,7 @@ const AudioController = {
       const { respuestas } = req.body || {};
 
       if (!ejercicioId || !Array.isArray(respuestas)) {
-        return res.status(400).json({ error: "Faltan datos de la respuesta" });
+        return res.status(400).json({ error: "Some answer data is missing" });
       }
 
       const { rows } = await pool.query(
@@ -206,7 +206,7 @@ const AudioController = {
       );
 
       if (rows.length === 0) {
-        return res.status(404).json({ error: "Ese ejercicio no existe" });
+        return res.status(404).json({ error: "That exercise doesn't exist" });
       }
 
       const preguntas = rows[0].contenido.preguntas || [];
@@ -245,7 +245,7 @@ const AudioController = {
       });
     } catch (error) {
       reportarError("Error en /audio/responder-comprension", error);
-      res.status(500).json({ error: "No se pudieron revisar tus respuestas" });
+      res.status(500).json({ error: "Could not check your answers" });
     }
   },
 };

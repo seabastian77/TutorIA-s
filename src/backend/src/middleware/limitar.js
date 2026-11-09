@@ -33,7 +33,7 @@ function limitar({ ventanaMs = 60 * 1000, max = 30, clave = quienPide, mensaje }
     if (c.cuenta > max) {
       res.set("Retry-After", String(Math.ceil((c.hasta - ahora) / 1000)));
       return res.status(429).json({
-        error: mensaje || "Vas muy rápido. Espera un momento y vuelve a intentar.",
+        error: mensaje || "You're going too fast. Wait a moment and try again.",
         codigo: "demasiadas_peticiones",
       });
     }

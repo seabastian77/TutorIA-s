@@ -12,7 +12,7 @@ const NivelAPI = {
       body: JSON.stringify({ nivel, turno, historialNarrativo }),
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Error generando la escena");
+    if (!resp.ok) throw new Error(datos.error || "Could not create the scene");
     return datos;
   },
 
@@ -28,7 +28,7 @@ const NivelAPI = {
     });
     const datos = await resp.json();
     if (!resp.ok)
-      throw new Error(datos.error || "Error evaluando la respuesta");
+      throw new Error(datos.error || "Could not check your answer");
     return datos;
   },
 
@@ -61,7 +61,7 @@ const NivelAPI = {
     });
     const datos = await resp.json();
     if (!resp.ok)
-      throw new Error(datos.error || "Error guardando el diagnóstico");
+      throw new Error(datos.error || "Could not save your results");
     return datos;
   },
 };

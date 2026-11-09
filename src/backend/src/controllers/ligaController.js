@@ -70,7 +70,7 @@ const LigaController = {
       });
     } catch (error) {
       reportarError("Error en /liga/clasificacion", error);
-      res.status(500).json({ error: "No se pudo cargar la clasificación" });
+      res.status(500).json({ error: "Could not load the leaderboard" });
     }
   },
 };

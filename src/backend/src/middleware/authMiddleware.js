@@ -6,7 +6,7 @@ async function verificarAuth(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Token no proporcionado' });
+      return res.status(401).json({ error: 'Missing session token' });
     }
 
     const token = authHeader.split(' ')[1];
@@ -14,19 +14,19 @@ async function verificarAuth(req, res, next) {
     const usuario = await UserModel.buscarPorId(payload.id);
 
     if (!usuario) {
-      return res.status(401).json({ error: 'Usuario no encontrado' });
+      return res.status(401).json({ error: 'User not found' });
     }
 
     // Cambiar la contraseña cierra las sesiones que estaban abiertas antes
     if (tokenAnteriorAlCambio(payload.iat, usuario.contrasena_cambiada_en)) {
-      return res.status(401).json({ error: 'Token inválido o expirado' });
+      return res.status(401).json({ error: 'Invalid or expired session' });
     }
 
     delete usuario.contrasena_cambiada_en;
     req.usuario = usuario;
     next();
   } catch (error) {
-    return res.status(401).json({ error: 'Token inválido o expirado' });
+    return res.status(401).json({ error: 'Invalid or expired session' });
   }
 }
 

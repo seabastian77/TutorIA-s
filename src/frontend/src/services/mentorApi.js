@@ -7,7 +7,7 @@ const MentorAPI = {
       headers: { Authorization: `Bearer ${Sesion.obtenerToken()}` },
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Error leyendo el estado");
+    if (!resp.ok) throw new Error(datos.error || "Could not load Tuti's status");
     return datos;
   },
 
@@ -17,7 +17,7 @@ const MentorAPI = {
       headers: { Authorization: `Bearer ${Sesion.obtenerToken()}` },
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Error pidiendo el consejo");
+    if (!resp.ok) throw new Error(datos.error || "Could not load today's tip");
     return datos;
   },
 
@@ -27,7 +27,7 @@ const MentorAPI = {
       headers: { Authorization: `Bearer ${Sesion.obtenerToken()}` },
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Error abriendo la charla");
+    if (!resp.ok) throw new Error(datos.error || "Could not open the chat");
     return datos;
   },
 
@@ -47,7 +47,7 @@ const MentorAPI = {
       }),
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Tuti no pudo responder");
+    if (!resp.ok) throw new Error(datos.error || "Tuti could not answer");
     return datos;
   },
 };

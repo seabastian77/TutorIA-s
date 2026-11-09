@@ -26,16 +26,16 @@ describe("datosDePerfilGoogle", () => {
 
   test("RECHAZA el correo que Google no verificó", () => {
     expect(() => datosDePerfilGoogle({ ...PERFIL, email_verified: false })).toThrow(
-      /no ha verificado/,
+      /hasn.t verified/,
     );
     expect(() => datosDePerfilGoogle({ ...PERFIL, email_verified: undefined })).toThrow(
-      /no ha verificado/,
+      /hasn.t verified/,
     );
   });
 
   test("sin usuario o sin correo no pasa", () => {
-    expect(() => datosDePerfilGoogle({ ...PERFIL, sub: null })).toThrow(/usuario/);
-    expect(() => datosDePerfilGoogle({ ...PERFIL, email: null })).toThrow(/correo/);
+    expect(() => datosDePerfilGoogle({ ...PERFIL, sub: null })).toThrow(/no user/);
+    expect(() => datosDePerfilGoogle({ ...PERFIL, email: null })).toThrow(/no email/);
     expect(() => datosDePerfilGoogle(null)).toThrow();
   });
 

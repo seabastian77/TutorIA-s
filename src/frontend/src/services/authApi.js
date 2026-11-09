@@ -7,7 +7,7 @@ async function registrar({ nombre, correo, contrasena, aceptaPolitica }) {
     body: JSON.stringify({ nombre, correo, contrasena, aceptaPolitica: aceptaPolitica === true }),
   });
   const datos = await resp.json();
-  if (!resp.ok) throw new Error(datos.error || "Error al registrarse");
+  if (!resp.ok) throw new Error(datos.error || "Could not create your account");
   return datos;
 }
 
@@ -18,7 +18,7 @@ async function login({ correo, contrasena }) {
     body: JSON.stringify({ correo, contrasena }),
   });
   const datos = await resp.json();
-  if (!resp.ok) throw new Error(datos.error || "Error al iniciar sesión");
+  if (!resp.ok) throw new Error(datos.error || "Could not log in");
   return datos;
 }
 
@@ -27,14 +27,14 @@ async function obtenerPerfil(token) {
     headers: { Authorization: `Bearer ${token}` },
   });
   const datos = await resp.json();
-  if (!resp.ok) throw new Error(datos.error || "Error al obtener el perfil");
+  if (!resp.ok) throw new Error(datos.error || "Could not load your profile");
   return datos;
 }
 
 /** Lo que el navegador necesita saber antes de pintar el login. */
 async function obtenerConfig() {
   const resp = await fetch(`${URL_BASE}/auth/config`);
-  if (!resp.ok) throw new Error("No se pudo leer la configuración");
+  if (!resp.ok) throw new Error("Could not load the app settings");
   return resp.json();
 }
 
@@ -46,7 +46,7 @@ async function entrarConGoogle(credencial) {
     body: JSON.stringify({ credencial }),
   });
   const datos = await resp.json();
-  if (!resp.ok) throw new Error(datos.error || "No se pudo entrar con Google");
+  if (!resp.ok) throw new Error(datos.error || "Could not sign in with Google");
   return datos;
 }
 
@@ -58,7 +58,7 @@ async function pedirEnlace(correo) {
     body: JSON.stringify({ correo }),
   });
   const datos = await resp.json();
-  if (!resp.ok) throw new Error(datos.error || "No se pudo pedir el enlace");
+  if (!resp.ok) throw new Error(datos.error || "Could not send the reset link");
   return datos;
 }
 
@@ -70,7 +70,7 @@ async function restablecer({ token, contrasena }) {
     body: JSON.stringify({ token, contrasena }),
   });
   const datos = await resp.json();
-  if (!resp.ok) throw new Error(datos.error || "No se pudo cambiar la contraseña");
+  if (!resp.ok) throw new Error(datos.error || "Could not change your password");
   return datos;
 }
 

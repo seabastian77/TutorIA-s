@@ -17,15 +17,8 @@ jobs:
         run: npm install
       - name: Instalar dependencias del backend
         run: npm install --prefix src/backend
+      # El script revisa también los módulos ES del frontend (Tuti 3D), que node --check solo no acepta en Node 20
       - name: Revisar que todo el JavaScript compile
-        run: |
-          errores=0
-          for archivo in $(find src -name "*.js" -not -path "*/node_modules/*"); do
-            if ! node --check "$archivo"; then
-              echo "Error de sintaxis en $archivo"
-              errores=1
-            fi
-          done
-          exit $errores
+        run: npm run lint:sintaxis
       - name: Correr las pruebas
         run: npm test

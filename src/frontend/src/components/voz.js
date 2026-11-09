@@ -20,23 +20,13 @@ const SoporteVoz = {
   sintesisDisponible: !!window.speechSynthesis,
 };
 
+// La interfaz va siempre en inglés; el español queda solo para explicar los errores
 const ESTADOS = {
-  listo: ["Ready", "Lista"],
-  escuchando: ["Listening", "Escuchando"],
-  pensando: ["Thinking", "Pensando"],
-  hablando: ["Speaking", "Hablando"],
+  listo: "Ready",
+  escuchando: "Listening",
+  pensando: "Thinking",
+  hablando: "Speaking",
 };
-
-/** Dice si el estudiante tiene encendidas las explicaciones en español. */
-function enEspanol() {
-  const casilla = document.getElementById("ayuda-espanol-check");
-  return Boolean(casilla && casilla.checked);
-}
-
-/** Escoge el texto en inglés o en español según la ayuda que tenga encendida. */
-function segunIdioma(ingles, espanol) {
-  return enEspanol() ? espanol : ingles;
-}
 
 function mostrarEstadoMic(texto) {
   const estado = document.getElementById("voz-estado");
@@ -48,7 +38,7 @@ function ponerEstado(estado, nota) {
   const escenario = document.getElementById("tutoria-escenario");
   if (escenario) escenario.dataset.estado = estado;
   const etiqueta = document.getElementById("tutoria-estado-texto");
-  if (etiqueta) etiqueta.textContent = ESTADOS[estado][enEspanol() ? 1 : 0];
+  if (etiqueta) etiqueta.textContent = ESTADOS[estado];
   if (avatar) avatar.estado(estado);
   if (nota) mostrarEstadoMic(nota);
   const mic = document.getElementById("btn-mic");
@@ -93,7 +83,7 @@ function iniciarVistaVoz() {
   if (!avatar) avatar = AvatarTutor.montar(document.getElementById("tutoria-avatar"));
   mostrarPortada(true);
   habilitarControles(false);
-  ponerEstado("listo", segunIdioma("Start the session to talk with Numi", "Empieza la sesión para hablar con Numi"));
+  ponerEstado("listo", "Start the session to talk with Numi");
   mostrarSubtitulo("");
   document.getElementById("tutoria-tiempo").textContent = "00:00";
 
@@ -159,10 +149,7 @@ async function conectarVideoReal() {
     videoReal = null;
     alternarVideo(false);
     ponerModo("Demo avatar", false, "Live video unavailable");
-    agregarMensajeChat("aviso", segunIdioma(
-      "The live video avatar couldn't connect, so Numi is using her demo avatar.",
-      "El avatar en video no se pudo conectar, así que Numi sigue con su avatar de demostración.",
-    ));
+    agregarMensajeChat("aviso", "The live video avatar couldn't connect, so Numi is using her demo avatar.");
   }
 }
 
@@ -195,7 +182,7 @@ function terminarSesion() {
   mostrarPortada(true);
   const boton = document.getElementById("btn-iniciar-tutoria");
   if (boton) boton.textContent = "Start a new session";
-  ponerEstado("listo", segunIdioma("Session finished. Start a new one whenever you want.", "Sesión terminada. Empieza otra cuando quieras."));
+  ponerEstado("listo", "Session finished. Start a new one whenever you want.");
   if (configAvatar.modo === "real") ponerModo("Live video ready", true);
 }
 
@@ -241,7 +228,7 @@ function hablarConNavegador(texto) {
 /** Numi dice un texto: con video real se lo envía al proveedor; si no, lo habla el avatar animado. */
 async function decir(texto) {
   const mio = ++turnoHabla;
-  ponerEstado("hablando", segunIdioma("Numi is speaking. Tap the mic to interrupt.", "Numi está hablando. Toca el micrófono para interrumpir."));
+  ponerEstado("hablando", "Numi is speaking. Tap the mic to interrupt.");
   mostrarSubtitulo(texto, "ia");
 
   const buffer = await obtenerAudio(texto);
@@ -258,7 +245,7 @@ async function decir(texto) {
 
   if (mio !== turnoHabla) return;
   mostrarSubtitulo("");
-  ponerEstado("listo", segunIdioma("Tap the mic to answer, or type below", "Toca el micrófono para responder o escribe abajo"));
+  ponerEstado("listo", "Tap the mic to answer, or type below");
 }
 
 /** Corta lo que Numi esté diciendo, venga del avatar, del navegador o del video real. */
@@ -295,12 +282,12 @@ function configurarReconocimiento() {
   reconocimiento.onerror = (evento) => {
     escuchando = false;
     if (evento.error === "not-allowed" || evento.error === "service-not-allowed") {
-      ponerEstado("listo", segunIdioma("The microphone is blocked. Allow it in your browser, or type your question.", "El micrófono está bloqueado. Permítelo en el navegador o escribe tu pregunta."));
+      ponerEstado("listo", "The microphone is blocked. Allow it in your browser, or type your question.");
       document.getElementById("tutoria-auto").checked = false;
     } else if (evento.error === "no-speech") {
-      ponerEstado("listo", segunIdioma("I didn't hear anything. Tap the mic and try again.", "No te escuché. Toca el micrófono e inténtalo otra vez."));
+      ponerEstado("listo", "I didn't hear anything. Tap the mic and try again.");
     } else if (evento.error !== "aborted") {
-      ponerEstado("listo", segunIdioma("There was a problem listening. Try again.", "Hubo un problema escuchando. Intenta de nuevo."));
+      ponerEstado("listo", "There was a problem listening. Try again.");
     }
   };
 
@@ -314,7 +301,7 @@ function configurarReconocimiento() {
       manejarMensajeUsuario(dicho);
     } else if (estabaEscuchando) {
       mostrarSubtitulo("");
-      ponerEstado("listo", segunIdioma("Tap the mic to talk, or type below", "Toca el micrófono para hablar o escribe abajo"));
+      ponerEstado("listo", "Tap the mic to talk, or type below");
     }
   };
 }
@@ -330,7 +317,7 @@ function escuchar() {
     return; // ya estaba arrancando
   }
   escuchando = true;
-  ponerEstado("escuchando", segunIdioma("Listening... speak in English", "Escuchando... habla en inglés"));
+  ponerEstado("escuchando", "Listening... speak in English");
 }
 
 function escucharSiAutomatico() {
@@ -363,7 +350,7 @@ async function manejarMensajeUsuario(texto) {
   agregarMensajeChat("usuario", limpio);
   historialVoz.push({ rol: "usuario", texto: limpio });
   const mio = ++turnoPregunta;
-  ponerEstado("pensando", segunIdioma("Numi is thinking...", "Numi está pensando..."));
+  ponerEstado("pensando", "Numi is thinking...");
 
   try {
     const datos = await VozAPI.enviarMensaje({
@@ -385,7 +372,7 @@ async function manejarMensajeUsuario(texto) {
     if (mio !== turnoPregunta) return;
     // Lo que no llegó no queda en la conversación que ve la IA
     if (historialVoz[historialVoz.length - 1]?.texto === limpio) historialVoz.pop();
-    ponerEstado("listo", segunIdioma("Numi couldn't answer that. Try again.", "Numi no pudo responder. Intenta de nuevo."));
+    ponerEstado("listo", "Numi couldn't answer that. Try again.");
   }
 }
 

@@ -97,7 +97,7 @@ describe("extraerJSON", () => {
   });
 
   test("una respuesta sin JSON avisa con un error claro", () => {
-    expect(() => extraerJSON("no encontré nada")).toThrow("no devolvió JSON");
+    expect(() => extraerJSON("no encontré nada")).toThrow("did not return JSON");
   });
 
   test("una respuesta vacía también falla de forma controlada", () => {
@@ -131,7 +131,7 @@ describe("extraerJSON", () => {
   test("un JSON cortado a la mitad avisa en vez de romper raro", () => {
     // Pasa cuando el modelo se queda sin tokens de salida
     expect(() => extraerJSON('{"precision": 70, "resumen": "se cor')).toThrow(
-      "no devolvió JSON completo",
+      "returned incomplete JSON",
     );
   });
 });

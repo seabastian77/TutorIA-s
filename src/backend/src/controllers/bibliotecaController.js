@@ -8,6 +8,16 @@ const {
 const { registrarActividad } = require("../utils/gamificacion");
 const { obtenerPerfil } = require("../utils/perfil");
 const { reportarError } = require("../utils/errores");
+const {
+  limpiarPalabra,
+  esPalabraInglesa,
+  limpiarFrase,
+  normalizarTraduccion,
+  crearCacheTraducciones,
+  claveTraduccion,
+} = require("../utils/palabraTocada");
+
+const cacheTraducciones = crearCacheTraducciones();
 
 const BibliotecaController = {
   /** Catálogo: los temas fijos, marcando cuáles ya leyó el usuario. */
@@ -37,7 +47,7 @@ const BibliotecaController = {
       res.json({ nivel, temas });
     } catch (error) {
       reportarError("Error en /biblioteca/catalogo", error);
-      res.status(500).json({ error: "No se pudo cargar la biblioteca" });
+      res.status(500).json({ error: "Could not load the library" });
     }
   },
 
@@ -48,7 +58,7 @@ const BibliotecaController = {
       const tema = obtenerTemaLectura(slug);
 
       if (!tema) {
-        return res.status(400).json({ error: "Esa lectura no existe" });
+        return res.status(400).json({ error: "That reading doesn't exist" });
       }
 
       const { nivel } = await obtenerPerfil(req.usuario.id);
@@ -75,7 +85,7 @@ const BibliotecaController = {
       if (!generada || !generada.texto || !Array.isArray(generada.preguntas)) {
         return res
           .status(502)
-          .json({ error: "La IA devolvió una lectura incompleta" });
+          .json({ error: "The AI returned an incomplete reading" });
       }
 
       // ON CONFLICT por si dos usuarios abren la misma lectura a la vez
@@ -104,56 +114,68 @@ const BibliotecaController = {
       });
     } catch (error) {
       reportarError("Error en /biblioteca/lectura", error);
-      res.status(500).json({ error: "No se pudo abrir la lectura" });
+      res.status(500).json({ error: "Could not open the reading" });
     }
   },
 
-  /** Traduce una palabra que el usuario tocó, y la guarda en su vocabulario. */
+  /** Traduce la palabra tocada en su frase; la guarda en el vocabulario salvo que se pida lo contrario. */
   async traducir(req, res) {
     try {
-      const { palabra, contexto } = req.body;
+      const { palabra, contexto, guardar = true } = req.body || {};
+      const limpia = limpiarPalabra(palabra);
 
-      if (!palabra || !palabra.trim()) {
-        return res.status(400).json({ error: "No mandaste ninguna palabra" });
+      if (!limpia) {
+        return res.status(400).json({ error: "No word was sent" });
+      }
+      if (!esPalabraInglesa(limpia)) {
+        return res.status(400).json({ error: "That doesn't look like an English word" });
       }
 
-      const limpia = palabra.trim().slice(0, 40);
+      const frase = limpiarFrase(contexto);
       const { ayudaEs } = await obtenerPerfil(req.usuario.id);
 
-      const resultado = await traducirPalabra({
-        palabra: limpia,
-        contexto: (contexto || "").slice(0, 300),
-        ayudaEs,
-      });
+      const resultado = await cacheTraducciones.obtener(
+        claveTraduccion({ palabra: limpia, contexto: frase, ayudaEs }),
+        async () => normalizarTraduccion(
+          await traducirPalabra({ palabra: limpia, contexto: frase, ayudaEs }),
+          limpia,
+        ),
+      );
 
-      // Entra al vocabulario de repetición espaciada si aún no estaba
-      try {
-        const { rows: yaEsta } = await pool.query(
-          "SELECT id FROM vocabulario_usuario WHERE usuario_id = $1 AND LOWER(palabra) = LOWER($2)",
-          [req.usuario.id, resultado.palabra || limpia],
-        );
-
-        if (yaEsta.length === 0) {
-          await pool.query(
-            `INSERT INTO vocabulario_usuario (usuario_id, palabra, traduccion, contexto)
-             VALUES ($1, $2, $3, $4)`,
-            [
-              req.usuario.id,
-              resultado.palabra || limpia,
-              resultado.traduccion,
-              contexto || null,
-            ],
-          );
-        }
-      } catch (error) {
-        // Guardar el vocabulario nunca debe tumbar la traducción
-        reportarError("No se pudo guardar la palabra tocada", error);
+      if (!resultado.traduccion) {
+        return res.status(502).json({ error: "Could not translate the word" });
       }
 
-      res.json(resultado);
+      let guardada = false;
+      if (guardar === false) {
+        // Sin guardar, igual se avisa si la palabra ya estaba en el vocabulario
+        const { rows } = await pool.query(
+          "SELECT 1 FROM vocabulario_usuario WHERE usuario_id = $1 AND LOWER(palabra) = LOWER($2) LIMIT 1",
+          [req.usuario.id, resultado.palabra],
+        );
+        guardada = rows.length > 0;
+      } else {
+        // Entra al vocabulario de repetición espaciada si aún no estaba; nunca tumba la traducción
+        try {
+          await pool.query(
+            `INSERT INTO vocabulario_usuario (usuario_id, palabra, traduccion, contexto)
+             SELECT $1::int, $2::text, $3::text, $4::text
+              WHERE NOT EXISTS (
+                SELECT 1 FROM vocabulario_usuario
+                 WHERE usuario_id = $1::int AND LOWER(palabra) = LOWER($2::text)
+              )`,
+            [req.usuario.id, resultado.palabra, resultado.traduccion, frase || null],
+          );
+          guardada = true;
+        } catch (error) {
+          reportarError("No se pudo guardar la palabra tocada", error);
+        }
+      }
+
+      res.json({ ...resultado, guardada });
     } catch (error) {
       reportarError("Error en /biblioteca/traducir", error);
-      res.status(500).json({ error: "No se pudo traducir la palabra" });
+      res.status(500).json({ error: "Could not translate the word" });
     }
   },
 
@@ -164,7 +186,7 @@ const BibliotecaController = {
       const lecturaId = Number.isInteger(Number((req.body || {}).lecturaId)) ? Number(req.body.lecturaId) : null;
 
       if (!lecturaId || !Array.isArray(respuestas)) {
-        return res.status(400).json({ error: "Faltan datos de la respuesta" });
+        return res.status(400).json({ error: "Some answer data is missing" });
       }
 
       const { rows } = await pool.query(
@@ -173,7 +195,7 @@ const BibliotecaController = {
       );
 
       if (rows.length === 0) {
-        return res.status(404).json({ error: "Esa lectura no existe" });
+        return res.status(404).json({ error: "That reading doesn't exist" });
       }
 
       const preguntas = rows[0].preguntas;
@@ -218,7 +240,7 @@ const BibliotecaController = {
       });
     } catch (error) {
       reportarError("Error en /biblioteca/responder", error);
-      res.status(500).json({ error: "No se pudieron revisar tus respuestas" });
+      res.status(500).json({ error: "Could not check your answers" });
     }
   },
 };

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 
   <meta charset="UTF-8" />
@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,100&display=swap" rel="stylesheet">
   <script>
     // Antes de pintar nada, para que no haya un destello del tema contrario
     (function () {
@@ -23,42 +24,26 @@
       }
     })();
   </script>
-  <link rel="icon" type="image/svg+xml" href="assets/tuti.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icono-32.png" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/icono-64.png" />
   <link rel="apple-touch-icon" href="assets/icono-180.png" />
-  <meta name="theme-color" content="#0B1B36" />
+  <meta name="theme-color" content="#0E3B24" />
+  <meta name="description" content="TutorIA's: learn English with an AI tutor. Speak, read, listen and play with Tuti." />
   <link rel="stylesheet" href="src/styles/global.css" />
+  <link rel="stylesheet" href="src/styles/marco.css" />
+  <link rel="preload" as="image" href="assets/tuti/tuti-saludo.webp" type="image/webp" />
 </head>
 <body>
 
-  <!-- El símbolo de la marca: Tuti simplificado, se reutiliza en toda la app -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <symbol id="marca-tuti" viewBox="9 8 54 54">
-      <g fill="#F5B301">
-        <path d="M30.5 19c-1.5-3.5-.8-6.5 1.5-8 1.3 2.4 1.7 5.3 1 7.7z"/>
-        <path d="M36 17.5c-1-4 .3-7 2.8-8.2.8 2.7.6 5.7-.6 7.9z"/>
-        <path d="M41.5 19.2c-.3-3.8 1.2-6.4 3.8-7 .1 2.7-.9 5.4-2.6 7.2z"/>
-      </g>
-      <circle cx="36" cy="39" r="22" fill="#14B8A6"/>
-      <path d="M36 17a22 22 0 0 1 0 44z" fill="#0D9488" opacity=".55"/>
-      <ellipse cx="36" cy="49.5" rx="12.5" ry="9.5" fill="#FDE68A"/>
-      <circle cx="28" cy="34" r="5.6" fill="#fff"/>
-      <circle cx="44" cy="34" r="5.6" fill="#fff"/>
-      <circle cx="29" cy="34.8" r="2.8" fill="#0B1B36"/>
-      <circle cx="45" cy="34.8" r="2.8" fill="#0B1B36"/>
-      <path d="M30.5 41.5h11L36 50.5z" fill="#F59E0B"/>
-    </symbol>
-  </svg>
 
   <!-- La política se lee aquí mismo, sin abrir otra pestaña ni perder lo escrito en el formulario -->
   <dialog id="dialogo-politica" class="dialogo-politica" aria-labelledby="dialogo-politica-titulo">
     <div class="dialogo-politica-barra">
-      <strong id="dialogo-politica-titulo">Política de tratamiento de datos</strong>
-      <a href="privacidad.html" target="_blank" rel="noopener">Abrir en otra pestaña</a>
-      <button type="button" id="btn-cerrar-politica" class="dialogo-politica-cerrar" aria-label="Cerrar">&times;</button>
+      <strong id="dialogo-politica-titulo">Data policy</strong>
+      <a href="privacidad.html" target="_blank" rel="noopener">Open in a new tab</a>
+      <button type="button" id="btn-cerrar-politica" class="dialogo-politica-cerrar" aria-label="Close">&times;</button>
     </div>
-    <iframe id="marco-politica" title="Política de tratamiento de datos"></iframe>
+    <iframe id="marco-politica" title="Data policy (in Spanish)"></iframe>
   </dialog>
 
   <!-- Vista de autenticación -->
@@ -66,8 +51,9 @@
 
     <!-- Panel de marca -->
     <section class="auth-lado-izquierdo" aria-label="TutorIA&#8217;s">
-      <span class="marca marca-clara"><svg class="marca-simbolo" aria-hidden="true"><use href="#marca-tuti"/></svg><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></span>
+      <span class="marca marca-clara"><img class="marca-simbolo" src="assets/tuti/tuti-cara-chico.webp" alt="" width="40" height="40" /><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></span>
 
+      <img class="auth-tuti" src="assets/tuti/tuti-saludo.webp" alt="Tuti, the TutorIA&#8217;s mascot, waving hello" width="300" height="300" />
       <h2 class="auth-frase">Speak English <span class="auth-frase-glow">out loud.</span></h2>
 
       <p class="auth-subfrase">
@@ -84,7 +70,7 @@
     <!-- Tarjeta de login/registro -->
     <div class="tarjeta-auth">
       <div class="auth-contenido">
-        <span class="marca marca-movil"><svg class="marca-simbolo" aria-hidden="true"><use href="#marca-tuti"/></svg><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></span>
+        <span class="marca marca-movil"><img class="marca-simbolo" src="assets/tuti/tuti-cara-chico.webp" alt="" width="40" height="40" /><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></span>
 
         <div class="auth-cabecera">
           <h1 id="auth-titulo">Welcome back</h1>
@@ -97,9 +83,9 @@
         <div id="caja-google" class="caja-google oculto">
           <div id="boton-google"></div>
           <p class="aviso-politica">
-            Al continuar con Google aceptas la
-            <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.
-            Si eres menor de 18 años, necesitas la autorización de tu acudiente.
+            By continuing with Google you accept the
+            <a href="privacidad.html" target="_blank" rel="noopener">data policy</a>.
+            If you are under 18, you need permission from your parent or guardian.
           </p>
           <p class="separador-o"><span>or with your email</span></p>
         </div>
@@ -142,12 +128,12 @@
             <div class="campo">
               <label for="restablecer-contrasena">New password</label>
               <input type="password" id="restablecer-contrasena"
-                     placeholder="Minimum 6 characters" minlength="6" required />
+                     placeholder="Minimum 8 characters" minlength="8" required />
             </div>
             <div class="campo">
               <label for="restablecer-repetir">Repeat it</label>
               <input type="password" id="restablecer-repetir"
-                     placeholder="Type it again" minlength="6" required />
+                     placeholder="Type it again" minlength="8" required />
             </div>
             <button type="submit" class="btn-principal">Save my new password</button>
           </form>
@@ -167,14 +153,14 @@
             </div>
             <div class="campo">
               <label for="registro-contrasena">Password</label>
-              <input type="password" id="registro-contrasena" placeholder="Minimum 6 characters" required />
+              <input type="password" id="registro-contrasena" placeholder="Minimum 8 characters" minlength="8" required />
             </div>
             <label class="casilla-politica" for="registro-politica">
               <input type="checkbox" id="registro-politica" required />
               <span>
-                Acepto la
-                <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.
-                Si soy menor de 18 años, tengo la autorización de mi madre, padre o representante legal.
+                I accept the
+                <a href="privacidad.html" target="_blank" rel="noopener">data policy</a>.
+                If I am under 18, I have permission from my parent or legal guardian.
               </span>
             </label>
             <button type="submit" class="btn-principal">Create my account</button>
@@ -192,7 +178,7 @@
 
   <!-- Barra superior: se queda fija en todas las vistas mientras hay sesión -->
   <header id="barra-app" class="barra-app oculto">
-    <button type="button" id="btn-logo-inicio" class="marca marca-boton" aria-label="TutorIA&#8217;s, go to Home"><svg class="marca-simbolo" aria-hidden="true"><use href="#marca-tuti"/></svg><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></button>
+    <button type="button" id="btn-logo-inicio" class="marca marca-boton" aria-label="TutorIA&#8217;s, go to Home"><img class="marca-simbolo" src="assets/tuti/tuti-cara-chico.webp" alt="" width="40" height="40" /><span class="marca-nombre">Tutor<em>IA</em>&#8217;s</span></button>
 
     <div id="progreso-usuario" class="progreso-usuario oculto" role="button" tabindex="0" title="See my progress">
       <span class="progreso-item item-racha" title="Day streak">
@@ -205,6 +191,12 @@
         <span id="progreso-puntos">0</span>&nbsp;XP
       </span>
     </div>
+
+    <button id="btn-espanol" class="btn-espanol oculto" type="button" aria-pressed="false"
+            aria-label="Spanish help: explanations in Spanish and tap any word to translate it">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+      <span class="btn-espanol-largo">Spanish help</span><span class="btn-espanol-corto" aria-hidden="true">ES</span>
+    </button>
 
     <button id="btn-tema" class="btn-tema" type="button" aria-pressed="false"
             aria-label="Switch to dark mode" title="Switch to dark mode">
@@ -237,8 +229,8 @@
         </div>
         <button type="button" id="btn-menu-progreso" class="menu-cuenta-opcion"><i class="fa-solid fa-chart-line"></i>My progress</button>
         <button type="button" id="btn-menu-tema" class="menu-cuenta-opcion menu-solo-movil"><i class="fa-solid fa-sun"></i><span id="menu-tema-texto">Dark mode</span></button>
-        <button type="button" id="btn-menu-metricas" class="menu-cuenta-opcion oculto"><i class="fa-solid fa-chart-column"></i>Métricas del estudio</button>
-        <button type="button" id="btn-menu-datos" class="menu-cuenta-opcion"><i class="fa-solid fa-shield-halved"></i>Tus datos y tu cuenta</button>
+        <button type="button" id="btn-menu-metricas" class="menu-cuenta-opcion oculto"><i class="fa-solid fa-chart-column"></i>Study metrics</button>
+        <button type="button" id="btn-menu-datos" class="menu-cuenta-opcion"><i class="fa-solid fa-shield-halved"></i>Your data and account</button>
         <button type="button" id="btn-cerrar-sesion" class="menu-cuenta-opcion"><i class="fa-solid fa-log-out"></i>Log out</button>
       </div>
     </div>
@@ -247,17 +239,19 @@
   <!-- Vista principal tras login -->
   <main id="vista-principal" class="pantalla-principal oculto">
 
-    <div class="saludo">
-      <h2 id="saludo-usuario">Hi!</h2>
-      <p id="progreso-tendencia-wrap" class="saludo-nota tendencia-neutra">
-        <span id="progreso-tendencia-icono" class="saludo-nota-icono"></span>
-        <span id="progreso-tendencia-texto">Welcome to TutorIA&#8217;s. Let&#8217;s start by finding your English level.</span>
-      </p>
-    </div>
-
     <!-- Lo que toca ahora: lo decide el mismo motor que usa Tuti -->
-    <section id="siguiente-paso" class="siguiente-paso" aria-labelledby="paso-titulo">
+    <section id="siguiente-paso" class="siguiente-paso heroe" aria-labelledby="saludo-usuario">
+      <div id="heroe-tuti" class="heroe-tuti">
+        <img class="heroe-tuti-img" src="assets/tuti/tuti-saludo.webp" alt="Tuti, your English tutor, waving hello" width="480" height="480" fetchpriority="high" />
+      </div>
       <div class="paso-cuerpo">
+        <div class="saludo">
+          <h2 id="saludo-usuario">Hi!</h2>
+          <p id="progreso-tendencia-wrap" class="saludo-nota tendencia-neutra">
+            <span id="progreso-tendencia-icono" class="saludo-nota-icono"></span>
+            <span id="progreso-tendencia-texto">Welcome to TutorIA&#8217;s. Let&#8217;s start by finding your English level.</span>
+          </p>
+        </div>
         <p class="paso-etiqueta">Your next step</p>
         <h3 id="paso-titulo">Level Check</h3>
         <p id="paso-texto">An immersive AI diagnostic in 8 scenes, about 10 minutes. Everything else adapts to your result.</p>
@@ -266,12 +260,6 @@
             <span id="paso-accion">Start now</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
           </button>
-
-          <label id="ayuda-espanol" class="ayuda-espanol oculto">
-            <input type="checkbox" id="ayuda-espanol-check" />
-            <span class="ayuda-espanol-palanca"></span>
-            <span id="ayuda-espanol-texto">Explanations in Spanish</span>
-          </label>
         </div>
       </div>
 
@@ -302,6 +290,7 @@
               <path d="M6.5 12h11" />
             </g>
           </svg></span><span class="modulo-sello">Daily</span></span>
+          <span class="modulo-tipo">Grammar &amp; vocabulary</span>
           <span class="modulo-titulo">Daily Practice</span>
           <span class="modulo-nota">Questions that get harder the moment you stop missing them</span>
         </button>
@@ -313,6 +302,7 @@
             <path class="ic-onda ic-onda-1" d="M17.6 7.2a3.6 3.6 0 0 1 0 5" />
             <path class="ic-onda ic-onda-2" d="M19.6 5.4a6.2 6.2 0 0 1 0 8.6" />
           </svg></span></span>
+          <span class="modulo-tipo">Speaking</span>
           <span class="modulo-titulo">Talk to the AI</span>
           <span class="modulo-nota">Video tutoring with Numi, your AI teacher</span>
         </button>
@@ -321,6 +311,7 @@
             <path class="ic-burbuja-1" d="M3 6a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8l-5 4z" />
             <path class="ic-burbuja-2" d="M17 9h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v3l-3-3" />
           </svg></span></span>
+          <span class="modulo-tipo">Role-play</span>
           <span class="modulo-titulo">Real Situations</span>
           <span class="modulo-nota">Order a coffee, pass immigration, nail an interview</span>
         </button>
@@ -334,6 +325,7 @@
               <path d="m14 8.3.9-4.2" />
             </g>
           </svg></span></span>
+          <span class="modulo-tipo">Reading aloud</span>
           <span class="modulo-titulo">Scene Mode</span>
           <span class="modulo-nota">Original AI scripts to read and repeat</span>
         </button>
@@ -354,6 +346,7 @@
             <path class="ic-eq ic-eq-4" d="M16.5 7v10" />
             <path class="ic-eq ic-eq-5" d="M21 10v4" />
           </svg></span></span>
+          <span class="modulo-tipo">Listening</span>
           <span class="modulo-titulo">Audio Lab</span>
           <span class="modulo-nota">Dictations and listening comprehension</span>
         </button>
@@ -363,6 +356,7 @@
             <path d="M12 7c1.5-1.5 4-2 7-2v13c-3 0-5.5.5-7 2" />
             <path class="ic-hoja" d="M12 7v13" />
           </svg></span></span>
+          <span class="modulo-tipo">Reading</span>
           <span class="modulo-titulo">Library</span>
           <span class="modulo-nota">Stories at your level, tap any word</span>
         </button>
@@ -371,6 +365,7 @@
             <rect x="9" y="6" width="11" height="14" rx="2" />
             <rect class="ic-carta" x="4" y="4" width="11" height="14" rx="2" fill="var(--tono-borde)" />
           </svg></span></span>
+          <span class="modulo-tipo">Spaced review</span>
           <span class="modulo-titulo">Vocabulary</span>
           <span class="modulo-nota">Spaced repetition cards</span>
         </button>
@@ -385,6 +380,7 @@
               <circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none" />
             </g>
           </svg></span></span>
+          <span class="modulo-tipo">Vocabulary</span>
           <span class="modulo-titulo">Word Games</span>
           <span class="modulo-nota">Built from the words you keep missing</span>
         </button>
@@ -458,7 +454,7 @@
   </div>
 
   <!-- Vista: prueba de nivel (Diagnóstico Inmersivo) -->
-  <div id="vista-nivel" class="pantalla-principal oculto" data-seccion="Your progress">
+  <div id="vista-nivel" class="pantalla-principal oculto" data-seccion="Your progress" data-sin-traduccion>
     <header class="cabecera-modulo">
       <h2>Level Check</h2>
       <p>Eight short scenes with the AI. Answer as best you can; there is no penalty for mistakes.</p>
@@ -484,6 +480,7 @@
 
   <!-- Vista: resultado del diagnóstico -->
   <div id="vista-resultado-nivel" class="pantalla-principal oculto">
+    <img class="resultado-tuti" src="assets/tuti/tuti-celebra.webp" alt="Tuti celebrating with a trophy" width="160" height="160" loading="lazy" />
     <h2>Diagnostic complete</h2>
     <p>Your estimated CEFR level is:</p>
     <div id="resultado-nivel-valor" class="resultado-nivel"></div>
@@ -640,9 +637,9 @@
 
     <div class="vocab-zona">
       <div id="vocab-pila" class="vocab-pila oculto"></div>
-      <div id="vocab-tarjeta" class="vocab-tarjeta">
+      <div id="vocab-tarjeta" class="vocab-tarjeta" data-sin-traduccion>
         <span id="vocab-sello" class="vocab-sello oculto"></span>
-        <span id="vocab-nivel" class="vocab-nivel oculto" title="Nivel de la palabra según la lista CEFR-J"></span>
+        <span id="vocab-nivel" class="vocab-nivel oculto" title="Word level on the CEFR-J list"></span>
         <h3 id="vocab-tarjeta-texto">Loading...</h3>
         <p id="vocab-contexto" class="nivel-narrativa oculto"></p>
         <div id="vocab-ejemplo" class="vocab-ejemplo oculto">
@@ -811,13 +808,29 @@
     <button id="btn-salir-biblioteca" class="btn-secundario" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
-  <!-- Globo de traduccion de palabras -->
-  <div id="popover-palabra" class="popover-palabra oculto">
-    <button id="btn-cerrar-popover" class="popover-cerrar" aria-label="Close">&times;</button>
-    <p id="popover-palabra-texto" class="popover-titulo"></p>
+  <!-- Globo con la traducción de la palabra tocada: lo usan Library y la ayuda en español -->
+  <div id="popover-palabra" class="popover-palabra oculto" role="dialog" aria-labelledby="popover-palabra-texto" aria-describedby="popover-traduccion">
+    <div class="popover-cabeza">
+      <p id="popover-palabra-texto" class="popover-titulo" lang="en"></p>
+      <span id="popover-nivel" class="popover-nivel oculto"></span>
+      <button id="btn-cerrar-popover" class="popover-cerrar" type="button" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
     <p id="popover-tipo" class="popover-tipo"></p>
-    <p id="popover-traduccion" class="popover-traduccion"></p>
-    <p id="popover-ejemplo" class="popover-ejemplo"></p>
+    <p id="popover-traduccion" class="popover-traduccion" aria-live="polite"></p>
+    <p id="popover-ejemplo" class="popover-ejemplo" lang="en"></p>
+    <div id="popover-acciones" class="popover-acciones oculto">
+      <button id="btn-oir-palabra" class="popover-accion" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        Listen
+      </button>
+      <button id="btn-guardar-palabra" class="popover-accion" type="button">
+        <svg class="ic-guardar" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+        <svg class="ic-guardada" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>
+        <span id="guardar-palabra-texto">Save word</span>
+      </button>
+    </div>
   </div>
 
   <!-- Vista: laboratorio de audio -->
@@ -897,7 +910,7 @@
   </div>
 
   <!-- Vista: minijuegos de vocabulario -->
-  <div id="vista-juegos" class="pantalla-principal oculto" data-seccion="Listen &amp; read">
+  <div id="vista-juegos" class="pantalla-principal oculto" data-seccion="Listen &amp; read" data-sin-traduccion>
 
     <div id="juegos-menu">
       <header class="cabecera-modulo">
@@ -1041,45 +1054,45 @@
   </div>
 
   <!-- Vista: tus datos, con lo que pide la Ley 1581 de 2012 -->
-  <div id="vista-datos" class="pantalla-principal oculto" data-seccion="Tus datos" lang="es">
+  <div id="vista-datos" class="pantalla-principal oculto" data-seccion="Your data">
     <header class="cabecera-modulo">
-      <h2>Tus datos</h2>
-      <p>Lo que TutorIA&#8217;s guarda de ti y lo que puedes hacer con eso, como lo dice la Ley 1581 de 2012.</p>
+      <h2>Your data</h2>
+      <p>What TutorIA&#8217;s stores about you and what you can do with it, as Colombian Law 1581 of 2012 requires.</p>
     </header>
 
     <section class="datos-tarjeta" aria-labelledby="t-descarga">
-      <h3 id="t-descarga">Descarga tus datos</h3>
-      <p>Un archivo con todo lo que guardamos de ti: tu cuenta, tus diagnósticos, ejercicios, conversaciones con la IA, vocabulario, liga, compras y actividades, además de cuándo aceptaste la política. No incluye tu contraseña.</p>
-      <button type="button" id="btn-descargar-datos" class="btn-secundario"><i class="fa-solid fa-download"></i>Descargar mis datos</button>
+      <h3 id="t-descarga">Download your data</h3>
+      <p>One file with everything we store about you: your account, diagnostics, exercises, conversations with the AI, vocabulary, league, purchases and activity, plus when you accepted the policy. It never includes your password.</p>
+      <button type="button" id="btn-descargar-datos" class="btn-secundario"><i class="fa-solid fa-download"></i>Download my data</button>
       <p id="datos-aviso-descarga" class="mensaje-exito" role="status" hidden></p>
     </section>
 
     <section class="datos-tarjeta" aria-labelledby="t-derechos">
-      <h3 id="t-derechos">Tus derechos</h3>
+      <h3 id="t-derechos">Your rights</h3>
       <ul class="datos-derechos">
-        <li><strong>Conocer tus datos y llevártelos:</strong> con el botón de arriba, cuando quieras y gratis.</li>
-        <li><strong>Corregirlos o preguntar cómo los usamos:</strong> escríbenos a <a href="mailto:sebastiangonzalez304@gmail.com">sebastiangonzalez304@gmail.com</a> desde el correo de tu cuenta.</li>
-        <li><strong>Retirar tu autorización y que borremos tus datos:</strong> aquí abajo, sin tener que escribirle a nadie.</li>
-        <li><strong>Quejarte</strong> ante la Superintendencia de Industria y Comercio si no te respondemos.</li>
+        <li><strong>See your data and take it with you:</strong> with the button above, any time, for free.</li>
+        <li><strong>Correct it or ask how we use it:</strong> write to <a href="mailto:sebastiangonzalez304@gmail.com">sebastiangonzalez304@gmail.com</a> from your account email.</li>
+        <li><strong>Withdraw your consent and have your data deleted:</strong> right below, without writing to anyone.</li>
+        <li><strong>File a complaint</strong> with Colombia&#8217;s Superintendencia de Industria y Comercio if we don&#8217;t answer.</li>
       </ul>
-      <p class="datos-politica">Todo está explicado en la <a href="privacidad.html" target="_blank" rel="noopener">política de tratamiento de datos</a>.</p>
+      <p class="datos-politica">Everything is explained in the <a href="privacidad.html" target="_blank" rel="noopener">data policy</a> (in Spanish, as the law requires).</p>
     </section>
 
     <section class="datos-tarjeta datos-peligro" aria-labelledby="t-borrar">
-      <h3 id="t-borrar">Borrar mi cuenta</h3>
-      <p>Se borran para siempre tu cuenta (<span id="datos-correo-cuenta"></span>), tu nivel, tu racha, tus monedas, tu vocabulario y todo lo que va en el archivo de arriba. <strong>No se puede deshacer.</strong> Si quieres guardar algo, descarga tus datos primero.</p>
+      <h3 id="t-borrar">Delete my account</h3>
+      <p>This permanently deletes your account (<span id="datos-correo-cuenta"></span>), your level, streak, coins, vocabulary and everything in the file above. <strong>It can&#8217;t be undone.</strong> If you want to keep anything, download your data first.</p>
       <form id="form-borrar" class="form-borrar" novalidate>
         <div class="campo">
-          <label for="borrar-correo">Escribe el correo de tu cuenta para confirmar</label>
+          <label for="borrar-correo">Type your account email to confirm</label>
           <input type="email" id="borrar-correo" autocomplete="off" required />
         </div>
         <div class="campo" id="campo-borrar-clave">
-          <label for="borrar-contrasena">Tu contraseña</label>
+          <label for="borrar-contrasena">Your password</label>
           <input type="password" id="borrar-contrasena" autocomplete="current-password" />
         </div>
-        <p id="nota-google" class="pagina-intro" hidden>Entras con Google, así que basta con tu correo.</p>
+        <p id="nota-google" class="pagina-intro" hidden>You sign in with Google, so your email is enough.</p>
         <p id="datos-aviso-borrar" class="mensaje-error visible" role="alert" hidden></p>
-        <button type="submit" id="btn-borrar-cuenta" class="btn-peligro">Borrar mi cuenta para siempre</button>
+        <button type="submit" id="btn-borrar-cuenta" class="btn-peligro">Delete my account forever</button>
       </form>
     </section>
 
@@ -1087,15 +1100,15 @@
   </div>
 
   <!-- Vista: métricas del estudio, solo para el equipo -->
-  <div id="vista-metricas" class="pantalla-principal oculto" data-seccion="Métricas" lang="es">
+  <div id="vista-metricas" class="pantalla-principal oculto" data-seccion="Study metrics">
     <div class="cabecera-seccion cabecera-modulo">
       <div>
-        <h2>Métricas del estudio</h2>
-        <p>Cifras agregadas y anónimas de todos los estudiantes, para el capítulo de resultados del trabajo de grado.</p>
+        <h2>Study metrics</h2>
+        <p>Aggregated, anonymous figures from every student, for the results chapter of the thesis.</p>
       </div>
       <div class="metricas-acciones">
-        <button type="button" id="btn-metricas-actualizar" class="btn-secundario"><i class="fa-solid fa-rotate"></i>Actualizar</button>
-        <button type="button" id="btn-metricas-csv" class="btn-secundario"><i class="fa-solid fa-download"></i>Descargar CSV</button>
+        <button type="button" id="btn-metricas-actualizar" class="btn-secundario"><i class="fa-solid fa-rotate"></i>Refresh</button>
+        <button type="button" id="btn-metricas-csv" class="btn-secundario"><i class="fa-solid fa-download"></i>Download CSV</button>
       </div>
     </div>
     <p id="metricas-estado" class="metricas-estado" role="status"></p>
@@ -1104,15 +1117,15 @@
 
     <div id="metricas-graficas" class="metricas-graficas">
       <section id="grafica-semanas" class="grafica grafica-ancha" aria-labelledby="t-semanas">
-        <h3 id="t-semanas">Actividades por semana</h3>
-        <p class="grafica-nota">Últimas 8 semanas · pase el puntero o use Tab para ver cada semana</p>
+        <h3 id="t-semanas">Activities per week</h3>
+        <p class="grafica-nota">Last 8 weeks · hover or press Tab to see each week</p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
         <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
       </section>
 
       <section id="grafica-aciertos" class="grafica" aria-labelledby="t-aciertos">
-        <h3 id="t-aciertos">Porcentaje de aciertos por semana</h3>
+        <h3 id="t-aciertos">Accuracy per week</h3>
         <p id="nota-aciertos" class="grafica-nota"></p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
@@ -1120,30 +1133,30 @@
       </section>
 
       <section id="grafica-modulos" class="grafica" aria-labelledby="t-modulos">
-        <h3 id="t-modulos">Uso por módulo</h3>
-        <p class="grafica-nota">Actividades terminadas desde el inicio</p>
+        <h3 id="t-modulos">Usage by module</h3>
+        <p class="grafica-nota">Activities completed since launch</p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
         <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
       </section>
 
       <section class="grafica grafica-ancha" aria-labelledby="t-cambio">
-        <h3 id="t-cambio">¿Mejoró su nivel?</h3>
-        <p class="grafica-nota">Primer diagnóstico frente al último, de quienes lo han hecho dos o más veces</p>
+        <h3 id="t-cambio">Did their level improve?</h3>
+        <p class="grafica-nota">First diagnostic against the latest, for students who took it twice or more</p>
         <div id="metricas-cambio" class="metricas-cambio"></div>
       </section>
 
       <section id="grafica-habilidades" class="grafica" aria-labelledby="t-habilidades">
-        <h3 id="t-habilidades">Habilidades: antes y ahora</h3>
+        <h3 id="t-habilidades">Skills: then and now</h3>
         <p id="nota-habilidades" class="grafica-nota"></p>
-        <p class="grafica-leyenda"><span class="clave clave-2"></span>Primer diagnóstico <span class="clave clave-1"></span>Último diagnóstico</p>
+        <p class="grafica-leyenda"><span class="clave clave-2"></span>First diagnostic <span class="clave clave-1"></span>Latest diagnostic</p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
         <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
       </section>
 
       <section id="grafica-niveles" class="grafica" aria-labelledby="t-niveles">
-        <h3 id="t-niveles">Nivel actual de los estudiantes</h3>
+        <h3 id="t-niveles">Students by current level</h3>
         <p id="nota-niveles" class="grafica-nota"></p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
@@ -1154,7 +1167,12 @@
     <button id="btn-salir-metricas" class="btn-secundario"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
-  <script>window.TUTORIAS_API_URL = 'https://tutoria-s-production.up.railway.app/api';</script>
+  <script>
+    // En el equipo de desarrollo usa la API local; publicada, la de Railway
+    window.TUTORIAS_API_URL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+      ? 'http://localhost:3000/api'
+      : 'https://tutoria-s-production.up.railway.app/api';
+  </script>
   <script src="src/utils/iconos.js"></script>
   <script src="src/utils/validaciones.js"></script>
   <script src="src/utils/vozIngles.js"></script>
@@ -1198,6 +1216,7 @@
   <script src="src/components/liga.js"></script>
   <script src="src/components/preferencias.js"></script>
   <script src="src/components/roleplay.js"></script>
+  <script src="src/components/traductor.js"></script>
   <script src="src/components/biblioteca.js"></script>
   <script src="src/components/audioLab.js"></script>
   <script src="src/components/juegos.js"></script>
@@ -1207,5 +1226,6 @@
   <script src="src/components/navegacion.js"></script>
   <script src="src/components/metricas.js"></script>
   <script src="src/components/misDatos.js"></script>
+  <script src="src/components/marco.js"></script>
 </body>
 </html>

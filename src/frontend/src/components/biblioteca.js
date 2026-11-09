@@ -116,52 +116,13 @@ function pintarTextoConPalabras(texto) {
   });
 }
 
-async function pedirTraduccion(palabra, contexto, elemento) {
-  const popover = document.getElementById("popover-palabra");
-
-  document.getElementById("popover-palabra-texto").textContent = palabra;
-  document.getElementById("popover-traduccion").textContent = "Looking it up...";
-  document.getElementById("popover-tipo").textContent = "";
-  document.getElementById("popover-ejemplo").textContent = "";
-  popover.classList.remove("oculto");
-
-  colocarPopover(elemento);
-
-  try {
-    const datos = await BibliotecaAPI.traducir(palabra, contexto);
-    document.getElementById("popover-palabra-texto").textContent =
-      datos.palabra || palabra;
-    document.getElementById("popover-traduccion").textContent =
-      datos.traduccion || "";
-    document.getElementById("popover-tipo").textContent = datos.tipo || "";
-    document.getElementById("popover-ejemplo").textContent = datos.ejemplo || "";
-    colocarPopover(elemento);
-  } catch (err) {
-    document.getElementById("popover-traduccion").textContent =
-      "Could not look up that word.";
-  }
-}
-
-function colocarPopover(elemento) {
-  const popover = document.getElementById("popover-palabra");
-  const caja = elemento.getBoundingClientRect();
-  const alto = popover.offsetHeight || 140;
-
-  // Si no cabe arriba, se pone debajo de la palabra
-  const arriba = caja.top - alto - 10;
-  const y = arriba > 10 ? arriba : caja.bottom + 10;
-  const x = Math.min(
-    Math.max(12, caja.left + caja.width / 2 - popover.offsetWidth / 2),
-    window.innerWidth - popover.offsetWidth - 12,
-  );
-
-  popover.style.top = `${y + window.scrollY}px`;
-  popover.style.left = `${x}px`;
+/** Las palabras de la lectura se traducen y entran solas al vocabulario de repaso. */
+function pedirTraduccion(palabra, contexto, elemento) {
+  Traductor.mostrar({ palabra, contexto, anclaje: elemento, guardar: true });
 }
 
 function cerrarPopoverPalabra() {
-  const popover = document.getElementById("popover-palabra");
-  if (popover) popover.classList.add("oculto");
+  Traductor.cerrar();
 }
 
 function pintarPreguntasLectura(preguntas) {
@@ -235,6 +196,9 @@ async function enviarRespuestasLectura() {
       });
     });
 
+    if (datos.perfecto && !datos.repetida && typeof celebrarConTuti === "function") {
+      celebrarConTuti("Perfect reading!", `${datos.aciertos}/${datos.total} right. +${datos.xpGanado} XP`);
+    }
     resultado.textContent = datos.perfecto
       ? `Perfect! ${datos.aciertos}/${datos.total} — +${datos.xpGanado} XP`
       : `${datos.aciertos} of ${datos.total} correct — +${datos.xpGanado} XP`;
@@ -266,10 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnVolver)
     btnVolver.addEventListener("click", mostrarCatalogoBiblioteca);
 
-  const btnCerrarPopover = document.getElementById("btn-cerrar-popover");
-  if (btnCerrarPopover)
-    btnCerrarPopover.addEventListener("click", cerrarPopoverPalabra);
-
   const btnSalir = document.getElementById("btn-salir-biblioteca");
   if (btnSalir) {
     btnSalir.addEventListener("click", () => {
@@ -279,13 +239,4 @@ document.addEventListener("DOMContentLoaded", () => {
       if (typeof cargarProgreso === "function") cargarProgreso();
     });
   }
-
-  // Tocar fuera del globo lo cierra
-  document.addEventListener("click", (e) => {
-    const popover = document.getElementById("popover-palabra");
-    if (!popover || popover.classList.contains("oculto")) return;
-    if (!popover.contains(e.target) && !e.target.classList.contains("palabra")) {
-      cerrarPopoverPalabra();
-    }
-  });
 });

@@ -7,7 +7,7 @@ const AvatarAPI = {
       headers: { Authorization: `Bearer ${Sesion.obtenerToken()}` },
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "No se pudo leer la configuración del avatar");
+    if (!resp.ok) throw new Error(datos.error || "Could not load the avatar settings");
     return datos;
   },
 
@@ -18,7 +18,7 @@ const AvatarAPI = {
       headers: { Authorization: `Bearer ${Sesion.obtenerToken()}` },
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "No se pudo abrir el video del tutor");
+    if (!resp.ok) throw new Error(datos.error || "Could not open the tutor video");
     return datos;
   },
 };

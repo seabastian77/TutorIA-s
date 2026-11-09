@@ -1,0 +1,273 @@
+// El marco de la app: navegación lateral y móvil, Tuti en cada sección y sus celebraciones
+
+const TUTI_RUTA = "assets/tuti/";
+
+// Cada entrada abre un módulo usando el mismo botón del inicio, así no se duplica su lógica
+const NAVEGACION = [
+  { grupo: null, items: [{ id: "inicio", vista: "vista-principal", texto: "Home", icono: "fa-house" }] },
+  {
+    grupo: "Learn",
+    items: [
+      { id: "btn-practicar", vista: "vista-practica", texto: "Daily Practice", corto: "Practice", icono: "fa-bolt" },
+      { id: "btn-hablar-ia", vista: "vista-voz", texto: "AI Tutor", corto: "Tutor", icono: "fa-comment-dots" },
+      { id: "btn-roleplay", vista: "vista-roleplay", texto: "Real Situations", corto: "Situations", icono: "fa-comments" },
+      { id: "btn-escena", vista: "vista-escena", texto: "Scene Mode", corto: "Scenes", icono: "fa-microphone" },
+    ],
+  },
+  {
+    grupo: "Listen & read",
+    items: [
+      { id: "btn-audio", vista: "vista-audio", texto: "Audio Lab", corto: "Audio", icono: "fa-headphones" },
+      { id: "btn-biblioteca", vista: "vista-biblioteca", texto: "Library", icono: "fa-book" },
+      { id: "btn-vocabulario", vista: "vista-vocabulario", texto: "Vocabulary", corto: "Words", icono: "fa-font" },
+      { id: "btn-juegos", vista: "vista-juegos", texto: "Word Games", corto: "Games", icono: "fa-table-cells" },
+    ],
+  },
+  {
+    grupo: "You",
+    items: [
+      { id: "btn-mi-progreso", vista: "vista-historial", texto: "My progress", corto: "Progress", icono: "fa-chart-line" },
+      { id: "btn-liga", vista: "vista-liga", texto: "League", icono: "fa-trophy" },
+      { id: "btn-logros", vista: "vista-logros", texto: "Achievements", corto: "Badges", icono: "fa-medal" },
+      { id: "btn-tienda", vista: "vista-tienda", texto: "Shop", icono: "fa-basket-shopping" },
+    ],
+  },
+];
+
+// En el celular caben cinco pestañas: lo que más se usa todos los días
+const PESTANAS = [
+  { id: "inicio", vista: "vista-principal", texto: "Home", icono: "fa-house" },
+  { id: "btn-practicar", vista: "vista-practica", texto: "Practice", icono: "fa-bolt" },
+  { id: "btn-hablar-ia", vista: "vista-voz", texto: "Tutor", icono: "fa-comment-dots" },
+  { id: "btn-vocabulario", vista: "vista-vocabulario", texto: "Words", icono: "fa-font" },
+  { id: "btn-mi-progreso", vista: "vista-historial", texto: "Progress", icono: "fa-chart-line" },
+];
+
+// La pose de Tuti que acompaña la cabecera de cada módulo
+const TUTI_POR_VISTA = {
+  "vista-practica": ["tutor", "Tuti in his graduation cap"],
+  "vista-escena": ["habla", "Tuti holding a microphone"],
+  "vista-roleplay": ["habla", "Tuti holding a microphone"],
+  "vista-audio": ["escucha", "Tuti wearing headphones"],
+  "vista-biblioteca": ["lee", "Tuti holding a book"],
+  "vista-vocabulario": ["lee", "Tuti holding a book"],
+  "vista-juegos": ["saludo", "Tuti waving"],
+  "vista-liga": ["celebra", "Tuti holding a trophy"],
+  "vista-logros": ["celebra", "Tuti holding a trophy"],
+  "vista-tienda": ["saludo", "Tuti waving"],
+  "vista-historial": ["tutor", "Tuti in his graduation cap"],
+  "vista-nivel": ["piensa", "Tuti thinking"],
+  "vista-visual": ["piensa", "Tuti thinking"],
+};
+
+let tuti3d = null;
+let ultimoProgreso = null;
+
+/** Abre un módulo desde cualquier vista: primero vuelve al inicio con la salida de la vista abierta. */
+function abrirDesdeNavegacion(id) {
+  if (typeof irAlInicio === "function") irAlInicio();
+  if (id === "inicio") return;
+  const boton = document.getElementById(id);
+  if (boton) boton.click();
+}
+
+function botonNavegacion(item, clase) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = clase;
+  b.dataset.abre = item.id;
+  b.dataset.vista = item.vista;
+  b.innerHTML = `${Icono.svg(item.icono)}<span class="nav-largo"></span><span class="nav-corto" aria-hidden="true"></span>`;
+  b.querySelector(".nav-largo").textContent = item.texto;
+  b.querySelector(".nav-corto").textContent = item.corto || item.texto;
+  b.addEventListener("click", () => abrirDesdeNavegacion(item.id));
+  return b;
+}
+
+/** Barra lateral para computador y tablet. */
+function montarNavLateral() {
+  const nav = document.createElement("nav");
+  nav.id = "nav-lateral";
+  nav.className = "nav-lateral";
+  nav.setAttribute("aria-label", "Main");
+
+  const marca = document.createElement("button");
+  marca.type = "button";
+  marca.className = "nav-marca";
+  marca.setAttribute("aria-label", "TutorIA’s, go to Home");
+  marca.innerHTML = `<img src="${TUTI_RUTA}tuti-cara-chico.webp" alt="" width="44" height="44"><span class="nav-marca-texto"><strong>Tutor<em>IA</em>’s</strong><small>Learn English with AI</small></span>`;
+  marca.addEventListener("click", () => abrirDesdeNavegacion("inicio"));
+  nav.appendChild(marca);
+
+  const lista = document.createElement("div");
+  lista.className = "nav-grupos";
+  NAVEGACION.forEach((g) => {
+    const grupo = document.createElement("div");
+    grupo.className = "nav-grupo";
+    if (g.grupo) {
+      const t = document.createElement("p");
+      t.className = "nav-grupo-titulo";
+      t.textContent = g.grupo;
+      grupo.appendChild(t);
+    }
+    g.items.forEach((item) => grupo.appendChild(botonNavegacion(item, "nav-item")));
+    lista.appendChild(grupo);
+  });
+  nav.appendChild(lista);
+
+  const tarjeta = document.createElement("div");
+  tarjeta.className = "nav-tarjeta";
+  tarjeta.innerHTML = `
+    <img src="${TUTI_RUTA}tuti-tutor-chico.webp" alt="" width="64" height="64">
+    <p class="nav-tarjeta-titulo">Keep your streak alive</p>
+    <p class="nav-tarjeta-texto">One activity a day is all it takes.</p>`;
+  const ir = document.createElement("button");
+  ir.type = "button";
+  ir.className = "nav-tarjeta-boton";
+  ir.textContent = "Practice now";
+  ir.addEventListener("click", () => abrirDesdeNavegacion("btn-practicar"));
+  tarjeta.appendChild(ir);
+  nav.appendChild(tarjeta);
+
+  document.body.appendChild(nav);
+}
+
+/** Pestañas fijas abajo, como en una app del celular. */
+function montarNavInferior() {
+  const nav = document.createElement("nav");
+  nav.id = "nav-inferior";
+  nav.className = "nav-inferior";
+  nav.setAttribute("aria-label", "Main");
+  PESTANAS.forEach((p) => nav.appendChild(botonNavegacion(p, "nav-pestana")));
+  document.body.appendChild(nav);
+}
+
+/** Marca como activo el botón de la vista que se está viendo. */
+function marcarVistaActiva() {
+  const visible = [...document.querySelectorAll(".pantalla-principal")].find((v) => !v.classList.contains("oculto"));
+  const id = visible ? visible.id : "";
+  document.querySelectorAll("[data-vista]").forEach((b) => {
+    const activo = b.dataset.vista === id;
+    b.classList.toggle("activo", activo);
+    if (activo) b.setAttribute("aria-current", "page");
+    else b.removeAttribute("aria-current");
+  });
+  document.body.dataset.vista = id;
+}
+
+/** Pone a Tuti, con la pose de la actividad, en la cabecera de cada módulo. */
+function montarTutiCabeceras() {
+  Object.entries(TUTI_POR_VISTA).forEach(([vista, [pose, alt]]) => {
+    const cabecera = document.querySelector(`#${vista} .cabecera-modulo`);
+    if (!cabecera || cabecera.querySelector(".tuti-cabecera")) return;
+    const img = document.createElement("img");
+    img.className = "tuti-cabecera";
+    img.src = `${TUTI_RUTA}tuti-${pose}.webp`;
+    img.alt = alt;
+    img.width = 120;
+    img.height = 120;
+    img.loading = "lazy";
+    img.decoding = "async";
+    cabecera.classList.add("con-tuti");
+    cabecera.appendChild(img);
+  });
+}
+
+/** WebGL disponible y sin ahorro de datos: solo entonces vale la pena el Tuti en 3D. */
+function puede3D() {
+  if (navigator.connection && navigator.connection.saveData) return false;
+  try {
+    // Un WebGL por software ahoga el procesador: en ese caso se queda la imagen
+    const c = document.createElement("canvas");
+    const opciones = { failIfMajorPerformanceCaveat: true };
+    return !!(c.getContext("webgl2", opciones) || c.getContext("webgl", opciones));
+  } catch (e) {
+    return false;
+  }
+}
+
+/** Carga el modelo 3D de Tuti en el inicio, después de que la página ya se pintó. */
+async function montarTuti3D() {
+  const caja = document.getElementById("heroe-tuti");
+  if (!caja || tuti3d || !puede3D()) return;
+  try {
+    const { montarTuti } = await import(new URL("src/tuti/tuti3d.js", document.baseURI).href);
+    tuti3d = montarTuti(caja, { pose: "saludo", etiqueta: "Tuti, your English tutor, waving hello" });
+    caja.classList.add("con-3d");
+  } catch (e) {
+    // Sin 3D se queda la imagen renderizada del mismo modelo
+    tuti3d = null;
+  }
+}
+
+/** Una tarjeta corta de Tuti que se va sola; las celebraciones traen confeti. */
+function avisoConTuti(titulo, texto, { pose = "celebra", confeti = true } = {}) {
+  let aviso = document.getElementById("tuti-celebra");
+  if (!aviso) {
+    aviso = document.createElement("div");
+    aviso.id = "tuti-celebra";
+    aviso.className = "tuti-celebra";
+    aviso.setAttribute("role", "status");
+    aviso.innerHTML = `
+      <span class="tuti-confeti" aria-hidden="true">${"<i></i>".repeat(12)}</span>
+      <img src="${TUTI_RUTA}tuti-celebra-chico.webp" alt="" width="72" height="72">
+      <span class="tuti-celebra-texto"><strong></strong><span></span></span>`;
+    document.body.appendChild(aviso);
+  }
+  aviso.classList.toggle("sin-confeti", !confeti);
+  aviso.querySelector("img").src = `${TUTI_RUTA}tuti-${pose}-chico.webp`;
+  aviso.querySelector("strong").textContent = titulo;
+  aviso.querySelector(".tuti-celebra-texto span").textContent = texto || "";
+  aviso.classList.remove("visible");
+  void aviso.offsetWidth;
+  aviso.classList.add("visible");
+  clearTimeout(aviso.temporizador);
+  aviso.temporizador = setTimeout(() => aviso.classList.remove("visible"), 4200);
+}
+
+/** Celebra un logro con confeti y, si el 3D está montado, con el salto de Tuti. */
+function celebrarConTuti(titulo, texto) {
+  avisoConTuti(titulo, texto);
+  if (tuti3d) tuti3d.celebrar();
+}
+
+/** Al volver al inicio, Tuti reacciona a lo que el estudiante acaba de lograr. */
+function reaccionarAlProgreso(e) {
+  const d = e.detail || {};
+  const antes = ultimoProgreso;
+  ultimoProgreso = { puntos: d.puntos, hoy: d.actividadesHoy, meta: d.metaDiaria };
+  if (!antes) {
+    if (tuti3d) tuti3d.saludar();
+    return;
+  }
+  if (d.actividadesHoy >= d.metaDiaria && antes.hoy < antes.meta) {
+    celebrarConTuti("Daily goal completed!", "Tuti is proud of you. See you tomorrow?");
+  } else if (d.puntos > antes.puntos) {
+    celebrarConTuti(`+${d.puntos - antes.puntos} XP`, "Nice work! Keep the momentum going.");
+  } else if (tuti3d) {
+    tuti3d.saludar();
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  montarNavLateral();
+  montarNavInferior();
+  montarTutiCabeceras();
+  marcarVistaActiva();
+
+  const observador = new MutationObserver(marcarVistaActiva);
+  document.querySelectorAll(".pantalla-principal").forEach((v) =>
+    observador.observe(v, { attributes: true, attributeFilter: ["class"] }),
+  );
+
+  document.addEventListener("tutorias:progreso", reaccionarAlProgreso);
+
+  // El 3D llega cuando el navegador está libre, para no frenar la primera pintura
+  const programar = window.requestIdleCallback || ((f) => setTimeout(f, 600));
+  const vistaInicio = document.getElementById("vista-principal");
+  const intentar = () => {
+    if (vistaInicio && !vistaInicio.classList.contains("oculto")) programar(montarTuti3D);
+  };
+  if (vistaInicio) new MutationObserver(intentar).observe(vistaInicio, { attributes: true, attributeFilter: ["class"] });
+  intentar();
+});

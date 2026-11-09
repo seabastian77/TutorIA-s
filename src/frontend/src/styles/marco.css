@@ -1,0 +1,831 @@
+/* Marco de la app: navegación, héroe con Tuti y acabado verde y blanco; va después de global.css */
+
+:root {
+  --nav-ancho: 272px;
+  --nav-riel: 92px;
+  --nav-inferior: 68px;
+  --bosque-1: #0b3320;
+  --bosque-2: #0e4a2b;
+  --bosque-3: #16804a;
+  --hoja: #22c55e;
+  --oro: #f5b301;
+  --radio-grande: 24px;
+  --font-titulo: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+}
+
+:root[data-tema="oscuro"] {
+  --bosque-1: #06190f;
+  --bosque-2: #0a2a19;
+  --bosque-3: #11603a;
+}
+
+body { background: var(--negro); }
+
+/* Navegación lateral (computador y tablet) */
+
+.nav-lateral,
+.nav-inferior { display: none; }
+
+body.con-sesion .nav-lateral {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 45;
+  width: var(--nav-ancho);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 16px 18px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  background: linear-gradient(180deg, var(--bosque-2), var(--bosque-1));
+  color: #e9f6ee;
+  box-shadow: 1px 0 0 rgb(255 255 255 / 0.04);
+}
+
+.nav-marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px 14px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: var(--font-display);
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.nav-marca img {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: radial-gradient(circle at 50% 35%, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0.06));
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.25));
+  transition: rotate 0.4s var(--curva), scale 0.4s var(--curva);
+}
+
+.nav-marca:hover img { rotate: -8deg; scale: 1.06; }
+.nav-marca-texto { display: flex; flex-direction: column; gap: 3px; }
+.nav-marca-texto strong { font-size: 21px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.nav-marca-texto em { font-style: normal; color: var(--hoja); }
+.nav-marca-texto small { font-size: 12px; font-weight: 600; color: #a7cdb5; letter-spacing: 0.01em; }
+
+.nav-grupos { display: flex; flex-direction: column; gap: 14px; }
+.nav-grupo { display: flex; flex-direction: column; gap: 2px; }
+
+.nav-grupo-titulo {
+  padding: 4px 12px 6px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #84b598;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+  color: #d3eadc;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-item .icono,
+.nav-pestana .icono { width: 20px; height: 20px; flex: none; }
+.nav-corto { display: none; }
+.nav-pestana .nav-largo { display: none; }
+.nav-pestana .nav-corto { display: inline; }
+.nav-item:hover { background: rgb(255 255 255 / 0.07); color: #ffffff; }
+.nav-item:focus-visible { outline: 2px solid var(--hoja); outline-offset: 2px; }
+
+.nav-item.activo {
+  background: rgb(255 255 255 / 0.1);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* La marca amarilla del pico de Tuti señala dónde está el estudiante */
+.nav-item.activo::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--oro);
+}
+
+.nav-tarjeta {
+  position: relative;
+  margin-top: auto;
+  padding: 18px 16px 16px;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.06);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  text-align: center;
+}
+
+.nav-tarjeta img { width: 72px; height: 72px; margin: -46px auto 4px; display: block; filter: drop-shadow(0 8px 12px rgb(0 0 0 / 0.3)); }
+.nav-tarjeta-titulo { font-size: 15px; font-weight: 800; color: #ffffff; }
+.nav-tarjeta-texto { margin-top: 4px; font-size: 13px; line-height: 1.45; color: #b9dbc6; }
+
+.nav-tarjeta-boton {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--oro);
+  color: #2b2100;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: translate 0.2s var(--curva), box-shadow 0.2s ease;
+}
+
+.nav-tarjeta-boton:hover { translate: 0 -1px; box-shadow: 0 10px 22px -10px rgb(245 179 1 / 0.8); }
+
+/* El contenido se corre a la derecha de la barra */
+body.con-sesion { padding-left: var(--nav-ancho); }
+body.con-sesion .barra-app .marca-boton { visibility: hidden; }
+body.con-sesion .mentor { right: 24px; }
+
+@media (min-width: 1440px) {
+  :root { --ancho: 1240px; }
+}
+
+/* Tablet: la barra se vuelve un riel de íconos */
+
+@media (max-width: 1099px) {
+  body.con-sesion { padding-left: var(--nav-riel); }
+  body.con-sesion .nav-lateral { width: var(--nav-riel); padding: 16px 10px; gap: 12px; }
+  .nav-marca { justify-content: center; padding: 4px 0 12px; }
+  .nav-marca-texto,
+  .nav-grupo-titulo,
+  .nav-tarjeta { display: none; }
+  .nav-grupos { gap: 10px; }
+  .nav-grupo + .nav-grupo { padding-top: 10px; border-top: 1px solid rgb(255 255 255 / 0.08); }
+
+  .nav-item {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-height: 56px;
+    padding: 6px 2px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.15;
+  }
+
+  .nav-item .nav-largo { display: none; }
+  .nav-item .nav-corto { display: inline; max-width: 100%; }
+  .nav-item.activo::before { left: -10px; }
+}
+
+/* En pantallas bajas la tarjeta de racha cede su espacio a la navegación */
+@media (max-height: 880px) {
+  .nav-tarjeta { display: none; }
+  .nav-item { min-height: 40px; }
+}
+
+/* Celular: pestañas abajo, como una app */
+
+@media (max-width: 767px) {
+  body.con-sesion { padding-left: 0; padding-bottom: calc(var(--nav-inferior) + env(safe-area-inset-bottom)); }
+  body.con-sesion .nav-lateral { display: none; }
+  body.con-sesion .barra-app .marca-boton { visibility: visible; }
+
+  body.con-sesion .nav-inferior {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 55;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    height: calc(var(--nav-inferior) + env(safe-area-inset-bottom));
+    padding: 6px 6px env(safe-area-inset-bottom);
+    background: color-mix(in srgb, var(--panel) 92%, transparent);
+    backdrop-filter: saturate(1.5) blur(14px);
+    -webkit-backdrop-filter: saturate(1.5) blur(14px);
+    border-top: 1px solid var(--borde);
+    box-shadow: 0 -10px 30px -18px rgb(15 42 28 / 0.35);
+  }
+
+  .nav-pestana {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 56px;
+    border: 0;
+    border-radius: 14px;
+    background: none;
+    color: var(--gris);
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .nav-pestana .icono { width: 22px; height: 22px; transition: translate 0.25s var(--curva); }
+
+  .nav-pestana.activo { color: var(--primario); }
+  .nav-pestana.activo .icono { translate: 0 -2px; }
+
+  .nav-pestana.activo::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    width: 36px;
+    height: 4px;
+    border-radius: 99px;
+    background: var(--hoja);
+  }
+
+  /* El mentor sube para no tapar las pestañas */
+  body.con-sesion .mentor { bottom: calc(var(--nav-inferior) + 14px + env(safe-area-inset-bottom)); right: 14px; }
+  body.con-sesion .pantalla-principal { padding-bottom: 120px; }
+}
+
+/* La barra superior */
+
+body.con-sesion .barra-app {
+  padding-left: max(24px, calc((100% - var(--ancho)) / 2 + 24px));
+  background: color-mix(in srgb, var(--negro) 86%, transparent);
+  border-bottom-color: transparent;
+}
+
+.progreso-item {
+  background: var(--panel);
+  border-color: var(--borde);
+  box-shadow: var(--sombra-1);
+}
+
+.item-racha .icono { color: #ea580c; }
+.item-monedas .icono { color: #ca8a04; }
+
+.btn-cuenta {
+  background: var(--marca-fondo);
+  color: #ffffff;
+}
+
+/* Ayuda en español: un solo botón, visible en todas las vistas */
+.btn-espanol {
+  display: inline-flex;
+  white-space: nowrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px 0 11px;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--gris);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--sombra-1);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-espanol svg { width: 18px; height: 18px; flex: none; }
+.btn-espanol:hover { color: var(--blanco); border-color: var(--primario-borde); }
+.btn-espanol:focus-visible { outline: 3px solid var(--primario); outline-offset: 2px; }
+.btn-espanol:disabled { cursor: progress; }
+.btn-espanol-corto { display: none; }
+
+.btn-espanol[aria-pressed="true"] {
+  background: var(--marca-fondo);
+  border-color: var(--marca-fondo);
+  color: #ffffff;
+}
+
+.btn-espanol[aria-pressed="true"] svg { color: var(--oro); }
+
+@media (max-width: 767px) {
+  .btn-espanol { padding: 0 11px; min-width: 44px; min-height: 44px; justify-content: center; }
+  .btn-espanol-largo { display: none; }
+  .btn-espanol-corto { display: inline; }
+}
+
+/* Títulos con la serif de la marca: le da voz propia a la app sin tocar el texto de uso */
+h1,
+h2,
+.grupo-modulos-cabecera h3,
+.heroe #paso-titulo {
+  font-family: var(--font-titulo);
+  font-weight: 560;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 100;
+  letter-spacing: -0.012em;
+}
+
+/* Las cabeceras de cada vista traían pesos de la letra anterior: la serif luce mejor más liviana */
+.auth-cabecera h1,
+.auth-frase,
+#vista-resultado-nivel h2,
+#vista-logros h2,
+.cabecera-seccion h2,
+.liga-cabecera h2,
+.practica-temas h2,
+.roleplay-cabecera h2,
+.cabecera-modulo h2,
+.pantalla-principal .cabecera-modulo h2 {
+  font-weight: 580;
+  letter-spacing: -0.015em;
+}
+
+.auth-frase { font-weight: 600; letter-spacing: -0.025em; }
+
+/* El héroe del inicio, con Tuti */
+
+.siguiente-paso.heroe {
+  grid-template-columns: 250px minmax(0, 1fr) auto;
+  gap: 28px;
+  min-height: 300px;
+  padding: 28px 36px 28px 20px;
+  border-radius: var(--radio-grande);
+  overflow: visible;
+  background:
+    radial-gradient(360px 300px at 135px 60%, rgb(255 255 255 / 0.07), transparent 70%),
+    linear-gradient(180deg, #104229, #0c3521);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 30px 60px -42px rgb(11 51 32 / 0.8);
+}
+
+.siguiente-paso.heroe::before,
+.siguiente-paso.heroe::after { display: none; }
+
+.heroe-tuti {
+  position: relative;
+  align-self: end;
+  width: 250px;
+  height: 290px;
+  margin: -64px 0 -28px;
+}
+
+.heroe-tuti-img,
+.heroe-tuti .tuti3d-lienzo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 22px rgb(0 0 0 / 0.28));
+}
+
+.heroe-tuti-img { animation: tuti-flota 4.5s ease-in-out infinite; transition: opacity 0.4s ease; }
+.heroe-tuti.con-3d .heroe-tuti-img { opacity: 0; animation: none; }
+.heroe-tuti .tuti3d-lienzo { animation: tuti-aparece 0.6s var(--curva) both; }
+
+@keyframes tuti-flota {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -8px; }
+}
+
+@keyframes tuti-aparece {
+  from { opacity: 0; scale: 0.92; }
+}
+
+.heroe .saludo { margin-bottom: 18px; }
+.heroe #saludo-usuario { color: #ffffff; font-size: clamp(30px, 3.2vw, 44px); font-weight: 520; line-height: 1.08; }
+.heroe .saludo-nota { color: #cfe7d8; }
+.heroe .tendencia-buena .saludo-nota-icono,
+.heroe.tendencia-buena .saludo-nota-icono { color: #86efac; }
+.heroe .tendencia-mala .saludo-nota-icono { color: #fca5a5; }
+.heroe .tendencia-neutra .saludo-nota-icono { color: #fde68a; }
+
+.heroe .paso-etiqueta {
+  padding: 0;
+  background: none;
+  color: var(--oro);
+  letter-spacing: 0.12em;
+}
+
+.heroe #paso-titulo { font-size: clamp(22px, 2.2vw, 28px); color: #ffffff; }
+
+.heroe .btn-paso {
+  min-height: 50px;
+  padding: 0 24px;
+  border-radius: 12px;
+  background: var(--oro);
+  color: #2b2100;
+  box-shadow: 0 10px 24px -16px rgb(245 179 1 / 0.9);
+}
+
+.heroe .btn-paso:hover { background: #ffc21f; }
+
+/* La meta del día es una columna de dato, separada por una línea fina */
+.heroe .meta-diaria {
+  width: 176px;
+  padding: 8px 0 8px 28px;
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-left: 1px solid rgb(255 255 255 / 0.12);
+}
+
+.heroe .meta-cifra strong { font-family: var(--font-titulo); font-weight: 600; font-variation-settings: "SOFT" 100; }
+
+.heroe .meta-cifra { top: 18px; }
+.heroe .meta-aro-fondo { stroke: rgb(255 255 255 / 0.16); }
+.heroe .meta-diaria.cumplida .meta-aro-relleno { stroke: #86efac; }
+
+@media (max-width: 1240px) and (min-width: 768px) {
+  .siguiente-paso.heroe { grid-template-columns: 200px minmax(0, 1fr) auto; gap: 22px; }
+  .heroe-tuti { width: 200px; height: 240px; margin-top: -50px; }
+}
+
+@media (max-width: 900px) and (min-width: 768px) {
+  .siguiente-paso.heroe { grid-template-columns: 170px minmax(0, 1fr); }
+  .heroe-tuti { width: 170px; height: 210px; }
+  .heroe .meta-diaria { grid-column: 1 / -1; width: auto; display: block; padding: 14px 0 0; border-left: 0; border-top: 1px solid rgb(255 255 255 / 0.12); }
+  .heroe .meta-aro,
+  .heroe .meta-cifra,
+  .heroe .meta-diaria-texto { display: none; }
+  .heroe .meta-linea { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #cfe7d8; }
+  .heroe .meta-barra { position: relative; flex: 1; height: 8px; border-radius: 99px; background: rgb(255 255 255 / 0.14); overflow: hidden; }
+  .heroe #meta-barra-relleno { position: absolute; inset: 0 auto 0 0; border-radius: 99px; background: var(--oro); transition: width 0.6s var(--curva); }
+}
+
+@media (max-width: 767px) {
+  .siguiente-paso.heroe {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    min-height: 0;
+    padding: 22px 20px 20px;
+    margin-top: 44px;
+  }
+
+  /* Tuti se asoma por encima del panel, a la derecha */
+  .heroe-tuti {
+    position: absolute;
+    top: -62px;
+    right: 4px;
+    width: 128px;
+    height: 150px;
+    margin: 0;
+  }
+
+  .heroe .saludo { padding-right: 112px; margin-bottom: 4px; }
+  .heroe #saludo-usuario { font-size: 28px; }
+  .heroe .meta-diaria { width: auto; padding: 0; border: 0; }
+}
+
+/* Las tarjetas de módulos: un solo tono de verde, sin adornos que compitan con el contenido */
+
+.grupo-modulos-cabecera h3 { font-size: 22px; }
+
+.modulo {
+  border-radius: 18px;
+  border-color: var(--borde);
+  box-shadow: 0 1px 2px rgb(15 42 28 / 0.03);
+}
+
+.modulo:hover {
+  border-color: #c5d9cb;
+  box-shadow: 0 1px 2px rgb(15 42 28 / 0.04), 0 14px 30px -18px rgb(15 42 28 / 0.28);
+  translate: 0 -2px;
+}
+
+.modulo-icono {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--primario-tinta);
+  color: #166534;
+}
+
+:root[data-tema="oscuro"] .modulo-icono {
+  background: rgb(34 197 94 / 0.12);
+  color: #86efac;
+}
+
+:root[data-tema="oscuro"] .modulo:hover { border-color: rgb(134 239 172 / 0.28); }
+
+/* Qué habilidad trabaja cada módulo, en una línea corta sobre el título */
+.modulo-tipo {
+  display: block;
+  margin-top: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primario);
+}
+
+:root[data-tema="oscuro"] .modulo-tipo { color: #86efac; }
+
+.modulo-tipo + .modulo-titulo { margin-top: 4px; }
+.modulo-titulo { font-size: 17px; font-weight: 700; }
+
+/* En computador una flecha discreta aparece al pasar el puntero */
+.modulos:not(.modulos-mini) .modulo::after {
+  content: "";
+  position: absolute;
+  top: 22px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  color: var(--primario);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='m13 6 6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='m13 6 6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0;
+  translate: -6px 0;
+  transition: opacity 0.2s ease, translate 0.3s var(--curva);
+}
+
+.modulos:not(.modulos-mini) .modulo:hover::after,
+.modulos:not(.modulos-mini) .modulo:focus-visible::after { opacity: 1; translate: 0 0; }
+.modulos:not(.modulos-mini) .btn-destacado::after { display: none; }
+
+.btn-destacado {
+  border: 1.5px solid var(--primario);
+  box-shadow: 0 0 0 4px rgb(21 128 61 / 0.07);
+}
+
+.btn-destacado:hover { border-color: var(--primario); }
+:root[data-tema="oscuro"] .btn-destacado { border-color: #4ade80; box-shadow: 0 0 0 4px rgb(74 222 128 / 0.08); }
+
+.modulo-sello {
+  padding: 4px 9px;
+  background: var(--marca-fondo);
+  color: #ffffff;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+/* En el celular las tarjetas pasan a una lista cómoda de tocar: ícono, texto y flecha */
+@media (max-width: 520px) {
+  .modulos:not(.modulos-mini) { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .modulos:not(.modulos-mini) .modulo {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    column-gap: 14px;
+    align-items: center;
+    padding: 14px 44px 14px 14px;
+  }
+  .modulos:not(.modulos-mini) .modulo-cabeza { grid-row: 1 / 4; width: auto; }
+  .modulos:not(.modulos-mini) .modulo-sello { display: none; }
+  .modulos:not(.modulos-mini) .modulo-tipo { margin-top: 0; font-size: 12px; align-self: end; }
+  .modulos:not(.modulos-mini) .modulo-titulo { margin-top: 0; }
+  .modulos:not(.modulos-mini) .modulo-nota { align-self: start; }
+  .modulos:not(.modulos-mini) .modulo::after,
+  .modulos:not(.modulos-mini) .btn-destacado::after {
+    display: block;
+    top: 50%;
+    right: 16px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.55;
+    translate: 0 -50%;
+    color: var(--gris);
+  }
+  .modulos:not(.modulos-mini) .modulo:hover::after { translate: 0 -50%; }
+}
+
+/* Las fichas de progreso usan el mismo tono que el resto */
+.modulos-mini .modulo-icono { width: 44px; height: 44px; background: var(--primario-tinta); color: #166534; }
+:root[data-tema="oscuro"] .modulos-mini .modulo-icono { background: rgb(34 197 94 / 0.12); color: #86efac; }
+.btn-logros .modulo-icono { background: #fff4d6; color: #8a5a00; }
+:root[data-tema="oscuro"] .btn-logros .modulo-icono { background: rgb(245 179 1 / 0.14); color: #fcd34d; }
+
+/* Logros y tienda: el oro del pico de Tuti para lo ganado, el bosque para comprar */
+.logro-item.desbloqueado .logro-icono {
+  background: #fff4d6;
+  color: #8a5a00;
+  box-shadow: inset 0 0 0 1px #f5d27a;
+}
+
+.logro-item.desbloqueado .logro-barra-relleno { background: var(--oro); }
+.logro-barra-relleno { background: var(--primario); }
+
+.articulo-precio {
+  background: var(--marca-fondo);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.articulo-precio .icono { color: var(--oro); }
+.articulo-precio:hover:not(:disabled) { filter: none; background: #155a37; }
+
+:root[data-tema="oscuro"] .logro-item.desbloqueado .logro-icono {
+  background: rgb(245 179 1 / 0.14);
+  color: #fcd34d;
+  box-shadow: inset 0 0 0 1px rgb(245 179 1 / 0.3);
+}
+
+:root[data-tema="oscuro"] .articulo-precio { background: #1c6b40; }
+:root[data-tema="oscuro"] .articulo-precio:hover:not(:disabled) { background: #22804c; }
+
+/* Tuti en el resultado del diagnóstico y en los estados vacíos */
+.resultado-tuti {
+  display: block;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 4px;
+  object-fit: contain;
+  animation: tuti-entra 0.6s var(--curva) both;
+}
+
+.tarjeta-vacia { align-items: center; }
+.tuti-vacio { width: 88px; height: 88px; flex: none; object-fit: contain; }
+
+.vocab-tarjeta-vacia::before {
+  content: "";
+  width: 104px;
+  height: 104px;
+  margin-bottom: 10px;
+  background: url("../../assets/tuti/tuti-vacio-chico.webp") center / contain no-repeat;
+}
+
+.vocab-tarjeta-hecha::before { background-image: url("../../assets/tuti/tuti-celebra-chico.webp"); }
+
+@media (max-width: 520px) {
+  .tarjeta-vacia { flex-direction: column; text-align: center; }
+}
+
+/* Tuti en las cabeceras de cada módulo */
+
+.cabecera-modulo.con-tuti {
+  position: relative;
+  padding-right: 150px;
+  min-height: 128px;
+}
+
+/* Se centra con top y no con translate, porque la animación de flotar usa translate */
+.tuti-cabecera {
+  position: absolute;
+  right: 0;
+  top: calc(50% - 64px);
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 14px rgb(15 42 28 / 0.18));
+  animation: tuti-entra 0.7s var(--curva) both, tuti-flota 5s ease-in-out 0.7s infinite;
+  pointer-events: none;
+}
+
+@keyframes tuti-entra {
+  from { opacity: 0; scale: 0.8; rotate: -8deg; }
+}
+
+@media (max-width: 620px) {
+  .cabecera-modulo.con-tuti { padding-right: 88px; min-height: 88px; }
+  .tuti-cabecera { width: 84px; height: 84px; top: calc(50% - 42px); }
+}
+
+/* Tuti celebra */
+
+.tuti-celebra {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 12px 20px 12px 12px;
+  border-radius: 22px;
+  background: var(--panel);
+  border: 1px solid var(--primario-borde);
+  box-shadow: 0 24px 50px -20px rgb(15 42 28 / 0.45);
+  translate: -50% 140%;
+  opacity: 0;
+  pointer-events: none;
+  transition: translate 0.5s var(--curva), opacity 0.3s ease;
+}
+
+.tuti-celebra.visible { translate: -50% 0; opacity: 1; }
+.tuti-celebra img { width: 72px; height: 72px; flex: none; }
+.tuti-celebra.visible img { animation: tuti-salta 0.9s var(--curva) 2; }
+.tuti-celebra-texto { display: flex; flex-direction: column; gap: 2px; }
+.tuti-celebra-texto strong { font-size: 18px; font-weight: 800; color: var(--blanco); }
+.tuti-celebra-texto span { font-size: 14px; color: var(--gris); }
+
+@keyframes tuti-salta {
+  0%, 100% { translate: 0 0; scale: 1 1; }
+  30% { translate: 0 -14px; scale: 0.96 1.06; }
+  55% { translate: 0 0; scale: 1.06 0.94; }
+}
+
+.tuti-confeti { position: absolute; inset: 0; pointer-events: none; }
+
+.tuti-confeti i {
+  position: absolute;
+  left: 46px;
+  top: 30px;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  opacity: 0;
+}
+
+.tuti-celebra.visible .tuti-confeti i { animation: confeti 1.4s var(--curva) both; }
+
+.tuti-confeti i:nth-child(3n) { background: var(--hoja); }
+.tuti-confeti i:nth-child(3n + 1) { background: var(--oro); }
+.tuti-confeti i:nth-child(3n + 2) { background: #a3e635; }
+
+.tuti-confeti i:nth-child(1) { --x: -70px; --y: -80px; --r: 200deg; }
+.tuti-confeti i:nth-child(2) { --x: 40px; --y: -96px; --r: -160deg; animation-delay: 0.05s; }
+.tuti-confeti i:nth-child(3) { --x: 110px; --y: -60px; --r: 260deg; animation-delay: 0.1s; }
+.tuti-confeti i:nth-child(4) { --x: -30px; --y: -110px; --r: -220deg; }
+.tuti-confeti i:nth-child(5) { --x: 170px; --y: -86px; --r: 180deg; animation-delay: 0.08s; }
+.tuti-confeti i:nth-child(6) { --x: 230px; --y: -50px; --r: -200deg; animation-delay: 0.12s; }
+.tuti-confeti i:nth-child(7) { --x: -90px; --y: -30px; --r: 300deg; animation-delay: 0.04s; }
+.tuti-confeti i:nth-child(8) { --x: 280px; --y: -96px; --r: 240deg; animation-delay: 0.14s; }
+.tuti-confeti i:nth-child(9) { --x: 80px; --y: -130px; --r: -280deg; animation-delay: 0.06s; }
+.tuti-confeti i:nth-child(10) { --x: 320px; --y: -40px; --r: 200deg; animation-delay: 0.16s; }
+.tuti-confeti i:nth-child(11) { --x: 10px; --y: -60px; --r: -140deg; animation-delay: 0.02s; }
+.tuti-confeti i:nth-child(12) { --x: 140px; --y: -120px; --r: 320deg; animation-delay: 0.11s; }
+
+@keyframes confeti {
+  0% { opacity: 1; translate: 0 0; rotate: 0deg; }
+  100% { opacity: 0; translate: var(--x) var(--y); rotate: var(--r); }
+}
+
+@media (max-width: 767px) {
+  .tuti-celebra { bottom: calc(var(--nav-inferior) + 16px + env(safe-area-inset-bottom)); }
+}
+
+/* El mentor usa el render 3D de Tuti */
+
+.mentor-avatar {
+  width: 72px;
+  height: 72px;
+  padding: 4px;
+  background: radial-gradient(circle at 50% 30%, #ffffff, #e7f6ec);
+  border-color: var(--primario-borde);
+}
+
+:root[data-tema="oscuro"] .mentor-avatar { background: radial-gradient(circle at 50% 30%, #1f4b31, #0f2a1c); }
+.mentor-ave-3d { object-fit: contain; animation: tuti-flota 4s ease-in-out infinite; }
+.charla-ave .mentor-ave-3d { animation: none; }
+
+/* La entrada: Tuti saluda */
+
+.auth-lado-izquierdo {
+  background:
+    radial-gradient(420px 360px at 160px 230px, rgb(255 255 255 / 0.07), transparent 70%),
+    linear-gradient(180deg, #104229, #0b3220);
+}
+
+.auth-tuti {
+  width: min(300px, 70%);
+  height: auto;
+  margin: 18px 0 6px -10px;
+  filter: drop-shadow(0 24px 26px rgb(0 0 0 / 0.3));
+  animation: tuti-flota 5s ease-in-out infinite;
+}
+
+.marca-simbolo { border-radius: 12px; object-fit: contain; }
+.marca-clara .marca-nombre em,
+.nav-marca-texto em { color: var(--hoja); }
+
+@media (max-width: 860px) {
+  .auth-tuti { display: none; }
+}
+
+/* Los botones principales */
+
+.btn-principal {
+  background: var(--primario);
+  box-shadow: 0 8px 20px -14px rgb(21 128 61 / 0.9);
+}
+
+.btn-principal:hover { background: var(--primario-hover); }
+
+/* Quien prefiere menos movimiento */
+
+@media (prefers-reduced-motion: reduce) {
+  .heroe-tuti-img,
+  .tuti-cabecera,
+  .mentor-ave-3d,
+  .auth-tuti,
+  .tuti-celebra.visible img { animation: none; }
+  .tuti-celebra.visible .tuti-confeti i { animation: none; }
+}

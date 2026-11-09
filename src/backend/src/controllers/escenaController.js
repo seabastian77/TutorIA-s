@@ -54,7 +54,7 @@ const EscenaController = {
       });
     } catch (error) {
       reportarError("Error en /escena/nueva", error);
-      res.status(500).json({ error: "No se pudo generar la escena" });
+      res.status(500).json({ error: "Could not create the scene" });
     }
   },
 
@@ -65,7 +65,7 @@ const EscenaController = {
       const transcripcion = String((req.body || {}).transcripcion || "").slice(0, 300);
 
       if (!lineaObjetivo || !transcripcion) {
-        return res.status(400).json({ error: "Faltan datos para evaluar" });
+        return res.status(400).json({ error: "Some data is missing to check your answer" });
       }
 
       const evaluacion = await evaluarLineaEscena({
@@ -126,7 +126,7 @@ const EscenaController = {
       });
     } catch (error) {
       reportarError("Error en /escena/evaluar-linea", error);
-      res.status(500).json({ error: "No se pudo evaluar tu línea" });
+      res.status(500).json({ error: "Could not check your line" });
     }
   },
 };

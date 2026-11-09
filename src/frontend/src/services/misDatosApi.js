@@ -10,7 +10,7 @@ async function pedirMisDatos(ruta, opciones = {}) {
     },
   });
   const datos = await resp.json().catch(() => ({}));
-  if (!resp.ok) throw new Error(datos.error || "Algo salió mal. Intenta de nuevo.");
+  if (!resp.ok) throw new Error(datos.error || "Something went wrong. Please try again.");
   return datos;
 }
 

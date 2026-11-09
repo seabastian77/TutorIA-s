@@ -5,7 +5,7 @@ const { reportarError } = require("../utils/errores");
 function responderError(res, error, contexto) {
   if (error.estado) return res.status(error.estado).json({ error: error.message });
   reportarError(contexto, error);
-  return res.status(500).json({ error: "Algo salió mal. Intenta de nuevo en un momento." });
+  return res.status(500).json({ error: "Something went wrong. Please try again in a moment." });
 }
 
 const MisDatosController = {

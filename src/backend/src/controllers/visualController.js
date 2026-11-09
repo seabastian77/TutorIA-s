@@ -82,7 +82,7 @@ const VisualController = {
       });
     } catch (error) {
       reportarError("Error en /visual/temas", error);
-      res.status(500).json({ error: "No se pudieron cargar los temas" });
+      res.status(500).json({ error: "Could not load the topics" });
     }
   },
 
@@ -90,7 +90,7 @@ const VisualController = {
     try {
       if (!hayMedios()) {
         return res.status(503).json({
-          error: "Los ejercicios con imagen no están disponibles",
+          error: "Photo exercises aren't available right now",
           codigo: "sin_medios",
         });
       }
@@ -99,14 +99,14 @@ const VisualController = {
       const elegido = buscarTema(modo, tema);
 
       if (!elegido) {
-        return res.status(400).json({ error: "Ese tema no existe" });
+        return res.status(400).json({ error: "That topic doesn't exist" });
       }
 
       const medio = await obtenerMedio("foto", elegido.consulta);
       if (!medio) {
         return res
           .status(502)
-          .json({ error: "No se encontró una foto para ese tema" });
+          .json({ error: "No photo was found for that topic" });
       }
 
       const { nivel } = await obtenerPerfil(req.usuario.id);
@@ -138,7 +138,7 @@ const VisualController = {
       });
     } catch (error) {
       reportarError("Error en /visual/ejercicio", error);
-      res.status(500).json({ error: "No se pudo preparar el ejercicio" });
+      res.status(500).json({ error: "Could not prepare the exercise" });
     }
   },
 
@@ -149,7 +149,7 @@ const VisualController = {
       const texto = typeof (req.body || {}).texto === "string" ? req.body.texto.slice(0, 1500) : "";
 
       if (!ejercicioId || !texto.trim()) {
-        return res.status(400).json({ error: "Falta lo que escribiste" });
+        return res.status(400).json({ error: "Your answer is missing" });
       }
 
       const { rows } = await pool.query(
@@ -159,7 +159,7 @@ const VisualController = {
       );
 
       if (rows.length === 0) {
-        return res.status(404).json({ error: "Ese ejercicio no existe" });
+        return res.status(404).json({ error: "That exercise doesn't exist" });
       }
 
       // Ya calificado: no se vuelve a gastar la IA ni a dar XP
@@ -171,7 +171,7 @@ const VisualController = {
       const medio = await obtenerMedioPorId(medioId);
 
       if (!medio) {
-        return res.status(404).json({ error: "Esa imagen ya no está disponible" });
+        return res.status(404).json({ error: "That image is no longer available" });
       }
 
       const { nivel, ayudaEs } = await obtenerPerfil(req.usuario.id);
@@ -199,7 +199,7 @@ const VisualController = {
         if (error.status === 429) {
           reportarError("Groq rechazó la evaluación por límite de tokens", error);
           return res.status(429).json({
-            error: "El tutor está ocupado. Espera unos segundos y vuelve a intentar.",
+            error: "The tutor is busy. Wait a few seconds and try again.",
             codigo: "limite_ia",
           });
         }
@@ -245,7 +245,7 @@ const VisualController = {
       });
     } catch (error) {
       reportarError("Error en /visual/responder", error);
-      res.status(500).json({ error: "No se pudo revisar tu respuesta" });
+      res.status(500).json({ error: "Could not check your answer" });
     }
   },
 };

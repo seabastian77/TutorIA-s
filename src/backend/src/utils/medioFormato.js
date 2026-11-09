@@ -44,7 +44,7 @@ function extraerJSON(texto) {
   const inicio = limpio.indexOf("{");
 
   if (inicio === -1) {
-    throw new Error("El modelo de visión no devolvió JSON");
+    throw new Error("The vision model did not return JSON");
   }
 
   let profundidad = 0;
@@ -70,7 +70,7 @@ function extraerJSON(texto) {
     }
   }
 
-  throw new Error("El modelo de visión no devolvió JSON completo");
+  throw new Error("The vision model returned incomplete JSON");
 }
 
 module.exports = { normalizarFoto, normalizarVideo, extraerJSON };

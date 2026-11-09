@@ -47,7 +47,7 @@ async function descargarMisDatos(boton) {
     enlace.click();
     enlace.remove();
     setTimeout(() => URL.revokeObjectURL(enlace.href), 1000);
-    avisoDatos("datos-aviso-descarga", "Listo: el archivo quedó en tus descargas.", "exito");
+    avisoDatos("datos-aviso-descarga", "Done! The file is in your downloads.", "exito");
   } catch (err) {
     avisoDatos("datos-aviso-descarga", err.message);
   } finally {
@@ -63,7 +63,7 @@ async function borrarMiCuenta(e) {
   const contrasena = document.getElementById("borrar-contrasena").value;
 
   if (cuentaActual && correo.trim().toLowerCase() !== cuentaActual.correo.toLowerCase()) {
-    avisoDatos("datos-aviso-borrar", "El correo no coincide con el de tu cuenta.");
+    avisoDatos("datos-aviso-borrar", "That email doesn\u2019t match your account.");
     return;
   }
 
@@ -73,7 +73,7 @@ async function borrarMiCuenta(e) {
     await MisDatosAPI.borrar({ correo, contrasena });
     Sesion.cerrar();
     try {
-      sessionStorage.setItem("tutorias_despedida", "Tu cuenta y todos tus datos quedaron borrados.");
+      sessionStorage.setItem("tutorias_despedida", "Your account and all your data were deleted.");
     } catch (err) {
       // Sin almacenamiento, la entrada simplemente no muestra la despedida
     }

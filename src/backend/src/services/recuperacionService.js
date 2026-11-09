@@ -16,7 +16,7 @@ const {
   SOLICITUDES_POR_HORA,
 } = require("../utils/recuperacion");
 
-const RONDAS_BCRYPT = 10; // las mismas que usa el registro
+const { RONDAS_BCRYPT } = require("../config/seguridad");
 
 /** La dirección pública de la app, que es donde vive el formulario. */
 function direccionDeLaApp() {
@@ -60,14 +60,14 @@ const RecuperacionService = {
    */
   async restablecer(token, contrasenaNueva) {
     if (!tokenBienFormado(token)) {
-      const error = new Error("El enlace no sirve o ya venció");
+      const error = new Error("This link is invalid or has expired");
       error.status = 400;
       throw error;
     }
 
     const solicitud = await RecuperacionModel.buscarPorHash(hashDeToken(token));
     if (!solicitud || solicitud.usado_en || estaVencido(solicitud.expira)) {
-      const error = new Error("El enlace no sirve o ya venció");
+      const error = new Error("This link is invalid or has expired");
       error.status = 400;
       throw error;
     }

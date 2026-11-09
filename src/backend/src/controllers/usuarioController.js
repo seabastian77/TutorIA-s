@@ -119,7 +119,7 @@ const UsuarioController = {
       });
     } catch (error) {
       reportarError("Error en /usuario/progreso", error);
-      res.status(500).json({ error: "No se pudo obtener el progreso" });
+      res.status(500).json({ error: "Could not load your progress" });
     }
   },
 
@@ -131,7 +131,7 @@ const UsuarioController = {
       if (typeof ayudaEspanol !== "boolean") {
         return res
           .status(400)
-          .json({ error: "ayudaEspanol tiene que ser true o false" });
+          .json({ error: "ayudaEspanol must be true or false" });
       }
 
       const { rows } = await pool.query(
@@ -142,7 +142,7 @@ const UsuarioController = {
       res.json({ ok: true, ayudaEspanol: rows[0].ayuda_es !== false });
     } catch (error) {
       reportarError("Error en /usuario/preferencias", error);
-      res.status(500).json({ error: "No se pudo guardar la preferencia" });
+      res.status(500).json({ error: "Could not save your preference" });
     }
   },
 
@@ -230,7 +230,7 @@ const UsuarioController = {
       res.json({ logros });
     } catch (error) {
       reportarError("Error en /usuario/logros", error);
-      res.status(500).json({ error: "No se pudieron cargar los logros" });
+      res.status(500).json({ error: "Could not load your achievements" });
     }
   },
 };

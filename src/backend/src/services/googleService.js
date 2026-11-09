@@ -38,7 +38,7 @@ const GoogleService = {
    */
   async entrar(credencial) {
     if (!googleConfigurado()) {
-      const error = new Error("Entrar con Google no está habilitado");
+      const error = new Error("Google sign-in is not enabled");
       error.status = 503;
       throw error;
     }
@@ -47,7 +47,7 @@ const GoogleService = {
     try {
       payload = await verificarToken(credencial);
     } catch (e) {
-      const error = new Error("El acceso con Google no se pudo verificar");
+      const error = new Error("We couldn't verify your Google sign-in");
       error.status = 401;
       throw error;
     }

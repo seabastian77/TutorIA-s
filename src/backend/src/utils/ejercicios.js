@@ -19,6 +19,6 @@ async function marcarRespondido(ejercicioId, usuarioId, correcto) {
   return rows.length > 0;
 }
 
-const YA_RESPONDIDO = { error: "Ya respondiste este ejercicio", codigo: "ya_respondido" };
+const YA_RESPONDIDO = { error: "You already answered this exercise", codigo: "ya_respondido" };
 
 module.exports = { idValido, marcarRespondido, YA_RESPONDIDO };

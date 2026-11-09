@@ -68,15 +68,14 @@ async function revisarTexto(texto) {
     body: cuerpo,
   });
   if (resp.status === 429) throw new Error("demasiadas");
-  if (!resp.ok) throw new Error(`LanguageTool respondió ${resp.status}`);
+  if (!resp.ok) throw new Error(`LanguageTool answered ${resp.status}`);
   const datos = await resp.json();
   return resumirHallazgos(texto, datos.matches);
 }
 
 /** Dice si el estudiante tiene encendidas las explicaciones en español. */
 function ayudaEnEspanol() {
-  const casilla = typeof document !== "undefined" && document.getElementById("ayuda-espanol-check");
-  return Boolean(casilla && casilla.checked);
+  return typeof document !== "undefined" && Boolean(document.body && document.body.classList.contains("ayuda-es"));
 }
 
 /** Pone el botón "Check my English" debajo de un campo y pinta los errores que encuentre. */
@@ -125,7 +124,7 @@ function conectarRevisor(entrada, { despuesDe = entrada } = {}) {
       const bien = document.createElement("p");
       bien.className = "revisor-bien";
       bien.innerHTML = Icono.svg("fa-check");
-      bien.append(espanol ? " No mistakes found. ¡Bien escrito!" : " No mistakes found. Well written!");
+      bien.append(" No mistakes found. Well written!");
       zona.append(bien, pie());
       return;
     }
@@ -144,7 +143,7 @@ function conectarRevisor(entrada, { despuesDe = entrada } = {}) {
       cabeza.className = "revisor-cabeza";
       const tipo = document.createElement("span");
       tipo.className = "revisor-tipo";
-      tipo.textContent = TIPOS_ERROR[h.tipo][espanol ? "es" : "en"];
+      tipo.textContent = TIPOS_ERROR[h.tipo].en;
       const frag = document.createElement("span");
       frag.className = "revisor-fragmento";
       // Se muestra la palabra con un poco de contexto para que se ubique en su texto

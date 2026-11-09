@@ -13,7 +13,7 @@ const PracticaAPI = {
       body: JSON.stringify({ tema }),
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Error generando ejercicio");
+    if (!resp.ok) throw new Error(datos.error || "Could not create the exercise");
     return datos;
   },
 
@@ -28,7 +28,7 @@ const PracticaAPI = {
       body: JSON.stringify({ ejercicioId, respuestaUsuario }),
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "Error evaluando respuesta");
+    if (!resp.ok) throw new Error(datos.error || "Could not check your answer");
     return datos;
   },
 };

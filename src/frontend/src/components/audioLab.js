@@ -106,6 +106,7 @@ async function comprobarDictado() {
     document.getElementById("dictado-frase-revelada").classList.remove("oculto");
 
     const resultado = document.getElementById("dictado-resultado");
+    if (datos.perfecto) if (typeof celebrarConTuti === "function") celebrarConTuti("Perfect dictation!", `+${datos.xpGanado} XP for your ears.`);
     resultado.textContent = datos.perfecto
       ? `Perfect! ${datos.porcentaje}% — +${datos.xpGanado} XP`
       : `${datos.aciertos} of ${datos.total} words — ${datos.porcentaje}% — +${datos.xpGanado} XP`;
@@ -233,6 +234,7 @@ async function enviarRespuestasAudio() {
     document.getElementById("comprension-texto").textContent = datos.texto;
     document.getElementById("comprension-transcripcion").classList.remove("oculto");
 
+    if (datos.perfecto) if (typeof celebrarConTuti === "function") celebrarConTuti("Perfect listening!", `${datos.aciertos}/${datos.total} right. +${datos.xpGanado} XP`);
     resultado.textContent = datos.perfecto
       ? `Perfect! ${datos.aciertos}/${datos.total} — +${datos.xpGanado} XP`
       : `${datos.aciertos} of ${datos.total} correct — +${datos.xpGanado} XP`;

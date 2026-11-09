@@ -17,7 +17,7 @@ const MetricasAPI = {
       headers: { Authorization: `Bearer ${Sesion.obtenerToken()}` },
     });
     const datos = await resp.json();
-    if (!resp.ok) throw new Error(datos.error || "No se pudieron cargar las métricas");
+    if (!resp.ok) throw new Error(datos.error || "Could not load the metrics");
     return datos;
   },
 };

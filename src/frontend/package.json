@@ -7,5 +7,8 @@
   },
   "dependencies": {
     "serve": "^14.2.1"
+  },
+  "overrides": {
+    "compression": "^1.8.2"
   }
 }

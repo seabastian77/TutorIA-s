@@ -212,6 +212,7 @@ async function enviarRespuesta(respuestaUsuario) {
       const racha = document.createElement("p");
       racha.className = "bonus-perfecto";
       racha.textContent = `5 in a row — +${resultado.bonusPerfecto} bonus XP`;
+      if (typeof celebrarConTuti === "function") celebrarConTuti("5 in a row!", `+${resultado.bonusPerfecto} bonus XP. You\u2019re on fire.`);
       cuerpo.appendChild(racha);
     }
 

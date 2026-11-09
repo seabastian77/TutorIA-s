@@ -67,7 +67,7 @@ const PracticaController = {
       return res.json({ ejercicioId: rows[0].id, tipo, nivel, tema, contenido: visible });
     } catch (error) {
       reportarError("Error en /practica/pregunta", error);
-      res.status(500).json({ error: "No se pudo generar el ejercicio" });
+      res.status(500).json({ error: "Could not create the exercise" });
     }
   },
 
@@ -76,7 +76,7 @@ const PracticaController = {
       const ejercicioId = idValido((req.body || {}).ejercicioId);
       const respuestaUsuario = (req.body || {}).respuestaUsuario;
       if (!ejercicioId || respuestaUsuario === undefined || respuestaUsuario === null) {
-        return res.status(400).json({ error: "Falta el ejercicio o la respuesta" });
+        return res.status(400).json({ error: "The exercise or the answer is missing" });
       }
 
       // Se califica contra la pregunta guardada, nunca contra lo que mande el navegador
@@ -86,7 +86,7 @@ const PracticaController = {
         [ejercicioId, req.usuario.id],
       );
       if (rows.length === 0) {
-        return res.status(404).json({ error: "Ese ejercicio no existe" });
+        return res.status(404).json({ error: "That exercise doesn't exist" });
       }
       if (rows[0].correcto !== null) {
         return res.status(409).json(YA_RESPONDIDO);
@@ -152,7 +152,7 @@ const PracticaController = {
       });
     } catch (error) {
       reportarError("Error en /practica/responder", error);
-      res.status(500).json({ error: "No se pudo evaluar la respuesta" });
+      res.status(500).json({ error: "Could not check the answer" });
     }
   },
 };

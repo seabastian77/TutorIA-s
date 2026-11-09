@@ -13,10 +13,10 @@ const AvatarSimli = {
     const cliente = new sdk.SimliClient(sessionToken, video, audio, null, sdk.LogLevel && sdk.LogLevel.ERROR, "livekit");
 
     const listo = new Promise((resolver, rechazar) => {
-      const espera = setTimeout(() => rechazar(new Error("Simli no respondió a tiempo")), 20000);
+      const espera = setTimeout(() => rechazar(new Error("The video avatar took too long to answer")), 20000);
       cliente.on("start", () => { clearTimeout(espera); resolver(); });
       cliente.on("error", (e) => { clearTimeout(espera); rechazar(new Error(String(e || "Error de Simli"))); });
-      cliente.on("startup_error", (e) => { clearTimeout(espera); rechazar(new Error(String(e || "Simli no pudo arrancar"))); });
+      cliente.on("startup_error", (e) => { clearTimeout(espera); rechazar(new Error(String(e || "The video avatar could not start"))); });
     });
     cliente.on("speaking", () => alHablar && alHablar());
     cliente.on("silent", () => alCallar && alCallar());

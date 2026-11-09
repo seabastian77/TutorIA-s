@@ -28,7 +28,7 @@ const VozController = {
       const mensajeUsuario = typeof (req.body || {}).mensajeUsuario === "string" ? req.body.mensajeUsuario.slice(0, 500) : "";
 
       if (!mensajeUsuario.trim()) {
-        return res.status(400).json({ error: "No llegó ningún mensaje" });
+        return res.status(400).json({ error: "No message was received" });
       }
 
       const NIVELES = ["A1", "A2", "B1", "B2", "C1", "C2"];
@@ -54,7 +54,7 @@ const VozController = {
           nivel: nivelUsuario,
         });
       if (!resultado || typeof resultado.respuesta !== "string" || !resultado.respuesta.trim()) {
-        throw new Error("La IA no devolvió una respuesta");
+        throw new Error("The AI did not return an answer");
       }
 
       await pool.query(
@@ -84,7 +84,7 @@ const VozController = {
       });
     } catch (error) {
       reportarError("Error en /voz/responder", error);
-      res.status(500).json({ error: "No se pudo procesar tu mensaje" });
+      res.status(500).json({ error: "Could not process your message" });
     }
   },
 };

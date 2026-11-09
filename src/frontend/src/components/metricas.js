@@ -1,29 +1,29 @@
 // Tablero de métricas del estudio: cifras agregadas y anónimas para el trabajo de grado
 
 const SVG_NS = "http://www.w3.org/2000/svg";
-const HABILIDADES_ES = {
-  vocabulario: "Vocabulario",
-  gramatica: "Gramática",
-  comprension: "Comprensión",
-  fluidez: "Fluidez",
+const NOMBRE_HABILIDAD = {
+  vocabulario: "Vocabulary",
+  gramatica: "Grammar",
+  comprension: "Comprehension",
+  fluidez: "Fluency",
 };
 
 let metricasDatos = null;
 let metricasObservador = null;
 
-const formatoEntero = new Intl.NumberFormat("es-CO");
+const formatoEntero = new Intl.NumberFormat("en-US");
 
-const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+const MESES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-/** Escribe una semana (lunes) como "21 sep". */
-function fechaCorta(iso) {
+/** Escribe una semana (lunes) como "Sep 21". */
+function semanaCorta(iso) {
   const d = new Date(`${iso}T12:00:00Z`);
-  return `${d.getUTCDate()} ${MESES[d.getUTCMonth()]}`;
+  return `${MESES[d.getUTCMonth()]} ${d.getUTCDate()}`;
 }
 
-/** Porcentaje con coma decimal, como se escribe en Colombia. */
+/** Porcentaje con punto decimal, como lo muestra la interfaz en inglés. */
 function textoPorcentaje(valor) {
-  return valor == null ? "—" : `${String(valor).replace(".", ",")} %`;
+  return valor == null ? "—" : `${valor}%`;
 }
 
 /** Crea un nodo SVG con sus atributos. */
@@ -173,7 +173,7 @@ function dibujarLinea(tarjeta, datos) {
     arriba: m.arriba,
     abajo: alto - m.abajo,
     maximo: 100,
-    formato: (v) => `${v} %`,
+    formato: (v) => `${v}%`,
   });
 
   const paso = (ancho - m.izquierda - m.derecha) / Math.max(datos.length - 1, 1);
@@ -194,11 +194,11 @@ function dibujarLinea(tarjeta, datos) {
   datos.forEach((d, i) => {
     const x = m.izquierda + paso * i;
     if ((datos.length - 1 - i) % saltoEtiquetas === 0) {
-      svg.append(textoSvg(fechaCorta(d.semana), { x, y: alto - 10, "text-anchor": "middle", class: "grafica-eje" }));
+      svg.append(textoSvg(semanaCorta(d.semana), { x, y: alto - 10, "text-anchor": "middle", class: "grafica-eje" }));
     }
     const golpe = nodoSvg("rect", { x: x - paso / 2, y: m.arriba, width: paso, height: altoUtil, class: "grafica-golpe" });
-    const texto = d.porcentaje == null ? "Sin intentos" : textoPorcentaje(d.porcentaje);
-    conTooltip(golpe, tarjeta, texto, `Semana del ${fechaCorta(d.semana)} · ${formatoEntero.format(d.intentos)} intentos`);
+    const texto = d.porcentaje == null ? "No attempts" : textoPorcentaje(d.porcentaje);
+    conTooltip(golpe, tarjeta, texto, `Week of ${semanaCorta(d.semana)} · ${formatoEntero.format(d.intentos)} attempts`);
     svg.append(golpe);
     if (d.porcentaje == null) return;
     const [px, py] = punto(d, i);
@@ -231,8 +231,8 @@ function dibujarBarras(tarjeta, datos) {
     svg.append(nodoSvg("path", { d: trazoBarra(etiquetaAncho, y, largo, grosor), class: "grafica-serie-1" }));
     svg.append(textoSvg(formatoEntero.format(d.actividades), { x: etiquetaAncho + largo + 8, y: y + grosor / 2 + 4, class: "grafica-valor" }));
     const golpe = nodoSvg("rect", { x: 0, y: y - 6, width: ancho, height: fila, class: "grafica-golpe" });
-    const personas = d.estudiantes === 1 ? "1 estudiante" : `${d.estudiantes} estudiantes`;
-    conTooltip(golpe, tarjeta, `${formatoEntero.format(d.actividades)} actividades`, `${d.nombre} · ${personas}`);
+    const personas = d.estudiantes === 1 ? "1 student" : `${d.estudiantes} students`;
+    conTooltip(golpe, tarjeta, `${formatoEntero.format(d.actividades)} activities`, `${d.nombre} · ${personas}`);
     svg.append(golpe);
   });
 
@@ -258,7 +258,7 @@ function dibujarPesas(tarjeta, habilidades) {
 
   habilidades.forEach((h, i) => {
     const y = i * fila + 26;
-    svg.append(textoSvg(HABILIDADES_ES[h.habilidad] || h.habilidad, { x: 0, y: y + 4, class: "grafica-categoria" }));
+    svg.append(textoSvg(NOMBRE_HABILIDAD[h.habilidad] || h.habilidad, { x: 0, y: y + 4, class: "grafica-categoria" }));
     if (h.inicial == null) return;
     const [a, b] = [x(h.inicial), x(h.actual)];
     svg.append(nodoSvg("line", { x1: a, x2: b, y1: y, y2: y, class: "grafica-pesa" }));
@@ -269,7 +269,7 @@ function dibujarPesas(tarjeta, habilidades) {
     svg.append(textoSvg(String(h.actual), { x: b + (subio ? 11 : -11), y: y + 4, "text-anchor": subio ? "start" : "end", class: "grafica-valor" }));
     const golpe = nodoSvg("rect", { x: etiquetaAncho - 8, y: y - fila / 2, width: util + 16, height: fila, class: "grafica-golpe" });
     const diferencia = h.actual - h.inicial;
-    conTooltip(golpe, tarjeta, `${h.inicial} → ${h.actual} (${diferencia >= 0 ? "+" : ""}${diferencia})`, `${HABILIDADES_ES[h.habilidad]} · ${h.estudiantes} estudiantes`);
+    conTooltip(golpe, tarjeta, `${h.inicial} → ${h.actual} (${diferencia >= 0 ? "+" : ""}${diferencia})`, `${NOMBRE_HABILIDAD[h.habilidad]} · ${h.estudiantes} students`);
     svg.append(golpe);
   });
 
@@ -313,12 +313,12 @@ function sinDatos(tarjeta, mensaje) {
 /** Las cifras de arriba: una por tarjeta, con su contexto debajo. */
 function pintarCifras(d) {
   const cifras = [
-    ["Estudiantes", formatoEntero.format(d.estudiantes.total), `+${d.estudiantes.nuevos7} en los últimos 7 días`],
-    ["Activos esta semana", formatoEntero.format(d.estudiantes.activos7), `${d.estudiantes.activos30} en los últimos 30 días`],
-    ["Actividades terminadas", formatoEntero.format(d.uso.actividades), `${formatoEntero.format(d.uso.actividades30)} en los últimos 30 días`],
-    ["Volvieron otro día", textoPorcentaje(d.constancia.volvieronPct), `${d.constancia.volvieron} de ${d.constancia.conActividad} estudiantes`],
-    ["Días de práctica", String(d.constancia.diasPromedio).replace(".", ","), "promedio por estudiante"],
-    ["Racha máxima", String(d.constancia.rachaPromedio).replace(".", ","), `días en promedio · la más larga, ${d.constancia.rachaMayor}`],
+    ["Students", formatoEntero.format(d.estudiantes.total), `+${d.estudiantes.nuevos7} in the last 7 days`],
+    ["Active this week", formatoEntero.format(d.estudiantes.activos7), `${d.estudiantes.activos30} in the last 30 days`],
+    ["Activities completed", formatoEntero.format(d.uso.actividades), `${formatoEntero.format(d.uso.actividades30)} in the last 30 days`],
+    ["Came back another day", textoPorcentaje(d.constancia.volvieronPct), `${d.constancia.volvieron} of ${d.constancia.conActividad} students`],
+    ["Practice days", String(d.constancia.diasPromedio), "average per student"],
+    ["Best streak", String(d.constancia.rachaPromedio), `days on average · longest, ${d.constancia.rachaMayor}`],
   ];
   const caja = document.getElementById("metricas-cifras");
   caja.replaceChildren(
@@ -345,9 +345,9 @@ function pintarCambioNivel(cambio) {
   const caja = document.getElementById("metricas-cambio");
   const total = cambio.estudiantes;
   const piezas = [
-    ["subieron", "Subieron de nivel", cambio.subieron, "fa-arrow-trend-up"],
-    ["igual", "Se mantuvieron", cambio.igual, "fa-minus"],
-    ["bajaron", "Bajaron de nivel", cambio.bajaron, "fa-arrow-trend-down"],
+    ["subieron", "Moved up a level", cambio.subieron, "fa-arrow-trend-up"],
+    ["igual", "Stayed the same", cambio.igual, "fa-minus"],
+    ["bajaron", "Moved down a level", cambio.bajaron, "fa-arrow-trend-down"],
   ];
   caja.replaceChildren(
     ...piezas.map(([clase, titulo, n, icono]) => {
@@ -355,7 +355,7 @@ function pintarCambioNivel(cambio) {
       div.className = `cambio cambio-${clase}`;
       div.innerHTML = Icono.svg(icono);
       const v = document.createElement("strong");
-      v.textContent = total ? `${Math.round((n / total) * 100)} %` : "—";
+      v.textContent = total ? `${Math.round((n / total) * 100)}%` : "—";
       const t = document.createElement("span");
       t.textContent = `${titulo} · ${n}`;
       div.append(v, t);
@@ -372,40 +372,40 @@ function dibujarGraficas() {
   const semanas = document.getElementById("grafica-semanas");
   if (d.uso.semanas.some((s) => s.actividades > 0)) {
     dibujarColumnas(semanas, d.uso.semanas, {
-      etiqueta: (s) => fechaCorta(s.semana),
+      etiqueta: (s) => semanaCorta(s.semana),
       valor: (s) => s.actividades,
-      textoValor: (s) => `${formatoEntero.format(s.actividades)} actividades`,
-      textoEtiqueta: (s) => `Semana del ${fechaCorta(s.semana)} · ${s.estudiantes} estudiantes activos`,
+      textoValor: (s) => `${formatoEntero.format(s.actividades)} activities`,
+      textoEtiqueta: (s) => `Week of ${semanaCorta(s.semana)} · ${s.estudiantes} active students`,
       etiquetar: true,
     });
   } else {
-    sinDatos(semanas, "Todavía no hay actividades en estas semanas.");
+    sinDatos(semanas, "No activity in these weeks yet.");
   }
 
   const aciertos = document.getElementById("grafica-aciertos");
   if (d.aprendizaje.aciertos.some((s) => s.intentos > 0)) dibujarLinea(aciertos, d.aprendizaje.aciertos);
-  else sinDatos(aciertos, "Todavía no hay ejercicios calificados en estas semanas.");
+  else sinDatos(aciertos, "No graded exercises in these weeks yet.");
 
   const modulos = document.getElementById("grafica-modulos");
   if (d.uso.modulos.length) dibujarBarras(modulos, d.uso.modulos);
-  else sinDatos(modulos, "Todavía no hay actividades registradas.");
+  else sinDatos(modulos, "No activity recorded yet.");
 
   const niveles = document.getElementById("grafica-niveles");
   if (d.estudiantes.conDiagnostico) {
     dibujarColumnas(niveles, d.aprendizaje.niveles, {
       etiqueta: (n) => n.nivel,
       valor: (n) => n.estudiantes,
-      textoValor: (n) => `${n.estudiantes} estudiantes`,
-      textoEtiqueta: (n) => `Nivel ${n.nivel}`,
+      textoValor: (n) => `${n.estudiantes} students`,
+      textoEtiqueta: (n) => `Level ${n.nivel}`,
       etiquetar: false,
     });
   } else {
-    sinDatos(niveles, "Nadie ha hecho el Level Check todavía.");
+    sinDatos(niveles, "Nobody has taken the Level Check yet.");
   }
 
   const pesas = document.getElementById("grafica-habilidades");
   if (d.aprendizaje.cambioNivel.estudiantes) dibujarPesas(pesas, d.aprendizaje.cambioNivel.habilidades);
-  else sinDatos(pesas, "Aparece cuando algún estudiante haga el Level Check por segunda vez.");
+  else sinDatos(pesas, "Shows up once a student takes the Level Check a second time.");
 }
 
 /** Llena textos, cifras y tablas; las gráficas se dibujan aparte porque dependen del ancho. */
@@ -414,29 +414,29 @@ function pintarMetricas(d) {
   pintarCifras(d);
   pintarCambioNivel(d.aprendizaje.cambioNivel);
 
-  const hora = new Date(d.generado).toLocaleString("es-CO", { dateStyle: "medium", timeStyle: "short" });
+  const hora = new Date(d.generado).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
   const desde = d.registroDesde
-    ? ` Desde el ${new Date(d.registroDesde).toLocaleDateString("es-CO", { dateStyle: "long" })} cada actividad queda registrada con su módulo; lo anterior se reconstruyó del historial de práctica, audio, fotos, situaciones, lecturas y diagnósticos.`
-    : " Lo anterior al registro por módulo se reconstruyó del historial de práctica, audio, fotos, situaciones, lecturas y diagnósticos.";
+    ? ` Since ${new Date(d.registroDesde).toLocaleDateString("en-US", { dateStyle: "long" })} every activity is logged with its module; earlier data was rebuilt from practice, audio, photo, situation, reading and diagnostic history.`
+    : " Data from before per-module logging was rebuilt from practice, audio, photo, situation, reading and diagnostic history.";
   const excluidas = d.cuentasExcluidas
-    ? ` No incluye ${d.cuentasExcluidas === 1 ? "la cuenta del equipo" : `las ${d.cuentasExcluidas} cuentas del equipo`}.`
+    ? ` Excludes ${d.cuentasExcluidas === 1 ? "the team account" : `the ${d.cuentasExcluidas} team accounts`}.`
     : "";
-  document.getElementById("metricas-estado").textContent = `Actualizado el ${hora.replace(/\.$/, "")}.${excluidas}${desde}`;
+  document.getElementById("metricas-estado").textContent = `Updated ${hora}.${excluidas}${desde}`;
 
-  document.getElementById("nota-niveles").textContent = `Último diagnóstico de cada estudiante · n = ${d.estudiantes.conDiagnostico}`;
-  document.getElementById("nota-habilidades").textContent = `Promedio sobre 100 · estudiantes con dos o más diagnósticos · n = ${d.aprendizaje.cambioNivel.estudiantes}`;
-  document.getElementById("nota-aciertos").textContent = `Práctica, dictados, comprensión y fotos · ${formatoEntero.format(d.aprendizaje.aciertos.reduce((s, a) => s + a.intentos, 0))} intentos en 8 semanas`;
+  document.getElementById("nota-niveles").textContent = `Latest diagnostic of each student · n = ${d.estudiantes.conDiagnostico}`;
+  document.getElementById("nota-habilidades").textContent = `Average out of 100 · students with two or more diagnostics · n = ${d.aprendizaje.cambioNivel.estudiantes}`;
+  document.getElementById("nota-aciertos").textContent = `Practice, dictation, comprehension and photos · ${formatoEntero.format(d.aprendizaje.aciertos.reduce((s, a) => s + a.intentos, 0))} attempts in 8 weeks`;
 
-  llenarTabla(document.getElementById("grafica-semanas"), ["Semana", "Actividades", "Estudiantes activos"],
-    d.uso.semanas.map((s) => [fechaCorta(s.semana), s.actividades, s.estudiantes]));
-  llenarTabla(document.getElementById("grafica-aciertos"), ["Semana", "Intentos", "Aciertos", "% de aciertos"],
-    d.aprendizaje.aciertos.map((s) => [fechaCorta(s.semana), s.intentos, s.aciertos, textoPorcentaje(s.porcentaje)]));
-  llenarTabla(document.getElementById("grafica-modulos"), ["Módulo", "Actividades", "Estudiantes"],
+  llenarTabla(document.getElementById("grafica-semanas"), ["Week", "Activities", "Active students"],
+    d.uso.semanas.map((s) => [semanaCorta(s.semana), s.actividades, s.estudiantes]));
+  llenarTabla(document.getElementById("grafica-aciertos"), ["Week", "Attempts", "Correct", "Accuracy"],
+    d.aprendizaje.aciertos.map((s) => [semanaCorta(s.semana), s.intentos, s.aciertos, textoPorcentaje(s.porcentaje)]));
+  llenarTabla(document.getElementById("grafica-modulos"), ["Module", "Activities", "Students"],
     d.uso.modulos.map((m) => [m.nombre, m.actividades, m.estudiantes]));
-  llenarTabla(document.getElementById("grafica-niveles"), ["Nivel", "Estudiantes"],
+  llenarTabla(document.getElementById("grafica-niveles"), ["Level", "Students"],
     d.aprendizaje.niveles.map((n) => [n.nivel, n.estudiantes]));
-  llenarTabla(document.getElementById("grafica-habilidades"), ["Habilidad", "Primer diagnóstico", "Último diagnóstico", "Estudiantes"],
-    d.aprendizaje.cambioNivel.habilidades.map((h) => [HABILIDADES_ES[h.habilidad], h.inicial ?? "—", h.actual ?? "—", h.estudiantes]));
+  llenarTabla(document.getElementById("grafica-habilidades"), ["Skill", "First diagnostic", "Latest diagnostic", "Students"],
+    d.aprendizaje.cambioNivel.habilidades.map((h) => [NOMBRE_HABILIDAD[h.habilidad], h.inicial ?? "—", h.actual ?? "—", h.estudiantes]));
   document.querySelectorAll("#vista-metricas .grafica-tabla").forEach((t) => {
     t.hidden = false;
   });
@@ -448,31 +448,31 @@ function pintarMetricas(d) {
 function descargarCsv() {
   const d = metricasDatos;
   if (!d) return;
-  const filas = [["Sección", "Indicador", "Valor"]];
+  const filas = [["Section", "Indicator", "Value"]];
   const agregar = (seccion, indicador, valor) => filas.push([seccion, indicador, valor ?? ""]);
 
-  agregar("Estudiantes", "Registrados", d.estudiantes.total);
-  agregar("Estudiantes", "Nuevos en 7 días", d.estudiantes.nuevos7);
-  agregar("Estudiantes", "Activos en 7 días", d.estudiantes.activos7);
-  agregar("Estudiantes", "Activos en 30 días", d.estudiantes.activos30);
-  agregar("Estudiantes", "Con diagnóstico", d.estudiantes.conDiagnostico);
-  agregar("Constancia", "Volvieron otro día (%)", d.constancia.volvieronPct);
-  agregar("Constancia", "Días de práctica promedio", d.constancia.diasPromedio);
-  agregar("Constancia", "Racha máxima promedio", d.constancia.rachaPromedio);
-  agregar("Constancia", "Racha más larga", d.constancia.rachaMayor);
-  agregar("Uso", "Actividades totales", d.uso.actividades);
-  d.uso.semanas.forEach((s) => agregar("Actividades por semana", s.semana, s.actividades));
-  d.uso.modulos.forEach((m) => agregar("Actividades por módulo", m.nombre, m.actividades));
-  d.aprendizaje.aciertos.forEach((s) => agregar("Aciertos por semana (%)", s.semana, s.porcentaje));
-  d.aprendizaje.niveles.forEach((n) => agregar("Nivel actual", n.nivel, n.estudiantes));
+  agregar("Students", "Registered", d.estudiantes.total);
+  agregar("Students", "New in 7 days", d.estudiantes.nuevos7);
+  agregar("Students", "Active in 7 days", d.estudiantes.activos7);
+  agregar("Students", "Active in 30 days", d.estudiantes.activos30);
+  agregar("Students", "With a diagnostic", d.estudiantes.conDiagnostico);
+  agregar("Consistency", "Came back another day (%)", d.constancia.volvieronPct);
+  agregar("Consistency", "Average practice days", d.constancia.diasPromedio);
+  agregar("Consistency", "Average best streak", d.constancia.rachaPromedio);
+  agregar("Consistency", "Longest streak", d.constancia.rachaMayor);
+  agregar("Usage", "Total activities", d.uso.actividades);
+  d.uso.semanas.forEach((s) => agregar("Activities per week", s.semana, s.actividades));
+  d.uso.modulos.forEach((m) => agregar("Activities per module", m.nombre, m.actividades));
+  d.aprendizaje.aciertos.forEach((s) => agregar("Accuracy per week (%)", s.semana, s.porcentaje));
+  d.aprendizaje.niveles.forEach((n) => agregar("Current level", n.nivel, n.estudiantes));
   const c = d.aprendizaje.cambioNivel;
-  agregar("Cambio de nivel", "Estudiantes con 2+ diagnósticos", c.estudiantes);
-  agregar("Cambio de nivel", "Subieron", c.subieron);
-  agregar("Cambio de nivel", "Se mantuvieron", c.igual);
-  agregar("Cambio de nivel", "Bajaron", c.bajaron);
+  agregar("Level change", "Students with 2+ diagnostics", c.estudiantes);
+  agregar("Level change", "Moved up", c.subieron);
+  agregar("Level change", "Stayed the same", c.igual);
+  agregar("Level change", "Moved down", c.bajaron);
   c.habilidades.forEach((h) => {
-    agregar("Habilidades (primer diagnóstico)", HABILIDADES_ES[h.habilidad], h.inicial);
-    agregar("Habilidades (último diagnóstico)", HABILIDADES_ES[h.habilidad], h.actual);
+    agregar("Skills (first diagnostic)", NOMBRE_HABILIDAD[h.habilidad], h.inicial);
+    agregar("Skills (latest diagnostic)", NOMBRE_HABILIDAD[h.habilidad], h.actual);
   });
 
   const csv = filas
@@ -482,7 +482,7 @@ function descargarCsv() {
   const archivo = new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8" });
   const enlace = document.createElement("a");
   enlace.href = URL.createObjectURL(archivo);
-  enlace.download = `metricas-tutorias-${d.generado.slice(0, 10)}.csv`;
+  enlace.download = `tutorias-metrics-${d.generado.slice(0, 10)}.csv`;
   document.body.append(enlace);
   enlace.click();
   enlace.remove();
@@ -494,11 +494,11 @@ async function cargarMetricas() {
   const vista = document.getElementById("vista-metricas");
   const estado = document.getElementById("metricas-estado");
   vista.classList.add("cargando-metricas");
-  if (!metricasDatos) estado.textContent = "Calculando las métricas…";
+  if (!metricasDatos) estado.textContent = "Calculating the metrics…";
   try {
     pintarMetricas(await MetricasAPI.resumen());
   } catch (err) {
-    estado.textContent = err.message || "No se pudieron cargar las métricas.";
+    estado.textContent = err.message || "Could not load the metrics.";
   } finally {
     vista.classList.remove("cargando-metricas");
   }

@@ -18,7 +18,7 @@ const RoleplayController = {
       res.json({ escenarios: listarEscenarios() });
     } catch (error) {
       reportarError("Error en /roleplay/escenarios", error);
-      res.status(500).json({ error: "No se pudieron cargar las situaciones" });
+      res.status(500).json({ error: "Could not load the situations" });
     }
   },
 
@@ -28,7 +28,7 @@ const RoleplayController = {
       const escenario = obtenerEscenario(escenarioId);
 
       if (!escenario) {
-        return res.status(400).json({ error: "Esa situación no existe" });
+        return res.status(400).json({ error: "That situation doesn't exist" });
       }
 
       const { nivel } = await obtenerPerfil(req.usuario.id);
@@ -53,7 +53,7 @@ const RoleplayController = {
       });
     } catch (error) {
       reportarError("Error en /roleplay/iniciar", error);
-      res.status(500).json({ error: "No se pudo iniciar la situación" });
+      res.status(500).json({ error: "Could not start the situation" });
     }
   },
 
@@ -63,11 +63,11 @@ const RoleplayController = {
       const escenario = obtenerEscenario(escenarioId);
 
       if (!escenario) {
-        return res.status(400).json({ error: "Esa situación no existe" });
+        return res.status(400).json({ error: "That situation doesn't exist" });
       }
 
       if (!mensajeUsuario || !mensajeUsuario.trim()) {
-        return res.status(400).json({ error: "No mandaste ningún mensaje" });
+        return res.status(400).json({ error: "No message was sent" });
       }
 
       const { nivel, ayudaEs } = await obtenerPerfil(req.usuario.id);
@@ -131,7 +131,7 @@ const RoleplayController = {
       });
     } catch (error) {
       reportarError("Error en /roleplay/responder", error);
-      res.status(500).json({ error: "No se pudo continuar la conversación" });
+      res.status(500).json({ error: "Could not continue the conversation" });
     }
   },
 };
