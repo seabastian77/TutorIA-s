@@ -43,22 +43,31 @@ const PESTANAS = [
   { id: "btn-mi-progreso", vista: "vista-historial", texto: "Progress", icono: "fa-chart-line" },
 ];
 
+// Poses de Tuti que ya tienen imagen, con su texto alternativo
+const POSES_TUTI = { saludo: "Tuti waving" };
+
 // La pose de Tuti que acompaña la cabecera de cada módulo
 const TUTI_POR_VISTA = {
-  "vista-practica": ["tutor", "Tuti in his graduation cap"],
-  "vista-escena": ["habla", "Tuti holding a microphone"],
-  "vista-roleplay": ["habla", "Tuti holding a microphone"],
-  "vista-audio": ["escucha", "Tuti wearing headphones"],
-  "vista-biblioteca": ["lee", "Tuti holding a book"],
-  "vista-vocabulario": ["lee", "Tuti holding a book"],
-  "vista-juegos": ["saludo", "Tuti waving"],
-  "vista-liga": ["celebra", "Tuti holding a trophy"],
-  "vista-logros": ["celebra", "Tuti holding a trophy"],
-  "vista-tienda": ["saludo", "Tuti waving"],
-  "vista-historial": ["tutor", "Tuti in his graduation cap"],
-  "vista-nivel": ["piensa", "Tuti thinking"],
-  "vista-visual": ["piensa", "Tuti thinking"],
+  "vista-practica": "tutor",
+  "vista-escena": "habla",
+  "vista-roleplay": "habla",
+  "vista-audio": "escucha",
+  "vista-biblioteca": "lee",
+  "vista-vocabulario": "lee",
+  "vista-juegos": "saludo",
+  "vista-liga": "celebra",
+  "vista-logros": "celebra",
+  "vista-tienda": "saludo",
+  "vista-historial": "tutor",
+  "vista-nivel": "piensa",
+  "vista-visual": "piensa",
 };
+
+/** Ruta y texto de una pose; si todavía no hay imagen para ella, Tuti saluda. */
+function poseTuti(pose, chico = false) {
+  const nombre = POSES_TUTI[pose] ? pose : "saludo";
+  return { nombre, alt: POSES_TUTI[nombre], src: `${TUTI_RUTA}tuti-${nombre}${chico ? "-chico" : ""}.webp` };
+}
 
 let ultimoProgreso = null;
 
@@ -117,7 +126,7 @@ function montarNavLateral() {
   const tarjeta = document.createElement("div");
   tarjeta.className = "nav-tarjeta";
   tarjeta.innerHTML = `
-    <img src="${TUTI_RUTA}tuti-tutor-chico.webp" alt="" width="64" height="64">
+    <img src="${poseTuti("tutor", true).src}" alt="" width="64" height="64">
     <p class="nav-tarjeta-titulo">Keep your streak alive</p>
     <p class="nav-tarjeta-texto">One activity a day is all it takes.</p>`;
   const ir = document.createElement("button");
@@ -156,12 +165,13 @@ function marcarVistaActiva() {
 
 /** Pone a Tuti, con la pose de la actividad, en la cabecera de cada módulo. */
 function montarTutiCabeceras() {
-  Object.entries(TUTI_POR_VISTA).forEach(([vista, [pose, alt]]) => {
+  Object.entries(TUTI_POR_VISTA).forEach(([vista, pose]) => {
     const cabecera = document.querySelector(`#${vista} .cabecera-modulo`);
     if (!cabecera || cabecera.querySelector(".tuti-cabecera")) return;
+    const { nombre, alt, src } = poseTuti(pose);
     const img = document.createElement("img");
     img.className = "tuti-cabecera";
-    img.src = `${TUTI_RUTA}tuti-${pose}.webp`;
+    img.src = src;
     img.alt = alt;
     img.width = 120;
     img.height = 120;
@@ -169,11 +179,11 @@ function montarTutiCabeceras() {
     img.decoding = "async";
     cabecera.classList.add("con-tuti");
     cabecera.appendChild(img);
-    if (pose === "saludo" && typeof TutiVivo !== "undefined") TutiVivo.montar(img);
+    if (nombre === "saludo" && typeof TutiVivo !== "undefined") TutiVivo.montar(img);
   });
 }
 
-/** Tuti del inicio reacciona: saluda o celebra con las alas, o cambia de pose si no hay capas. */
+/** Tuti del inicio reacciona: saluda o celebra con todo el cuerpo, o salta si las capas no cargaron. */
 function animarTutiInicio(gesto) {
   const inicio = document.getElementById("vista-principal");
   if (!inicio || inicio.classList.contains("oculto")) return;
@@ -183,7 +193,7 @@ function animarTutiInicio(gesto) {
   clearTimeout(img.temporizador);
   img.classList.remove("tuti-salta", "tuti-saluda");
   void img.offsetWidth;
-  if (gesto === "celebrar") img.src = `${TUTI_RUTA}tuti-celebra.webp`;
+  if (gesto === "celebrar") img.src = poseTuti("celebra").src;
   img.classList.add(gesto === "celebrar" ? "tuti-salta" : "tuti-saluda");
   img.temporizador = setTimeout(() => {
     img.classList.remove("tuti-salta", "tuti-saluda");
@@ -201,12 +211,12 @@ function avisoConTuti(titulo, texto, { pose = "celebra", confeti = true } = {}) 
     aviso.setAttribute("role", "status");
     aviso.innerHTML = `
       <span class="tuti-confeti" aria-hidden="true">${"<i></i>".repeat(12)}</span>
-      <img src="${TUTI_RUTA}tuti-celebra-chico.webp" alt="" width="72" height="72">
+      <img src="${poseTuti("celebra", true).src}" alt="" width="72" height="72">
       <span class="tuti-celebra-texto"><strong></strong><span></span></span>`;
     document.body.appendChild(aviso);
   }
   aviso.classList.toggle("sin-confeti", !confeti);
-  aviso.querySelector("img").src = `${TUTI_RUTA}tuti-${pose}-chico.webp`;
+  aviso.querySelector("img").src = poseTuti(pose, true).src;
   aviso.querySelector("strong").textContent = titulo;
   aviso.querySelector(".tuti-celebra-texto span").textContent = texto || "";
   aviso.classList.remove("visible");

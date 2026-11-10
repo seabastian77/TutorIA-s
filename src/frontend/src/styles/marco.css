@@ -116,7 +116,7 @@ body.con-sesion .nav-lateral {
   font-weight: 700;
 }
 
-/* La marca amarilla del pico de Tuti señala dónde está el estudiante */
+/* La marca ámbar de las rayas de Tuti señala dónde está el estudiante */
 .nav-item.activo::before {
   content: "";
   position: absolute;
@@ -622,7 +622,7 @@ h2,
 .btn-logros .modulo-icono { background: #fff4d6; color: #8a5a00; }
 :root[data-tema="oscuro"] .btn-logros .modulo-icono { background: rgb(245 179 1 / 0.14); color: #fcd34d; }
 
-/* Logros y tienda: el oro del pico de Tuti para lo ganado, el bosque para comprar */
+/* Logros y tienda: el ámbar de Tuti para lo ganado, el bosque para comprar */
 .logro-item.desbloqueado .logro-icono {
   background: #fff4d6;
   color: #8a5a00;
@@ -669,10 +669,10 @@ h2,
   width: 104px;
   height: 104px;
   margin-bottom: 10px;
-  background: url("../../assets/tuti/tuti-vacio-chico.webp") center / contain no-repeat;
+  background: url("../../assets/tuti/tuti-saludo-chico.webp") center / contain no-repeat;
 }
 
-.vocab-tarjeta-hecha::before { background-image: url("../../assets/tuti/tuti-celebra-chico.webp"); }
+.vocab-tarjeta-hecha::before { background-image: url("../../assets/tuti/tuti-saludo-chico.webp"); }
 
 @media (max-width: 520px) {
   .tarjeta-vacia { flex-direction: column; text-align: center; }
@@ -844,11 +844,13 @@ h2,
   .tuti-celebra.visible .tuti-confeti i { animation: none; }
 }
 
-/* Tuti animado por capas: ojos, párpados, alas y copete */
+/* Tuti animado por capas: ojos de torreta, cola, brazo que saluda, lengua y color */
 
 .tuti-vivo {
-  --tv-mx: 0;
-  --tv-my: 0;
+  --tv-mx1: 0;
+  --tv-my1: 0;
+  --tv-mx2: 0;
+  --tv-my2: 0;
   --tv-sombra: drop-shadow(0 18px 22px rgb(0 0 0 / 0.3));
   display: block;
   aspect-ratio: 1;
@@ -863,89 +865,92 @@ h2,
 .tuti-vivo.heroe-tuti-img { top: auto; bottom: 0; height: auto; filter: none; }
 .tuti-vivo.auth-tuti { filter: none; --tv-sombra: drop-shadow(0 24px 26px rgb(0 0 0 / 0.3)); }
 .tuti-vivo.tuti-cabecera { height: auto; filter: none; --tv-sombra: drop-shadow(0 12px 14px rgb(15 42 28 / 0.18)); }
-.tuti-vivo.mentor-ave { height: auto; --tv-sombra: none; }
+.tuti-vivo.mentor-ave { height: auto; --tv-sombra: drop-shadow(0 0 0 transparent); }
 
 .tv-parte,
 .tv-ojo,
 .tv-abertura,
-.tv-feliz,
-.tv-parpado,
+.tv-esclera,
 .tv-iris,
-.tv-piel,
-.tv-pestana {
+.tv-lengua {
   position: absolute;
   display: block;
   max-width: none;
+  pointer-events: none;
 }
 
-.tv-parte { pointer-events: none; }
 .tv-sombra { filter: var(--tv-sombra); }
-.tv-ojo { pointer-events: none; }
-.tv-abertura { inset: 0; }
-.tv-feliz,
-.tv-parpado { left: 0; width: 100%; }
-.tv-piel { left: 0; top: 0; width: 100%; }
+.tv-abertura,
+.tv-esclera { inset: 0; width: 100%; height: 100%; }
 
-/* La mirada: el iris se corre dentro del ojo según --tv-mx y --tv-my, de -1 a 1 */
-.tv-iris {
-  translate: calc(var(--tv-mx) * 15%) calc(var(--tv-my) * 9%);
-  transition: translate 0.16s ease-out;
+/* Los ojos: cada iris se corre dentro de su abertura según --tv-mx y --tv-my, de -1 a 1 */
+.tv-iris { transition: translate 0.2s ease-out; }
+.tv-ojo-1 .tv-iris { translate: calc(var(--tv-mx1) * 20%) calc(var(--tv-my1) * 16%); }
+.tv-ojo-2 .tv-iris { translate: calc(var(--tv-mx2) * 20%) calc(var(--tv-my2) * 16%); }
+
+/* Parpadeo de camaleón: la abertura de la torreta se cierra hacia el centro */
+.tv-abertura { transition: scale 0.25s var(--curva); }
+.tuti-vivo.parpadea .tv-abertura { animation: tv-parpadeo 0.24s ease-in-out; }
+.tuti-vivo.celebra .tv-abertura { scale: 1 0.4; }
+
+@keyframes tv-parpadeo { 45%, 60% { scale: 0.06; } }
+
+/* La lengua: sale de la comisura y vuelve rapidito */
+.tv-lengua { width: 25%; height: 5.6%; transform-origin: 0% 50%; scale: 0 1; }
+.tuti-vivo.lengua .tv-lengua { animation: tv-lengua 0.55s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+@keyframes tv-lengua {
+  0% { scale: 0 1; }
+  30%, 55% { scale: 1 1; }
+  100% { scale: 0 1; }
 }
 
-/* Ojos felices: la mejilla sube y deja solo la curva de arriba */
-.tv-feliz { top: 0; translate: 0 var(--tv-feliz); transition: translate 0.28s var(--curva); }
-.tv-feliz .tv-piel { translate: 0 var(--tv-piel-feliz); transition: translate 0.28s var(--curva); }
-.tuti-vivo.feliz .tv-feliz,
-.tuti-vivo.feliz .tv-feliz .tv-piel { translate: 0 0; }
-
-/* Parpadeo: el párpado baja y la piel se queda quieta mientras la pestaña se voltea */
-.tuti-vivo.parpadea .tv-parpado { animation: tv-parpado 0.22s ease-in-out; }
-.tuti-vivo.parpadea .tv-parpado .tv-piel { animation: tv-parpado-piel 0.22s ease-in-out; }
-.tuti-vivo.parpadea .tv-pestana { animation: tv-pestana 0.22s ease-in-out; }
-
-@keyframes tv-parpado { 40%, 58% { translate: 0 var(--tv-cierra); } }
-@keyframes tv-parpado-piel { 40%, 58% { translate: 0 var(--tv-piel-cierra); } }
-@keyframes tv-pestana { 40%, 58% { scale: 1 -0.45; } }
-
-/* Alas y copete: un vaivén suave siempre, y saludo o aleteo cuando reacciona */
+/* Brazo, cola y color: un vaivén suave siempre; saludo y fiesta cuando reacciona */
 .tv-ala { animation: tv-ala-quieta 3.8s ease-in-out infinite; }
-.tv-ala-lado { animation: tv-lado-quieta 4.6s ease-in-out infinite; }
-.tv-copete { animation: tv-copete-quieto 4.5s ease-in-out infinite; }
+.tv-cola { animation: tv-cola-quieta 5.2s ease-in-out infinite; }
+.tv-piel { opacity: 0; }
 
 .tuti-vivo.saluda .tv-ala { animation: tv-ala-saluda 0.5s ease-in-out 3; }
-.tuti-vivo.saluda .tv-ala-lado { animation: tv-lado-aletea 0.5s ease-in-out 3; }
-.tuti-vivo.saluda .tv-copete { animation: tv-copete-saluda 0.5s ease-in-out 3; }
+.tuti-vivo.saluda .tv-cola { animation: tv-cola-mece 0.75s ease-in-out 2; }
 
 .tuti-vivo.celebra { animation: tuti-salta-grande 0.8s var(--curva) 3; }
-.tuti-vivo.celebra .tv-ala { animation: tv-ala-festeja 0.4s ease-in-out 6; }
-.tuti-vivo.celebra .tv-ala-lado { animation: tv-lado-festeja 0.4s ease-in-out 6; }
-.tuti-vivo.celebra .tv-copete { animation: tv-copete-salta 0.8s var(--curva) 3; }
+.tuti-vivo.celebra .tv-ala { animation: tv-ala-festeja 0.4s ease-in-out 6, tv-colores-sombra 2.4s ease-in-out; }
+.tuti-vivo.celebra .tv-cola { animation: tv-cola-mece 0.8s ease-in-out 3, tv-colores-sombra 2.4s ease-in-out; }
+.tuti-vivo.celebra .tv-piel { opacity: 1; animation: tv-colores 2.4s ease-in-out; }
 
 @keyframes tv-ala-quieta { 50% { rotate: -3deg; } }
-@keyframes tv-lado-quieta { 50% { rotate: -2.5deg; } }
-@keyframes tv-copete-quieto { 50% { rotate: 2.5deg; } }
-@keyframes tv-ala-saluda { 30% { rotate: -13deg; } 70% { rotate: 9deg; } }
-@keyframes tv-lado-aletea { 45% { rotate: -9deg; } }
-@keyframes tv-copete-saluda { 35% { rotate: -3deg; } 75% { rotate: 3deg; } }
+@keyframes tv-cola-quieta { 50% { rotate: 2.5deg; } }
+@keyframes tv-ala-saluda { 30% { rotate: -12deg; } 70% { rotate: 8deg; } }
+@keyframes tv-cola-mece { 35% { rotate: 4deg; } 75% { rotate: -2.5deg; } }
 @keyframes tv-ala-festeja { 50% { rotate: -14deg; } }
-@keyframes tv-lado-festeja { 50% { rotate: -10deg; } }
-@keyframes tv-copete-salta { 30% { rotate: 5deg; } 60% { rotate: -4deg; } }
+
+/* El camaleón cambia de color al celebrar: el buzo y los ojos se quedan como están */
+@keyframes tv-colores {
+  0%, 100% { filter: hue-rotate(0deg) saturate(1); }
+  30% { filter: hue-rotate(-80deg) saturate(1.25); }
+  55% { filter: hue-rotate(-150deg) saturate(1.3); }
+  80% { filter: hue-rotate(-230deg) saturate(1.2); }
+}
+
+@keyframes tv-colores-sombra {
+  0%, 100% { filter: var(--tv-sombra) hue-rotate(0deg) saturate(1); }
+  30% { filter: var(--tv-sombra) hue-rotate(-80deg) saturate(1.25); }
+  55% { filter: var(--tv-sombra) hue-rotate(-150deg) saturate(1.3); }
+  80% { filter: var(--tv-sombra) hue-rotate(-230deg) saturate(1.2); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .tuti-vivo,
   .tuti-vivo.celebra,
   .tv-ala,
-  .tv-ala-lado,
-  .tv-copete,
+  .tv-cola,
   .tuti-vivo.saluda .tv-ala,
-  .tuti-vivo.saluda .tv-ala-lado,
-  .tuti-vivo.saluda .tv-copete,
+  .tuti-vivo.saluda .tv-cola,
+  .tuti-vivo.lengua .tv-lengua { animation: none; }
   .tuti-vivo.celebra .tv-ala,
-  .tuti-vivo.celebra .tv-ala-lado,
-  .tuti-vivo.celebra .tv-copete { animation: none; }
+  .tuti-vivo.celebra .tv-cola { animation: tv-colores-sombra 2.4s ease-in-out; }
   .tv-iris,
-  .tv-feliz,
-  .tv-feliz .tv-piel { transition: none; }
+  .tv-abertura { transition: none; }
 }
 
 /* Reportar un ejercicio: un enlace discreto y una ventana corta */

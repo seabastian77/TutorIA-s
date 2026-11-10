@@ -117,7 +117,7 @@ function montarMentor() {
   });
 }
 
-/** Pinta el consejo recibido y pone al loro en el ánimo que le corresponde. */
+/** Pinta el consejo recibido y pone a Tuti en el ánimo que le corresponde. */
 function pintarConsejo(consejo) {
   mentorConsejo = consejo;
   const mentor = document.getElementById("mentor");
@@ -158,7 +158,7 @@ function ocultarBurbuja() {
 }
 
 /**
- * Dentro de un módulo la burbuja se repliega para no taparlo; el loro se queda.
+ * Dentro de un módulo la burbuja se repliega para no taparlo; Tuti se queda.
  * Es distinto de cerrarla a mano, así que no pisa lo que el usuario eligió.
  */
 function vigilarLaVista() {

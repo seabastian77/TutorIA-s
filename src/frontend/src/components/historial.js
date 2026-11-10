@@ -215,7 +215,7 @@ function pintarHistorial(datos) {
 
   if (!datos.hayHistorial) {
     caja.innerHTML = `<div class="tarjeta-tip tarjeta-vacia" style="margin-top:0">
-      <img class="tuti-vacio" src="assets/tuti/tuti-vacio-chico.webp" alt="" width="88" height="88">
+      <img class="tuti-vacio" src="${poseTuti("vacio", true).src}" alt="" width="88" height="88">
       <div><p class="tarjeta-tip-titulo">${esc(t.vacio)}</p>
       <p class="tarjeta-tip-texto">${esc(t.vacioNota)}</p></div></div>`;
     return;
