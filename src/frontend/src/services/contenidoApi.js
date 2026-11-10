@@ -83,3 +83,13 @@ window.RoleplayAPI = RoleplayAPI;
 window.BibliotecaAPI = BibliotecaAPI;
 window.AudioAPI = AudioAPI;
 window.PreferenciasAPI = PreferenciasAPI;
+
+const ReportesAPI = {
+  enviar: (datos) =>
+    pedirContenido("/reportes", { method: "POST", body: JSON.stringify(datos) }),
+
+  listar: (estado = "nuevo") => pedirContenido(`/reportes?estado=${encodeURIComponent(estado)}`),
+
+  marcarRevisado: (id) =>
+    pedirContenido(`/reportes/${encodeURIComponent(id)}`, { method: "PATCH", body: "{}" }),
+};

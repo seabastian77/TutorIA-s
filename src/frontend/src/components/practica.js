@@ -228,6 +228,25 @@ async function enviarRespuesta(respuestaUsuario) {
     xp.textContent = `+${resultado.xpGanado || 0} XP`;
     cuerpo.appendChild(xp);
 
+    // Si la IA se equivocó, el estudiante lo puede reportar con lo que vio
+    const ejercicio = ejercicioActual;
+    const opciones = (ejercicio && ejercicio.contenido && ejercicio.contenido.opciones) || null;
+    if (typeof ReporteEjercicio !== "undefined") {
+      ReporteEjercicio.agregarBoton(cuerpo, {
+        modulo: "practica",
+        contenido: () => ({
+          ejercicioId: ejercicio && ejercicio.ejercicioId,
+          nivel: ejercicio && ejercicio.nivel,
+          tema: temaElegido || null,
+          pregunta: ejercicio && (ejercicio.contenido.pregunta || ejercicio.contenido.frase),
+          opciones,
+          respuestaEstudiante: opciones && Number.isInteger(respuestaUsuario) ? opciones[respuestaUsuario] : respuestaUsuario,
+          marcadaCorrecta: resultado.correcto,
+          explicacion: resultado.explicacion || null,
+        }),
+      });
+    }
+
     const chip = document.getElementById("progreso-monedas");
     if (chip && typeof resultado.monedas === "number") {
       chip.textContent = resultado.monedas;

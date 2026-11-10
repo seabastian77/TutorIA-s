@@ -67,6 +67,8 @@ async function abrirLectura(slug) {
   try {
     const datos = await BibliotecaAPI.lectura(slug);
     lecturaActual = datos;
+    const zonaReporte = document.getElementById("lectura-reporte");
+    if (zonaReporte) zonaReporte.innerHTML = "";
     respuestasLectura = new Array(datos.preguntas.length).fill(null);
 
     document.getElementById("biblioteca-catalogo").classList.add("oculto");
@@ -209,6 +211,27 @@ async function enviarRespuestasLectura() {
 
     const chip = document.getElementById("progreso-monedas");
     if (chip && typeof datos.monedas === "number") chip.textContent = datos.monedas;
+
+    // Las preguntas las hizo la IA: si alguna está mal, el estudiante lo reporta
+    const lectura = lecturaActual;
+    const elegidas = [...respuestasLectura];
+    const zonaReporte = document.getElementById("lectura-reporte");
+    if (zonaReporte && typeof ReporteEjercicio !== "undefined") {
+      zonaReporte.innerHTML = "";
+      ReporteEjercicio.agregarBoton(zonaReporte, {
+        modulo: "lectura",
+        contenido: () => ({
+          lecturaId: lectura.id,
+          titulo: lectura.titulo,
+          preguntas: (lectura.preguntas || []).map((p, i) => ({
+            pregunta: p.pregunta,
+            opciones: p.opciones,
+            elegida: elegidas[i],
+            correcta: datos.correccion[i] ? datos.correccion[i].correcta : null,
+          })),
+        }),
+      });
+    }
   } catch (err) {
     resultado.textContent = "Could not check your answers.";
     resultado.className = "nivel-feedback";

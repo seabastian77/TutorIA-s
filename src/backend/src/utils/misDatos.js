@@ -13,6 +13,7 @@ const TABLAS_DEL_USUARIO = [
   { tabla: "liga_semanal", clave: "liga", columnas: "semana, liga, grupo, xp", orden: "semana" },
   { tabla: "compras_tienda", clave: "compras", columnas: "articulo_id, precio, fecha", orden: "fecha" },
   { tabla: "actividades", clave: "actividades", columnas: "modulo, xp, perfecto, fecha", orden: "fecha" },
+  { tabla: "reportes_ejercicio", clave: "reportes", columnas: "modulo, motivo, comentario, contenido, estado, fecha", orden: "fecha" },
   { tabla: "recuperaciones_contrasena", clave: null, columnas: null }, // solo se borra: guarda hashes, no datos útiles
 ];
 

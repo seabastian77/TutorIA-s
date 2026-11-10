@@ -495,6 +495,7 @@ async function cargarMetricas() {
   const estado = document.getElementById("metricas-estado");
   vista.classList.add("cargando-metricas");
   if (!metricasDatos) estado.textContent = "Calculating the metrics…";
+  if (typeof cargarReportes === "function") cargarReportes();
   try {
     pintarMetricas(await MetricasAPI.resumen());
   } catch (err) {

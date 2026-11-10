@@ -60,7 +60,6 @@ const TUTI_POR_VISTA = {
   "vista-visual": ["piensa", "Tuti thinking"],
 };
 
-let tuti3d = null;
 let ultimoProgreso = null;
 
 /** Abre un módulo desde cualquier vista: primero vuelve al inicio con la salida de la vista abierta. */
@@ -173,31 +172,20 @@ function montarTutiCabeceras() {
   });
 }
 
-/** WebGL disponible y sin ahorro de datos: solo entonces vale la pena el Tuti en 3D. */
-function puede3D() {
-  if (navigator.connection && navigator.connection.saveData) return false;
-  try {
-    // Un WebGL por software ahoga el procesador: en ese caso se queda la imagen
-    const c = document.createElement("canvas");
-    const opciones = { failIfMajorPerformanceCaveat: true };
-    return !!(c.getContext("webgl2", opciones) || c.getContext("webgl", opciones));
-  } catch (e) {
-    return false;
-  }
-}
-
-/** Carga el modelo 3D de Tuti en el inicio, después de que la página ya se pintó. */
-async function montarTuti3D() {
-  const caja = document.getElementById("heroe-tuti");
-  if (!caja || tuti3d || !puede3D()) return;
-  try {
-    const { montarTuti } = await import(new URL("src/tuti/tuti3d.js", document.baseURI).href);
-    tuti3d = montarTuti(caja, { pose: "saludo", etiqueta: "Tuti, your English tutor, waving hello" });
-    caja.classList.add("con-3d");
-  } catch (e) {
-    // Sin 3D se queda la imagen renderizada del mismo modelo
-    tuti3d = null;
-  }
+/** Tuti del inicio reacciona: cambia de pose un momento y da un salto o un saludo. */
+function animarTutiInicio(gesto) {
+  const img = document.querySelector("#heroe-tuti .heroe-tuti-img");
+  const inicio = document.getElementById("vista-principal");
+  if (!img || !inicio || inicio.classList.contains("oculto")) return;
+  clearTimeout(img.temporizador);
+  img.classList.remove("tuti-salta", "tuti-saluda");
+  void img.offsetWidth;
+  if (gesto === "celebrar") img.src = `${TUTI_RUTA}tuti-celebra.webp`;
+  img.classList.add(gesto === "celebrar" ? "tuti-salta" : "tuti-saluda");
+  img.temporizador = setTimeout(() => {
+    img.classList.remove("tuti-salta", "tuti-saluda");
+    img.src = `${TUTI_RUTA}tuti-saludo.webp`;
+  }, 2400);
 }
 
 /** Una tarjeta corta de Tuti que se va sola; las celebraciones traen confeti. */
@@ -225,10 +213,10 @@ function avisoConTuti(titulo, texto, { pose = "celebra", confeti = true } = {}) 
   aviso.temporizador = setTimeout(() => aviso.classList.remove("visible"), 4200);
 }
 
-/** Celebra un logro con confeti y, si el 3D está montado, con el salto de Tuti. */
+/** Celebra un logro con confeti y con el salto de Tuti en el inicio. */
 function celebrarConTuti(titulo, texto) {
   avisoConTuti(titulo, texto);
-  if (tuti3d) tuti3d.celebrar();
+  animarTutiInicio("celebrar");
 }
 
 /** Al volver al inicio, Tuti reacciona a lo que el estudiante acaba de lograr. */
@@ -237,15 +225,15 @@ function reaccionarAlProgreso(e) {
   const antes = ultimoProgreso;
   ultimoProgreso = { puntos: d.puntos, hoy: d.actividadesHoy, meta: d.metaDiaria };
   if (!antes) {
-    if (tuti3d) tuti3d.saludar();
+    animarTutiInicio("saludar");
     return;
   }
   if (d.actividadesHoy >= d.metaDiaria && antes.hoy < antes.meta) {
     celebrarConTuti("Daily goal completed!", "Tuti is proud of you. See you tomorrow?");
   } else if (d.puntos > antes.puntos) {
     celebrarConTuti(`+${d.puntos - antes.puntos} XP`, "Nice work! Keep the momentum going.");
-  } else if (tuti3d) {
-    tuti3d.saludar();
+  } else {
+    animarTutiInicio("saludar");
   }
 }
 
@@ -261,13 +249,4 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   document.addEventListener("tutorias:progreso", reaccionarAlProgreso);
-
-  // El 3D llega cuando el navegador está libre, para no frenar la primera pintura
-  const programar = window.requestIdleCallback || ((f) => setTimeout(f, 600));
-  const vistaInicio = document.getElementById("vista-principal");
-  const intentar = () => {
-    if (vistaInicio && !vistaInicio.classList.contains("oculto")) programar(montarTuti3D);
-  };
-  if (vistaInicio) new MutationObserver(intentar).observe(vistaInicio, { attributes: true, attributeFilter: ["class"] });
-  intentar();
 });

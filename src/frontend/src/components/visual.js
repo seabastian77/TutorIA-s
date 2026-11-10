@@ -205,6 +205,24 @@ function pintarResultadoVisual(datos) {
   }
 
   agregarListaVisual(resultado, "Useful phrases", datos.frasesUtiles, "lista-frases");
+
+  // La corrección la hizo la IA mirando la foto: si se equivocó, se reporta con lo que escribió el estudiante
+  const imagen = document.getElementById("visual-imagen");
+  const escrito = document.getElementById("visual-entrada").value;
+  if (typeof ReporteEjercicio !== "undefined") {
+    ReporteEjercicio.agregarBoton(resultado, {
+      modulo: "visual",
+      contenido: () => ({
+        ejercicioId: ejercicioVisual,
+        foto: imagen ? imagen.alt : null,
+        instruccion: document.getElementById("visual-instruccion").textContent,
+        escrito,
+        precision: datos.precision,
+        correcciones: datos.correcciones || [],
+        mejorRespuesta: datos.mejorRespuesta || null,
+      }),
+    });
+  }
 }
 
 function agregarListaVisual(contenedor, titulo, items, clase) {

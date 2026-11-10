@@ -55,6 +55,8 @@ async function nuevoDictado() {
   pintarCreditoFrase(document.getElementById("dictado-credito"), null);
   document.getElementById("btn-comprobar-dictado").disabled = true;
   dictadoActual = null;
+  const zonaDictado = document.getElementById("dictado-reporte");
+  if (zonaDictado) zonaDictado.innerHTML = "";
 
   try {
     dictadoActual = await AudioAPI.dictado();
@@ -106,7 +108,9 @@ async function comprobarDictado() {
     document.getElementById("dictado-frase-revelada").classList.remove("oculto");
 
     const resultado = document.getElementById("dictado-resultado");
-    if (datos.perfecto) if (typeof celebrarConTuti === "function") celebrarConTuti("Perfect dictation!", `+${datos.xpGanado} XP for your ears.`);
+    if (datos.perfecto && typeof celebrarConTuti === "function") {
+      celebrarConTuti("Perfect dictation!", `+${datos.xpGanado} XP for your ears.`);
+    }
     resultado.textContent = datos.perfecto
       ? `Perfect! ${datos.porcentaje}% — +${datos.xpGanado} XP`
       : `${datos.aciertos} of ${datos.total} words — ${datos.porcentaje}% — +${datos.xpGanado} XP`;
@@ -115,6 +119,24 @@ async function comprobarDictado() {
 
     const chip = document.getElementById("progreso-monedas");
     if (chip && typeof datos.monedas === "number") chip.textContent = datos.monedas;
+    // La frase y su traducción pueden venir mal: se deja reportar con lo que se oyó y se escribió
+    const ejercicio = dictadoActual;
+    const zonaReporte = document.getElementById("dictado-reporte");
+    if (zonaReporte && typeof ReporteEjercicio !== "undefined") {
+      zonaReporte.innerHTML = "";
+      ReporteEjercicio.agregarBoton(zonaReporte, {
+        modulo: "dictado",
+        contenido: () => ({
+          ejercicioId: ejercicio.ejercicioId,
+          frase: datos.frase,
+          traduccion: datos.traduccion || null,
+          pista: ejercicio.pista || null,
+          escrito: texto,
+          porcentaje: datos.porcentaje,
+        }),
+      });
+    }
+
     // Ya calificado: para otro intento se pide otra frase
     calificado = true;
     document.getElementById("dictado-entrada").disabled = true;
@@ -143,6 +165,8 @@ async function nuevaComprension() {
   document.getElementById("comprension-transcripcion").classList.add("oculto");
   document.getElementById("btn-enviar-comprension").disabled = false;
   comprensionActual = null;
+  const zonaComprension = document.getElementById("comprension-reporte");
+  if (zonaComprension) zonaComprension.innerHTML = "";
 
   try {
     comprensionActual = await AudioAPI.comprension();
@@ -234,7 +258,9 @@ async function enviarRespuestasAudio() {
     document.getElementById("comprension-texto").textContent = datos.texto;
     document.getElementById("comprension-transcripcion").classList.remove("oculto");
 
-    if (datos.perfecto) if (typeof celebrarConTuti === "function") celebrarConTuti("Perfect listening!", `${datos.aciertos}/${datos.total} right. +${datos.xpGanado} XP`);
+    if (datos.perfecto && typeof celebrarConTuti === "function") {
+      celebrarConTuti("Perfect listening!", `${datos.aciertos}/${datos.total} right. +${datos.xpGanado} XP`);
+    }
     resultado.textContent = datos.perfecto
       ? `Perfect! ${datos.aciertos}/${datos.total} — +${datos.xpGanado} XP`
       : `${datos.aciertos} of ${datos.total} correct — +${datos.xpGanado} XP`;
@@ -243,6 +269,27 @@ async function enviarRespuestasAudio() {
 
     const chip = document.getElementById("progreso-monedas");
     if (chip && typeof datos.monedas === "number") chip.textContent = datos.monedas;
+
+    const audio = comprensionActual;
+    const elegidas = [...respuestasAudio];
+    const zonaReporte = document.getElementById("comprension-reporte");
+    if (zonaReporte && typeof ReporteEjercicio !== "undefined") {
+      zonaReporte.innerHTML = "";
+      ReporteEjercicio.agregarBoton(zonaReporte, {
+        modulo: "comprension",
+        contenido: () => ({
+          ejercicioId: audio.ejercicioId,
+          titulo: audio.titulo,
+          texto: datos.texto,
+          preguntas: (audio.preguntas || []).map((p, i) => ({
+            pregunta: p.pregunta,
+            opciones: p.opciones,
+            elegida: elegidas[i],
+            correcta: datos.correccion[i] ? datos.correccion[i].correcta : null,
+          })),
+        }),
+      });
+    }
     calificado = true;
   } catch (err) {
     resultado.textContent = "Could not check your answers.";

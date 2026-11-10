@@ -242,7 +242,7 @@
     <!-- Lo que toca ahora: lo decide el mismo motor que usa Tuti -->
     <section id="siguiente-paso" class="siguiente-paso heroe" aria-labelledby="saludo-usuario">
       <div id="heroe-tuti" class="heroe-tuti">
-        <img class="heroe-tuti-img" src="assets/tuti/tuti-saludo.webp" alt="Tuti, your English tutor, waving hello" width="480" height="480" fetchpriority="high" />
+        <img class="heroe-tuti-img" src="assets/tuti/tuti-saludo.webp" alt="Tuti, your English tutor, waving hello" width="560" height="560" fetchpriority="high" />
       </div>
       <div class="paso-cuerpo">
         <div class="saludo">
@@ -799,6 +799,7 @@
         <div id="lectura-preguntas"></div>
         <button id="btn-enviar-lectura" class="btn-principal" style="margin-top:16px;">Check answers</button>
         <div id="lectura-resultado" class="nivel-feedback oculto"></div>
+        <div id="lectura-reporte" class="zona-reporte"></div>
       </div>
 
       <button id="btn-volver-catalogo" class="btn-secundario" style="margin-top:14px;">Another story</button>
@@ -878,6 +879,7 @@
         </div>
 
         <div id="dictado-resultado" class="nivel-feedback oculto"></div>
+        <div id="dictado-reporte" class="zona-reporte"></div>
       </div>
       <div class="audio-botones" style="margin-top:14px;">
         <button id="btn-otro-dictado" class="btn-secundario">Another one</button>
@@ -894,6 +896,7 @@
         <div id="comprension-preguntas"></div>
         <button id="btn-enviar-comprension" class="btn-principal" style="margin-top:16px;">Check answers</button>
         <div id="comprension-resultado" class="nivel-feedback oculto"></div>
+        <div id="comprension-reporte" class="zona-reporte"></div>
         <div id="comprension-transcripcion" class="oculto" style="margin-top:16px;">
           <div class="nivel-progreso">Transcript</div>
           <p id="comprension-texto" class="nivel-narrativa"></p>
@@ -1121,7 +1124,7 @@
         <p class="grafica-nota">Last 8 weeks · hover or press Tab to see each week</p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
-        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+        <details class="grafica-tabla"><summary>See the data as a table</summary><table></table></details>
       </section>
 
       <section id="grafica-aciertos" class="grafica" aria-labelledby="t-aciertos">
@@ -1129,7 +1132,7 @@
         <p id="nota-aciertos" class="grafica-nota"></p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
-        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+        <details class="grafica-tabla"><summary>See the data as a table</summary><table></table></details>
       </section>
 
       <section id="grafica-modulos" class="grafica" aria-labelledby="t-modulos">
@@ -1137,7 +1140,7 @@
         <p class="grafica-nota">Activities completed since launch</p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
-        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+        <details class="grafica-tabla"><summary>See the data as a table</summary><table></table></details>
       </section>
 
       <section class="grafica grafica-ancha" aria-labelledby="t-cambio">
@@ -1152,7 +1155,7 @@
         <p class="grafica-leyenda"><span class="clave clave-2"></span>First diagnostic <span class="clave clave-1"></span>Latest diagnostic</p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
-        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+        <details class="grafica-tabla"><summary>See the data as a table</summary><table></table></details>
       </section>
 
       <section id="grafica-niveles" class="grafica" aria-labelledby="t-niveles">
@@ -1160,9 +1163,24 @@
         <p id="nota-niveles" class="grafica-nota"></p>
         <div class="grafica-zona"></div>
         <div class="grafica-tip" hidden></div>
-        <details class="grafica-tabla"><summary>Ver los datos en tabla</summary><table></table></details>
+        <details class="grafica-tabla"><summary>See the data as a table</summary><table></table></details>
       </section>
     </div>
+
+    <section id="metricas-reportes" class="reportes-panel" aria-labelledby="t-reportes">
+      <div class="reportes-cabeza">
+        <div>
+          <h3 id="t-reportes">Reported exercises</h3>
+          <p class="grafica-nota">Exercises students flagged as wrong. Who sent each report is not shown.</p>
+        </div>
+        <div class="reportes-filtro" role="group" aria-label="Filter the reports">
+          <button type="button" class="filtro activo" data-estado="nuevo" aria-pressed="true">New <span id="reportes-nuevos">0</span></button>
+          <button type="button" class="filtro" data-estado="revisado" aria-pressed="false">Reviewed <span id="reportes-revisados">0</span></button>
+        </div>
+      </div>
+      <p id="reportes-estado" class="metricas-estado" role="status"></p>
+      <div id="reportes-lista" class="reportes-lista"></div>
+    </section>
 
     <button id="btn-salir-metricas" class="btn-secundario"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
@@ -1217,6 +1235,8 @@
   <script src="src/components/preferencias.js"></script>
   <script src="src/components/roleplay.js"></script>
   <script src="src/components/traductor.js"></script>
+  <script src="src/components/reporteEjercicio.js"></script>
+  <script src="src/components/reportesEquipo.js"></script>
   <script src="src/components/biblioteca.js"></script>
   <script src="src/components/audioLab.js"></script>
   <script src="src/components/juegos.js"></script>

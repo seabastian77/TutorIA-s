@@ -4,7 +4,7 @@ const MENTOR_NOMBRE = "Tuti";
 const MENTOR_MEMORIA = "tutorias_mentor_cerrado";
 
 // Tuti es el mismo modelo 3D de toda la app, aquí en su imagen renderizada
-const MENTOR_CUERPO = `<img class="mentor-ave mentor-ave-3d" src="assets/tuti/tuti-cara-chico.webp" alt="" width="64" height="64" decoding="async">`;
+const MENTOR_CUERPO = `<img class="mentor-ave mentor-ave-tuti" src="assets/tuti/tuti-cara-chico.webp" alt="" width="64" height="64" decoding="async">`;
 
 const MENTOR_HTML = `
 <div id="mentor" class="mentor oculto" data-animo="feliz">

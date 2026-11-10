@@ -31,6 +31,7 @@ const visualRoutes = require("./src/routes/visualRoutes");
 const mentorRoutes = require("./src/routes/mentorRoutes");
 const historialRoutes = require("./src/routes/historialRoutes");
 const metricasRoutes = require("./src/routes/metricasRoutes");
+const reportesRoutes = require("./src/routes/reportesRoutes");
 const avatarRoutes = require("./src/routes/avatarRoutes");
 const { ejecutarMigraciones } = require("./src/config/migraciones");
 const { limitar } = require("./src/middleware/limitar");
@@ -84,6 +85,7 @@ app.use(["/api/nivel", "/api/practica", "/api/voz/responder", "/api/escena", "/a
 app.use("/api/voz/hablar", limitar({ max: 90 }));
 // Cada sesión de video real cuesta minutos del proveedor: pocas por estudiante
 app.use("/api/avatar/sesion", limitar({ ventanaMs: 15 * 60 * 1000, max: 10 }));
+app.use("/api/reportes", limitar({ max: 20 }));
 
 // Rutas
 app.use("/api/auth", authRoutes);
@@ -103,6 +105,7 @@ app.use("/api/visual", visualRoutes);
 app.use("/api/mentor", mentorRoutes);
 app.use("/api/historial", historialRoutes);
 app.use("/api/metricas", metricasRoutes);
+app.use("/api/reportes", reportesRoutes);
 app.use("/api/avatar", avatarRoutes);
 
 app.get("/api/health", (req, res) => {
