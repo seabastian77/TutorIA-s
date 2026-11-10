@@ -844,6 +844,110 @@ h2,
   .tuti-celebra.visible .tuti-confeti i { animation: none; }
 }
 
+/* Tuti animado por capas: ojos, párpados, alas y copete */
+
+.tuti-vivo {
+  --tv-mx: 0;
+  --tv-my: 0;
+  --tv-sombra: drop-shadow(0 18px 22px rgb(0 0 0 / 0.3));
+  display: block;
+  aspect-ratio: 1;
+  height: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(.tuti-vivo) { position: relative; }
+
+.tuti-vivo.heroe-tuti-img { top: auto; bottom: 0; height: auto; filter: none; }
+.tuti-vivo.auth-tuti { filter: none; --tv-sombra: drop-shadow(0 24px 26px rgb(0 0 0 / 0.3)); }
+.tuti-vivo.tuti-cabecera { height: auto; filter: none; --tv-sombra: drop-shadow(0 12px 14px rgb(15 42 28 / 0.18)); }
+.tuti-vivo.mentor-ave { height: auto; --tv-sombra: none; }
+
+.tv-parte,
+.tv-ojo,
+.tv-abertura,
+.tv-feliz,
+.tv-parpado,
+.tv-iris,
+.tv-piel,
+.tv-pestana {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+
+.tv-parte { pointer-events: none; }
+.tv-sombra { filter: var(--tv-sombra); }
+.tv-ojo { pointer-events: none; }
+.tv-abertura { inset: 0; }
+.tv-feliz,
+.tv-parpado { left: 0; width: 100%; }
+.tv-piel { left: 0; top: 0; width: 100%; }
+
+/* La mirada: el iris se corre dentro del ojo según --tv-mx y --tv-my, de -1 a 1 */
+.tv-iris {
+  translate: calc(var(--tv-mx) * 15%) calc(var(--tv-my) * 9%);
+  transition: translate 0.16s ease-out;
+}
+
+/* Ojos felices: la mejilla sube y deja solo la curva de arriba */
+.tv-feliz { top: 0; translate: 0 var(--tv-feliz); transition: translate 0.28s var(--curva); }
+.tv-feliz .tv-piel { translate: 0 var(--tv-piel-feliz); transition: translate 0.28s var(--curva); }
+.tuti-vivo.feliz .tv-feliz,
+.tuti-vivo.feliz .tv-feliz .tv-piel { translate: 0 0; }
+
+/* Parpadeo: el párpado baja y la piel se queda quieta mientras la pestaña se voltea */
+.tuti-vivo.parpadea .tv-parpado { animation: tv-parpado 0.22s ease-in-out; }
+.tuti-vivo.parpadea .tv-parpado .tv-piel { animation: tv-parpado-piel 0.22s ease-in-out; }
+.tuti-vivo.parpadea .tv-pestana { animation: tv-pestana 0.22s ease-in-out; }
+
+@keyframes tv-parpado { 40%, 58% { translate: 0 var(--tv-cierra); } }
+@keyframes tv-parpado-piel { 40%, 58% { translate: 0 var(--tv-piel-cierra); } }
+@keyframes tv-pestana { 40%, 58% { scale: 1 -0.45; } }
+
+/* Alas y copete: un vaivén suave siempre, y saludo o aleteo cuando reacciona */
+.tv-ala { animation: tv-ala-quieta 3.8s ease-in-out infinite; }
+.tv-ala-lado { animation: tv-lado-quieta 4.6s ease-in-out infinite; }
+.tv-copete { animation: tv-copete-quieto 4.5s ease-in-out infinite; }
+
+.tuti-vivo.saluda .tv-ala { animation: tv-ala-saluda 0.5s ease-in-out 3; }
+.tuti-vivo.saluda .tv-ala-lado { animation: tv-lado-aletea 0.5s ease-in-out 3; }
+.tuti-vivo.saluda .tv-copete { animation: tv-copete-saluda 0.5s ease-in-out 3; }
+
+.tuti-vivo.celebra { animation: tuti-salta-grande 0.8s var(--curva) 3; }
+.tuti-vivo.celebra .tv-ala { animation: tv-ala-festeja 0.4s ease-in-out 6; }
+.tuti-vivo.celebra .tv-ala-lado { animation: tv-lado-festeja 0.4s ease-in-out 6; }
+.tuti-vivo.celebra .tv-copete { animation: tv-copete-salta 0.8s var(--curva) 3; }
+
+@keyframes tv-ala-quieta { 50% { rotate: -3deg; } }
+@keyframes tv-lado-quieta { 50% { rotate: -2.5deg; } }
+@keyframes tv-copete-quieto { 50% { rotate: 2.5deg; } }
+@keyframes tv-ala-saluda { 30% { rotate: -13deg; } 70% { rotate: 9deg; } }
+@keyframes tv-lado-aletea { 45% { rotate: -9deg; } }
+@keyframes tv-copete-saluda { 35% { rotate: -3deg; } 75% { rotate: 3deg; } }
+@keyframes tv-ala-festeja { 50% { rotate: -14deg; } }
+@keyframes tv-lado-festeja { 50% { rotate: -10deg; } }
+@keyframes tv-copete-salta { 30% { rotate: 5deg; } 60% { rotate: -4deg; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tuti-vivo,
+  .tuti-vivo.celebra,
+  .tv-ala,
+  .tv-ala-lado,
+  .tv-copete,
+  .tuti-vivo.saluda .tv-ala,
+  .tuti-vivo.saluda .tv-ala-lado,
+  .tuti-vivo.saluda .tv-copete,
+  .tuti-vivo.celebra .tv-ala,
+  .tuti-vivo.celebra .tv-ala-lado,
+  .tuti-vivo.celebra .tv-copete { animation: none; }
+  .tv-iris,
+  .tv-feliz,
+  .tv-feliz .tv-piel { transition: none; }
+}
+
 /* Reportar un ejercicio: un enlace discreto y una ventana corta */
 .zona-reporte:empty { display: none; }
 .zona-reporte { margin-top: 12px; }

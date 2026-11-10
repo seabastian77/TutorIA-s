@@ -98,6 +98,7 @@ function montarMentor() {
   document.body.appendChild(caja.firstElementChild);
 
   document.getElementById("mentor-avatar").addEventListener("click", alternarMentor);
+  if (typeof TutiVivo !== "undefined") TutiVivo.montar(document.querySelector("#mentor-avatar .mentor-ave"), "cara");
   vigilarLaVista();
   document.getElementById("mentor-burbuja").addEventListener("click", seguirConsejo);
   document.getElementById("mentor-abrir-charla").addEventListener("click", abrirCharla);

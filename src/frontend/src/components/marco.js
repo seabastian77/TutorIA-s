@@ -169,14 +169,17 @@ function montarTutiCabeceras() {
     img.decoding = "async";
     cabecera.classList.add("con-tuti");
     cabecera.appendChild(img);
+    if (pose === "saludo" && typeof TutiVivo !== "undefined") TutiVivo.montar(img);
   });
 }
 
-/** Tuti del inicio reacciona: cambia de pose un momento y da un salto o un saludo. */
+/** Tuti del inicio reacciona: saluda o celebra con las alas, o cambia de pose si no hay capas. */
 function animarTutiInicio(gesto) {
-  const img = document.querySelector("#heroe-tuti .heroe-tuti-img");
   const inicio = document.getElementById("vista-principal");
-  if (!img || !inicio || inicio.classList.contains("oculto")) return;
+  if (!inicio || inicio.classList.contains("oculto")) return;
+  if (typeof TutiVivo !== "undefined" && TutiVivo.gesto("#heroe-tuti", gesto)) return;
+  const img = document.querySelector("#heroe-tuti img.heroe-tuti-img");
+  if (!img) return;
   clearTimeout(img.temporizador);
   img.classList.remove("tuti-salta", "tuti-saluda");
   void img.offsetWidth;
@@ -249,4 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   document.addEventListener("tutorias:progreso", reaccionarAlProgreso);
+
+  // Tuti cobra vida cuando el navegador ya no tiene trabajo pendiente
+  const darVida = () => {
+    if (typeof TutiVivo === "undefined") return;
+    TutiVivo.montar(document.querySelector("#heroe-tuti .heroe-tuti-img"));
+    TutiVivo.montar(document.querySelector(".auth-tuti"));
+  };
+  if ("requestIdleCallback" in window) requestIdleCallback(darVida, { timeout: 2500 });
+  else setTimeout(darVida, 1200);
 });
