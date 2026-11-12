@@ -669,10 +669,10 @@ h2,
   width: 104px;
   height: 104px;
   margin-bottom: 10px;
-  background: url("../../assets/tuti/tuti-saludo-chico.webp") center / contain no-repeat;
+  background: url("../../assets/tuti/tuti-vacio-chico.webp") center / contain no-repeat;
 }
 
-.vocab-tarjeta-hecha::before { background-image: url("../../assets/tuti/tuti-saludo-chico.webp"); }
+.vocab-tarjeta-hecha::before { background-image: url("../../assets/tuti/tuti-celebra-chico.webp"); }
 
 @media (max-width: 520px) {
   .tarjeta-vacia { flex-direction: column; text-align: center; }
@@ -702,6 +702,31 @@ h2,
 @keyframes tuti-entra {
   from { opacity: 0; scale: 0.8; rotate: -8deg; }
 }
+
+/* Cada pose tiene su propio movimiento: baila con los audífonos, lee despacio, festeja con el trofeo */
+.tuti-cabecera:not(.tuti-pose-saludo) { transform-origin: 50% 96%; }
+.tuti-cabecera.tuti-pose-tutor { animation: tuti-entra 0.7s var(--curva) both, tuti-orgullo 3.2s ease-in-out 0.7s infinite; }
+.tuti-cabecera.tuti-pose-escucha { animation: tuti-entra 0.7s var(--curva) both, tuti-ritmo 1.3s ease-in-out 0.7s infinite; }
+.tuti-cabecera.tuti-pose-habla { animation: tuti-entra 0.7s var(--curva) both, tuti-hablando 1.6s ease-in-out 0.7s infinite; }
+.tuti-cabecera.tuti-pose-lee { animation: tuti-entra 0.7s var(--curva) both, tuti-lectura 4.5s ease-in-out 0.7s infinite; }
+.tuti-cabecera.tuti-pose-celebra { animation: tuti-entra 0.7s var(--curva) both, tuti-festejo 2.4s var(--curva) 0.7s infinite; }
+.tuti-cabecera.tuti-pose-piensa { animation: tuti-entra 0.7s var(--curva) both, tuti-pensando 5.5s ease-in-out 0.7s infinite; }
+.tuti-cabecera.tuti-pose-vacio { animation: tuti-entra 0.7s var(--curva) both, tuti-encoge 3.6s ease-in-out 0.7s infinite; }
+.tuti-cabecera.tuti-pose-normal { animation: tuti-entra 0.7s var(--curva) both, tuti-respira 3.8s ease-in-out 0.7s infinite; }
+
+@keyframes tuti-orgullo { 40% { translate: 0 -5px; rotate: -2deg; } 60% { translate: 0 -5px; rotate: 1deg; } }
+@keyframes tuti-ritmo { 0%, 100% { rotate: -3deg; } 25%, 75% { translate: 0 -2px; } 50% { rotate: 3deg; } }
+@keyframes tuti-hablando { 20% { scale: 1.02 0.98; } 40% { scale: 0.99 1.02; } 60% { scale: 1.015 0.99; } 80% { scale: 1 1.01; } }
+@keyframes tuti-lectura { 50% { rotate: 2deg; translate: 0 1px; } }
+@keyframes tuti-festejo {
+  0%, 55%, 100% { translate: 0 0; scale: 1 1; }
+  15% { translate: 0 -10px; scale: 0.98 1.03; }
+  30% { translate: 0 0; scale: 1.04 0.96; }
+  40% { translate: 0 -4px; scale: 1 1; }
+}
+@keyframes tuti-pensando { 0%, 100% { rotate: -2deg; } 50% { rotate: 2deg; } }
+@keyframes tuti-encoge { 0%, 70%, 100% { translate: 0 0; scale: 1 1; } 80% { translate: 0 -3px; scale: 1.02 0.98; } }
+@keyframes tuti-respira { 50% { translate: 0 -2px; scale: 1.015 1.015; } }
 
 @media (max-width: 620px) {
   .cabecera-modulo.con-tuti { padding-right: 88px; min-height: 88px; }
@@ -840,7 +865,8 @@ h2,
   .tuti-cabecera,
   .mentor-ave-tuti,
   .auth-tuti,
-  .tuti-celebra.visible img { animation: none; }
+  .tuti-celebra.visible img,
+  .tuti-cabecera[class*="tuti-pose-"] { animation: none; }
   .tuti-celebra.visible .tuti-confeti i { animation: none; }
 }
 
@@ -894,6 +920,12 @@ h2,
 .tuti-vivo.celebra .tv-abertura { scale: 1 0.4; }
 
 @keyframes tv-parpadeo { 45%, 60% { scale: 0.06; } }
+
+/* En las poses el parpadeo asoma los ojos cerrados un instante */
+.tv-parpados { opacity: 0; }
+.tuti-vivo.parpadea .tv-parpados { animation: tv-parpados 0.26s linear; }
+
+@keyframes tv-parpados { 0%, 100% { opacity: 0; } 22%, 78% { opacity: 1; } }
 
 /* La lengua: sale de la comisura y vuelve rapidito */
 .tv-lengua { width: 25%; height: 5.6%; transform-origin: 0% 50%; scale: 0 1; }

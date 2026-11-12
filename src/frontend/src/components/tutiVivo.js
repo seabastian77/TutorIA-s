@@ -55,6 +55,18 @@ const TutiVivo = (() => {
       ],
     },
   };
+  // Poses de los módulos: la imagen de la pose y, encima, los ojos cerrados que se asoman al parpadear
+  const POSES_SIMPLES = {
+    tutor: { base: "../tuti-tutor.webp", parpados: { src: "tutor-parpados.webp", caja: [30.893, 19.107, 30.0, 12.857] } },
+    habla: { base: "../tuti-habla.webp", parpados: { src: "habla-parpados.webp", caja: [29.107, 16.607, 29.643, 12.321] } },
+    lee: { base: "../tuti-lee.webp", parpados: { src: "lee-parpados.webp", caja: [24.464, 22.321, 28.571, 10.0] } },
+    piensa: { base: "../tuti-piensa.webp", parpados: { src: "piensa-parpados.webp", caja: [24.107, 15.893, 29.643, 16.429] } },
+    vacio: { base: "../tuti-vacio.webp", parpados: { src: "vacio-parpados.webp", caja: [33.214, 15.714, 31.964, 15.893] } },
+    normal: { base: "../tuti-normal.webp", parpados: { src: "normal-parpados.webp", caja: [28.75, 15.179, 31.429, 13.75] } },
+  };
+  Object.entries(POSES_SIMPLES).forEach(([pose, { base, parpados }]) => {
+    POSES[pose] = { partes: [{ nombre: "cuerpo", src: base, caja: [0, 0, 100, 100] }], parpados, ojos: [] };
+  });
   const CON_SOMBRA = new Set(["cola", "ala", "cuerpo"]);
   const vivos = new Set();
   const movimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -133,6 +145,11 @@ const TutiVivo = (() => {
       if (parte.origen) capa.style.transformOrigin = `${parte.origen[0]}% ${parte.origen[1]}%`;
       raiz.appendChild(capa);
     });
+    if (datos.parpados) {
+      const parpados = imagen(datos.parpados.src, "tv-parte tv-parpados");
+      ubicar(parpados, datos.parpados.caja);
+      raiz.appendChild(parpados);
+    }
     datos.ojos.forEach((ojo, i) => raiz.appendChild(armarOjo(ojo, i + 1)));
     if (datos.boca) raiz.appendChild(armarLengua(datos.boca));
     raiz.miradas = datos.ojos.map((ojo) => ojo.mira);
@@ -227,8 +244,10 @@ const TutiVivo = (() => {
 
     control.empezar = () => {
       cicloParpadeo();
-      cicloOjo(1);
-      cicloOjo(2);
+      if (raiz.miradas.length) {
+        cicloOjo(1);
+        cicloOjo(2);
+      }
       cicloSaludo();
       cicloLengua();
     };

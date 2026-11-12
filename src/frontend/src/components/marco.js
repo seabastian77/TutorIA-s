@@ -43,8 +43,18 @@ const PESTANAS = [
   { id: "btn-mi-progreso", vista: "vista-historial", texto: "Progress", icono: "fa-chart-line" },
 ];
 
-// Poses de Tuti que ya tienen imagen, con su texto alternativo
-const POSES_TUTI = { saludo: "Tuti waving" };
+// Poses de Tuti con su texto alternativo
+const POSES_TUTI = {
+  saludo: "Tuti waving",
+  tutor: "Tuti in a graduation cap",
+  escucha: "Tuti wearing headphones",
+  habla: "Tuti holding a microphone",
+  lee: "Tuti reading a book",
+  celebra: "Tuti holding a trophy",
+  piensa: "Tuti thinking",
+  vacio: "Tuti shrugging",
+  normal: "Tuti giving a thumbs-up",
+};
 
 // La pose de Tuti que acompaña la cabecera de cada módulo
 const TUTI_POR_VISTA = {
@@ -58,7 +68,7 @@ const TUTI_POR_VISTA = {
   "vista-liga": "celebra",
   "vista-logros": "celebra",
   "vista-tienda": "saludo",
-  "vista-historial": "tutor",
+  "vista-historial": "normal",
   "vista-nivel": "piensa",
   "vista-visual": "piensa",
 };
@@ -170,7 +180,7 @@ function montarTutiCabeceras() {
     if (!cabecera || cabecera.querySelector(".tuti-cabecera")) return;
     const { nombre, alt, src } = poseTuti(pose);
     const img = document.createElement("img");
-    img.className = "tuti-cabecera";
+    img.className = `tuti-cabecera tuti-pose-${nombre}`;
     img.src = src;
     img.alt = alt;
     img.width = 120;
@@ -179,7 +189,7 @@ function montarTutiCabeceras() {
     img.decoding = "async";
     cabecera.classList.add("con-tuti");
     cabecera.appendChild(img);
-    if (nombre === "saludo" && typeof TutiVivo !== "undefined") TutiVivo.montar(img);
+    if (typeof TutiVivo !== "undefined") TutiVivo.montar(img, nombre);
   });
 }
 
