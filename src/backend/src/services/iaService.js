@@ -1,5 +1,6 @@
 const Groq = require("groq-sdk");
 const { instruccionVariedadEs } = require("../utils/variedad");
+const { normalizarEscena } = require("../utils/escenaGuion");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -260,11 +261,15 @@ The scene is a short monologue of exactly 4 lines said by a single invented char
 emotional, or exciting situation (like a movie trailer moment), with vocabulary and grammar appropriate
 for level ${nivel}.
 
+The student reads it like a bilingual book, so give every line its natural Latin American Spanish
+translation, in the same order. Translate the meaning, not word by word.
+
 Respond ONLY with valid JSON, no extra text, in this exact shape:
 {
   "titulo": "short original scene title",
   "situacion": "one sentence setting up the scene, in English",
-  "lineas": ["line 1", "line 2", "line 3", "line 4"]
+  "lineas": ["line 1", "line 2", "line 3", "line 4"],
+  "traducciones": ["Spanish for line 1", "Spanish for line 2", "Spanish for line 3", "Spanish for line 4"]
 }`;
 
   const completion = await groq.chat.completions.create({
@@ -273,7 +278,7 @@ Respond ONLY with valid JSON, no extra text, in this exact shape:
     response_format: { type: "json_object" },
   });
 
-  return JSON.parse(completion.choices[0].message.content);
+  return normalizarEscena(JSON.parse(completion.choices[0].message.content));
 }
 
 async function evaluarLineaEscena({ lineaObjetivo, transcripcion }) {

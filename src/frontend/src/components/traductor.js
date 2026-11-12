@@ -222,7 +222,7 @@ const Traductor = (() => {
 
   /** Descarta controles y zonas que ya hacen algo al tocarlas, para no robarles el clic. */
   function sePuedeTraducir(objetivo) {
-    return objetivo instanceof Element && !objetivo.closest(NO_TRADUCIR) &&
+    return objetivo instanceof Element && objetivo.isConnected && !objetivo.closest(NO_TRADUCIR) &&
       getComputedStyle(objetivo).cursor !== "pointer";
   }
 

@@ -177,11 +177,26 @@ async function leerConElNavegador(texto, idioma, velocidad, turno = turnoVoz, ev
   return true;
 }
 
+/** Avisa cuándo empieza y termina el audio del servidor; quien escucha sigue el avance con audio.currentTime. */
+function avisarAudio(sonido, eventos) {
+  let terminado = false;
+  const terminar = () => {
+    if (terminado) return;
+    terminado = true;
+    if (eventos.alTerminar) eventos.alTerminar();
+  };
+  if (eventos.alEmpezar) {
+    sonido.addEventListener("playing", () => eventos.alEmpezar({ audio: sonido }), { once: true });
+  }
+  ["ended", "pause", "error"].forEach((tipo) => sonido.addEventListener(tipo, terminar));
+}
+
 /**
  * Lee un texto en voz alta. Intenta con la voz del servidor, que se entiende mucho mejor, y
  * si no hay o falla, cae a la voz del navegador sin que el usuario note nada.
+ * Los eventos opcionales avisan el inicio, cada palabra (solo la voz del navegador) y el fin.
  */
-async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
+async function leer(texto, { idioma = "en", velocidad = 1, eventos = null } = {}) {
   callar();
   const mio = turnoVoz;
   if (!texto) return false;
@@ -198,6 +213,7 @@ async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
       if (audio) {
         const sonido = new Audio(`data:audio/mp3;base64,${audio}`);
         audioActual = sonido;
+        if (eventos) avisarAudio(sonido, eventos);
         await sonido.play();
         return true;
       }
@@ -207,7 +223,7 @@ async function leer(texto, { idioma = "en", velocidad = 1 } = {}) {
     }
   }
 
-  return leerConElNavegador(texto, idioma, velocidad, mio);
+  return leerConElNavegador(texto, idioma, velocidad, mio, eventos);
 }
 
 const VozIngles = {

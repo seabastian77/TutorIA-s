@@ -157,17 +157,18 @@ function ocultarBurbuja() {
   }
 }
 
-/**
- * Dentro de un módulo la burbuja se repliega para no taparlo; Tuti se queda.
- * Es distinto de cerrarla a mano, así que no pisa lo que el usuario eligió.
- */
+/** Tuti y su chat solo están en Home: al entrar a un módulo se esconde y la charla abierta se cierra. */
 function vigilarLaVista() {
   const menu = document.getElementById("vista-principal");
   const mentor = document.getElementById("mentor");
   if (!menu || !mentor) return;
 
-  const ajustar = () =>
-    mentor.classList.toggle("fuera-del-menu", menu.classList.contains("oculto"));
+  const ajustar = () => {
+    const fuera = menu.classList.contains("oculto");
+    mentor.classList.toggle("fuera-del-menu", fuera);
+    const charla = document.getElementById("mentor-charla");
+    if (fuera && charla && !charla.classList.contains("oculto")) cerrarCharla();
+  };
 
   new MutationObserver(ajustar).observe(menu, {
     attributes: true,
@@ -342,7 +343,7 @@ function cerrarCharla() {
   document.getElementById("mentor-charla").classList.add("oculto");
   document.getElementById("mentor").classList.remove("en-charla");
   const abrir = document.getElementById("mentor-abrir-charla");
-  if (abrir) abrir.focus();
+  if (abrir && abrir.offsetParent) abrir.focus();
 }
 
 async function enviarCharla(evento, voz) {
@@ -357,7 +358,7 @@ async function enviarCharla(evento, voz) {
   campo.value = "";
   campo.disabled = true;
   document.getElementById("charla-enviar").disabled = true;
-  document.getElementById("charla-estado").textContent = "Escribiendo...";
+  document.getElementById("charla-estado").textContent = "Typing...";
 
   anotarTurno("tu", mensaje);
   // El historial que se manda no incluye este mensaje: el backend lo añade

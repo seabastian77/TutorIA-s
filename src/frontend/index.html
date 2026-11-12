@@ -592,37 +592,72 @@
     <button id="btn-salir-voz" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
-  <!-- Vista: modo escena — guiones originales para pronunciación -->
+  <!-- Vista: modo escena — guiones originales que se leen como libro bilingüe, se escuchan y se dicen -->
   <div id="vista-escena" class="pantalla-principal oculto" data-seccion="Practice">
     <header class="cabecera-modulo">
       <h2>Scene Mode</h2>
-      <p>Listen to each line, then say it out loud.</p>
+      <p>Read the scene, listen to it, then say each line out loud.</p>
     </header>
 
-    <div id="escena-video" class="escena-video oculto">
-      <video id="escena-video-fuente" autoplay muted loop playsinline></video>
-      <div class="escena-velo"></div>
-      <p id="escena-video-credito" class="escena-video-credito"></p>
-    </div>
-
-    <div class="tarjeta-voz" id="escena-tarjeta">
-      <div id="escena-situacion" class="nivel-narrativa">Loading scene...</div>
-      <h3 id="escena-linea-texto"></h3>
-
-      <div id="escena-palabras" class="dictado-palabras oculto"></div>
-      <p id="escena-precision" class="dictado-original oculto"></p>
-
-      <div class="voz-controles">
-        <button id="btn-escuchar-linea" class="btn-secundario" style="margin-bottom:10px;">Listen</button>
-        <button id="btn-mic-escena" class="btn-mic">
-          <i class="fa-solid fa-microphone"></i>
-        </button>
-        <p id="escena-estado" class="voz-estado">Press play to hear it, then the mic to repeat</p>
+    <article id="escena-libro" class="escena-libro" aria-labelledby="escena-titulo" aria-busy="true">
+      <div class="escena-portada">
+        <div id="escena-video" class="escena-video oculto">
+          <video id="escena-video-fuente" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        </div>
+        <div class="escena-portada-texto">
+          <span class="escena-sello"><i class="fa-solid fa-clapperboard"></i>Original scene</span>
+          <h3 id="escena-titulo">Loading your scene...</h3>
+          <p id="escena-situacion"></p>
+        </div>
+        <p id="escena-video-credito" class="escena-video-credito"></p>
       </div>
 
-      <div id="escena-feedback" class="nivel-feedback oculto"></div>
-      <button id="btn-siguiente-linea" class="btn-principal oculto" style="margin-top:16px;">Next Line</button>
-    </div>
+      <div class="escena-pagina">
+        <ol id="escena-lineas" class="escena-lineas"></ol>
+      </div>
+
+      <div class="escena-herramientas" role="group" aria-label="Scene tools">
+        <button id="btn-escena-leer" class="escena-chip" type="button" disabled>
+          <span class="escena-chip-icono"><i class="fa-solid fa-microphone"></i></span>
+          <span class="escena-chip-icono escena-chip-parar"><i class="fa-solid fa-stop"></i></span>
+          <span class="escena-chip-texto">Read aloud</span>
+        </button>
+        <button id="btn-escena-escuchar" class="escena-chip" type="button" disabled>
+          <span class="escena-chip-icono"><i class="fa-solid fa-headphones"></i></span>
+          <span class="escena-chip-icono escena-chip-parar"><i class="fa-solid fa-stop"></i></span>
+          <span class="escena-chip-texto">Listen</span>
+        </button>
+        <button id="btn-escena-traducir" class="escena-chip" type="button" aria-pressed="true" disabled>
+          <span class="escena-chip-icono"><i class="fa-solid fa-language"></i></span>
+          <span class="escena-chip-texto">Translate</span>
+        </button>
+      </div>
+
+      <div class="escena-practica">
+        <p id="escena-estado" class="escena-estado" role="status"></p>
+
+        <div id="escena-resultado" class="escena-resultado oculto">
+          <p class="escena-nota"><strong id="escena-nota-cifra">0</strong><span>/100</span></p>
+          <div class="escena-resultado-texto">
+            <p id="escena-precision" class="escena-precision"></p>
+            <p id="escena-feedback" class="escena-feedback"></p>
+          </div>
+          <div class="escena-resultado-acciones">
+            <button id="btn-repetir-linea" class="btn-secundario" type="button"><i class="fa-solid fa-rotate"></i>Try again</button>
+            <button id="btn-siguiente-linea" class="btn-principal" type="button">Next line</button>
+          </div>
+        </div>
+
+        <div id="escena-final" class="escena-final oculto">
+          <h3 id="escena-final-titulo">Scene complete!</h3>
+          <p id="escena-final-texto"></p>
+          <button id="btn-otra-escena" class="btn-principal" type="button">New scene</button>
+        </div>
+
+        <div id="escena-reporte" class="zona-reporte escena-reporte"></div>
+      </div>
+    </article>
+
     <button id="btn-salir-escena" class="btn-secundario" style="margin-top:18px;"><i class="fa-solid fa-chevron-left"></i>Back to Home</button>
   </div>
 
@@ -1224,6 +1259,7 @@
   <script src="src/components/practica.js"></script>
   <script src="src/components/progreso.js"></script>
   <script src="src/utils/labios.js"></script>
+  <script src="src/utils/lecturaGuiada.js"></script>
   <script src="src/components/avatarClips.js"></script>
   <script src="src/components/avatarTutor.js"></script>
   <script src="src/components/voz.js"></script>

@@ -50,7 +50,9 @@ const EscenaController = {
 
       res.json({
         ...escena,
-        video: video ? { url: video.url, autor: video.autor, autorUrl: video.autorUrl } : null,
+        video: video
+          ? { url: video.url, poster: video.miniatura, autor: video.autor, autorUrl: video.autorUrl }
+          : null,
       });
     } catch (error) {
       reportarError("Error en /escena/nueva", error);
