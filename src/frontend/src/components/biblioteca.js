@@ -12,6 +12,8 @@ async function mostrarCatalogoBiblioteca() {
 
   document.getElementById("biblioteca-catalogo").classList.remove("oculto");
   document.getElementById("biblioteca-lectura").classList.add("oculto");
+  const lectorLibros = document.getElementById("biblioteca-libro");
+  if (lectorLibros) lectorLibros.classList.add("oculto");
   cerrarPopoverPalabra();
 
   const lista = document.getElementById("biblioteca-lista");

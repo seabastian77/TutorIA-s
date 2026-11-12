@@ -51,6 +51,17 @@ const BibliotecaAPI = {
       method: "POST",
       body: JSON.stringify({ lecturaId, respuestas }),
     }),
+
+  libros: () => pedirContenido("/biblioteca/libros"),
+
+  capitulo: (libro, numero) =>
+    pedirContenido(`/biblioteca/libros/${encodeURIComponent(libro)}/${encodeURIComponent(numero)}`),
+
+  terminarCapitulo: (libro, numero) =>
+    pedirContenido(`/biblioteca/libros/${encodeURIComponent(libro)}/${encodeURIComponent(numero)}/terminar`, {
+      method: "POST",
+      body: "{}",
+    }),
 };
 
 const AudioAPI = {

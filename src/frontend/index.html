@@ -823,11 +823,71 @@
       <div class="cabecera-seccion cabecera-modulo">
         <div>
           <h2>Library</h2>
-          <p>Stories at your level. Tap any word while you read to see what it means.</p>
+          <p>Classic books and short stories at your level. Tap any word while you read to see what it means.</p>
         </div>
         <span id="biblioteca-nivel" class="nivel-progreso"></span>
       </div>
+
+      <section class="estante" aria-labelledby="estante-titulo">
+        <div class="estante-cabeza">
+          <h3 id="estante-titulo">Classic books</h3>
+          <p>Famous stories told at your level, with Spanish line by line. Listen while you read.</p>
+        </div>
+        <div id="libros-lista" class="libros-lista"></div>
+      </section>
+
+      <h3 class="estante-cuentos">Short stories</h3>
       <div id="biblioteca-lista" class="biblioteca-lista"></div>
+    </div>
+
+    <div id="biblioteca-libro" class="oculto">
+      <article id="libro-lector" class="escena-libro libro-lector" aria-labelledby="libro-capitulo-titulo" aria-busy="true">
+        <div id="libro-escenario" class="libro-escenario">
+          <div class="libro-fondo" aria-hidden="true">
+            <img id="libro-fondo-img" alt="">
+            <video id="libro-video" class="oculto" muted loop playsinline preload="metadata"></video>
+          </div>
+          <div class="libro-tapa-grande"><img id="libro-portada" alt=""></div>
+          <div class="libro-titulos">
+            <span class="escena-sello"><i class="fa-solid fa-book"></i><span id="libro-sello">Chapter 1</span></span>
+            <h3 id="libro-capitulo-titulo">Loading the chapter...</h3>
+            <p id="libro-capitulo-es" class="libro-capitulo-es" lang="es"></p>
+            <p id="libro-obra" class="libro-obra"></p>
+          </div>
+          <div id="libro-subtitulo" class="escena-subtitulo libro-subtitulo oculto" aria-hidden="true"></div>
+          <p id="libro-video-credito" class="escena-video-credito"></p>
+        </div>
+
+        <div class="escena-pagina">
+          <ol id="libro-lineas" class="escena-lineas"></ol>
+        </div>
+
+        <div class="escena-herramientas" role="group" aria-label="Reading tools">
+          <button id="btn-libro-escuchar" class="escena-chip" type="button" disabled>
+            <span class="escena-chip-icono"><i class="fa-solid fa-headphones"></i></span>
+            <span class="escena-chip-icono escena-chip-parar"><i class="fa-solid fa-stop"></i></span>
+            <span class="escena-chip-texto">Listen</span>
+          </button>
+          <button id="btn-libro-traducir" class="escena-chip" type="button" aria-pressed="true" disabled>
+            <span class="escena-chip-icono"><i class="fa-solid fa-language"></i></span>
+            <span class="escena-chip-texto">Translate</span>
+          </button>
+        </div>
+
+        <div class="escena-practica">
+          <p id="libro-estado" class="escena-estado" role="status"></p>
+          <div id="libro-final" class="escena-final oculto">
+            <h3 id="libro-final-titulo"></h3>
+            <p id="libro-final-texto"></p>
+          </div>
+          <div class="libro-navegacion">
+            <button id="btn-capitulo-anterior" class="btn-secundario" type="button"><i class="fa-solid fa-chevron-left"></i>Previous chapter</button>
+            <button id="btn-capitulo-terminar" class="btn-principal" type="button" disabled>Finish chapter</button>
+          </div>
+          <div id="libro-reporte" class="zona-reporte escena-reporte"></div>
+        </div>
+      </article>
+      <button id="btn-volver-estante" class="btn-secundario" type="button" style="margin-top:14px;"><i class="fa-solid fa-chevron-left"></i>All books</button>
     </div>
 
     <div id="biblioteca-lectura" class="oculto">
@@ -1267,6 +1327,7 @@
   <script src="src/components/progreso.js"></script>
   <script src="src/utils/labios.js"></script>
   <script src="src/utils/lecturaGuiada.js"></script>
+  <script src="src/components/lectorBilingue.js"></script>
   <script src="src/components/avatarClips.js"></script>
   <script src="src/components/avatarTutor.js"></script>
   <script src="src/components/voz.js"></script>
@@ -1282,6 +1343,7 @@
   <script src="src/components/reporteEjercicio.js"></script>
   <script src="src/components/reportesEquipo.js"></script>
   <script src="src/components/biblioteca.js"></script>
+  <script src="src/components/libros.js"></script>
   <script src="src/components/audioLab.js"></script>
   <script src="src/components/juegos.js"></script>
   <script src="src/components/visual.js"></script>

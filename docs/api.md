@@ -114,6 +114,9 @@ descenso que corresponda según cómo le fue la semana anterior.
 | GET | `/biblioteca/lectura/:slug` | Abre la lectura (la genera si no existía) |
 | POST | `/biblioteca/traducir` | Body: `palabra`, `contexto` |
 | POST | `/biblioteca/responder` | Body: `lecturaId`, `respuestas` |
+| GET | `/biblioteca/libros` | Estante de clásicos con los capítulos que ya terminó el estudiante |
+| GET | `/biblioteca/libros/:libro/:numero` | Capítulo contado al nivel del estudiante, con su español (la IA lo escribe la primera vez y queda guardado) |
+| POST | `/biblioteca/libros/:libro/:numero/terminar` | Marca el capítulo como leído; el XP se gana solo la primera vez |
 
 ## Laboratorio de audio
 

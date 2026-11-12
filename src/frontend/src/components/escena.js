@@ -171,92 +171,18 @@ function pintarVideoEscena(video) {
   }
 }
 
-/** Pinta la página: cada línea con su número para oírla, la traducción encima y cada palabra tocable. */
+/** Pinta la página con el lector bilingüe: el número de cada línea la lee en voz alta. */
 function pintarLineasEscena() {
-  const lista = $escena("escena-lineas");
-  lista.innerHTML = "";
   const { lineas, traducciones } = escenaActual;
-
-  lineas.forEach((linea, i) => {
-    const renglon = document.createElement("li");
-    renglon.className = "escena-renglon";
-    renglon.dataset.linea = String(i);
-
-    const numero = document.createElement("button");
-    numero.type = "button";
-    numero.className = "escena-numero";
-    numero.setAttribute("aria-label", `Listen to line ${i + 1}`);
-    numero.innerHTML =
-      `<span class="escena-numero-cifra" aria-hidden="true">${i + 1}</span>` +
-      Icono.svg("fa-volume-high", "escena-numero-voz") +
-      Icono.svg("fa-check", "escena-numero-hecha");
-    numero.addEventListener("click", () => escucharLineaEscena(i));
-
-    const textos = document.createElement("div");
-    textos.className = "escena-textos";
-    if (traducciones) {
-      const es = document.createElement("p");
-      es.className = "escena-es";
-      es.lang = "es";
-      es.textContent = traducciones[i];
-      textos.appendChild(es);
-    }
-
-    const en = document.createElement("p");
-    en.className = "escena-en";
-    en.lang = "en";
-    LecturaGuiada.partirEnPiezas(linea).forEach((pieza) => {
-      if (!pieza.palabra) {
-        en.appendChild(document.createTextNode(pieza.texto));
-        return;
-      }
-      const palabra = document.createElement("span");
-      palabra.className = "escena-palabra";
-      palabra.textContent = pieza.texto;
-      // Las palabras con letras se traducen al tocarlas, igual que en Library
-      if (/[A-Za-z]/.test(pieza.texto)) {
-        palabra.classList.add("palabra");
-        palabra.addEventListener("click", () =>
-          Traductor.mostrar({ palabra: pieza.texto, contexto: linea, anclaje: palabra }),
-        );
-      }
-      en.appendChild(palabra);
-    });
-    textos.appendChild(en);
-
-    renglon.append(numero, textos);
-    lista.appendChild(renglon);
-  });
+  LectorBilingue.pintarRenglones($escena("escena-lineas"), { lineas, traducciones, alEscuchar: escucharLineaEscena });
 }
 
 /** Pone la línea en los subtítulos del video, con cada palabra lista para el marcador. */
 function pintarSubtituloEscena(i) {
   const zona = $escena("escena-subtitulo");
   if (!zona || !escenaActual || !$escena("escena-portada").classList.contains("con-video")) return;
-  zona.innerHTML = "";
-  const en = document.createElement("p");
-  en.className = "escena-subtitulo-en";
-  const caja = document.createElement("span");
-  LecturaGuiada.partirEnPiezas(escenaActual.lineas[i]).forEach((pieza) => {
-    if (!pieza.palabra) {
-      caja.appendChild(document.createTextNode(pieza.texto));
-      return;
-    }
-    const palabra = document.createElement("span");
-    palabra.className = "escena-sub-palabra";
-    palabra.textContent = pieza.texto;
-    caja.appendChild(palabra);
-  });
-  en.appendChild(caja);
-  zona.appendChild(en);
-  if (escenaActual.traducciones) {
-    const es = document.createElement("p");
-    es.className = "escena-subtitulo-es";
-    const texto = document.createElement("span");
-    texto.textContent = escenaActual.traducciones[i];
-    es.appendChild(texto);
-    zona.appendChild(es);
-  }
+  const traduccion = escenaActual.traducciones ? escenaActual.traducciones[i] : null;
+  LectorBilingue.pintarSubtitulo(zona, escenaActual.lineas[i], traduccion);
 }
 
 /** El botón del video muestra pausa mientras corre y play cuando está quieto. */
@@ -304,14 +230,8 @@ function marcarLineaActual() {
   });
 }
 
-/** Lleva la línea a la vista cuando quedó fuera de la pantalla. */
 function mostrarRenglonEscena(i) {
-  const renglon = renglonEscena(i);
-  if (!renglon) return;
-  const caja = renglon.getBoundingClientRect();
-  if (caja.top < 80 || caja.bottom > window.innerHeight - 96) {
-    renglon.scrollIntoView({ block: "center", behavior: movimientoReducidoEscena() ? "auto" : "smooth" });
-  }
+  LectorBilingue.mostrar(renglonEscena(i));
 }
 
 /** Cambia la línea que se practica y limpia el resultado de la anterior. */
@@ -350,85 +270,14 @@ function alternarTraduccionEscena() {
   }
 }
 
-/** Lee una línea marcando cada palabra mientras suena; resuelve cuando termina o se corta. */
+/** Lee una línea con el marcador en la página y, si hay video, también en los subtítulos. */
 function narrarLineaEscena(i, turno) {
-  return new Promise((listo) => {
-    const renglon = renglonEscena(i);
-    if (!renglon || turno !== turnoNarracion) {
-      listo();
-      return;
-    }
-    const linea = escenaActual.lineas[i];
-    pintarSubtituloEscena(i);
-    const palabras = [...renglon.querySelectorAll(".escena-palabra")];
-    const subtitulos = [...document.querySelectorAll("#escena-subtitulo .escena-sub-palabra")];
-    const piezas = LecturaGuiada.partirEnPiezas(linea);
-    const marcas = LecturaGuiada.marcasDeTiempo(piezas);
-    const estimado = LecturaGuiada.duracionEstimada(piezas, VozIngles.RITMO_INGLES);
-    let cuadro = 0;
-    let reloj = 0;
-    let seguro = 0;
-    let ultimoAviso = 0;
-    let terminado = false;
-
-    const marcar = (n) => {
-      palabras.forEach((p, j) => p.classList.toggle("sonando", j === n));
-      subtitulos.forEach((p, j) => p.classList.toggle("sonando", j === n));
-    };
-    const fin = () => {
-      if (terminado) return;
-      terminado = true;
-      cancelAnimationFrame(cuadro);
-      clearInterval(reloj);
-      clearTimeout(seguro);
-      marcar(-1);
-      renglon.classList.remove("narrando");
-      listo();
-    };
-    // Por si la voz nunca avisa que terminó: primero espera que arranque y luego lo que dure
-    const vigilar = (ms) => {
-      clearTimeout(seguro);
-      seguro = setTimeout(fin, ms);
-    };
-
-    renglon.classList.add("narrando");
-    vigilar(15000);
-
-    VozIngles.leer(linea, {
-      idioma: "en",
-      eventos: {
-        alEmpezar: (info) => {
-          if (terminado) return;
-          if (info && info.audio) {
-            const audio = info.audio;
-            vigilar((Number.isFinite(audio.duration) ? audio.duration * 1000 : estimado * 2) + 3000);
-            const seguir = () => {
-              marcar(LecturaGuiada.palabraEnFraccion(marcas, LecturaGuiada.fraccionDeAudio(audio.currentTime, audio.duration)));
-              cuadro = requestAnimationFrame(seguir);
-            };
-            seguir();
-            return;
-          }
-          // La voz del navegador avisa cada palabra; si no lo hace, se marca con el reloj
-          vigilar(estimado * 2 + 3000);
-          const inicio = performance.now();
-          reloj = setInterval(() => {
-            if (performance.now() - ultimoAviso < 1200) return;
-            marcar(LecturaGuiada.palabraEnFraccion(marcas, (performance.now() - inicio) / estimado));
-          }, 90);
-        },
-        alPalabra: (evento) => {
-          if (terminado || (evento.name && evento.name !== "word")) return;
-          ultimoAviso = performance.now();
-          marcar(LecturaGuiada.palabraEnCaracter(piezas, evento.charIndex));
-        },
-        alTerminar: fin,
-      },
-    })
-      .then((sono) => {
-        if (!sono) fin();
-      })
-      .catch(fin);
+  if (turno !== turnoNarracion) return Promise.resolve();
+  pintarSubtituloEscena(i);
+  const conVideo = $escena("escena-portada").classList.contains("con-video");
+  return LectorBilingue.narrar(renglonEscena(i), escenaActual.lineas[i], {
+    vigente: () => turno === turnoNarracion,
+    subtitulo: conVideo ? $escena("escena-subtitulo") : null,
   });
 }
 

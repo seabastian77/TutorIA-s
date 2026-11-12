@@ -2620,7 +2620,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
 .escena-portada.con-video::before,
 .escena-portada.con-video::after { display: none; }
 
-.con-video .escena-pantalla {
+.escena-portada.con-video .escena-pantalla {
   width: 100%;
   max-height: 460px;
   aspect-ratio: 16 / 9;
@@ -2629,7 +2629,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   background: #04110a;
 }
 
-.con-video .escena-sello {
+.escena-portada.con-video .escena-sello {
   position: absolute;
   top: 14px;
   left: 16px;
@@ -2638,9 +2638,9 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   backdrop-filter: blur(6px);
 }
 
-.con-video .escena-portada-texto { padding: 18px 26px 2px; gap: 6px; }
-.con-video #escena-titulo { color: var(--blanco); font-size: clamp(22px, 2.6vw, 28px); }
-.con-video #escena-situacion { color: var(--gris); }
+.escena-portada.con-video .escena-portada-texto { padding: 18px 26px 2px; gap: 6px; }
+.escena-portada.con-video #escena-titulo { color: var(--blanco); font-size: clamp(22px, 2.6vw, 28px); }
+.escena-portada.con-video #escena-situacion { color: var(--gris); }
 
 .escena-video {
   position: absolute;
@@ -2852,7 +2852,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   border-radius: 5px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
-  transition: background 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+  transition: background 0.08s ease, color 0.08s ease, box-shadow 0.08s ease;
 }
 
 /* La palabra que va sonando lleva el marcador amarillo, como en un libro subrayado */
@@ -3057,7 +3057,7 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   .escena-portada { min-height: 180px; }
   .escena-pantalla { padding: 30px 18px 0; }
   .escena-portada-texto { padding: 8px 18px 30px; }
-  .con-video .escena-portada-texto { padding: 14px 14px 0; }
+  .escena-portada.con-video .escena-portada-texto { padding: 14px 14px 0; }
   .escena-subtitulo { bottom: 27px; width: 94%; }
   .escena-pagina { padding: 10px 8px 6px; }
   .escena-renglon { grid-template-columns: 32px minmax(0, 1fr); gap: 11px; padding: 12px 10px; }
@@ -3090,6 +3090,218 @@ h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.08; }
   .escena-nota strong { font-size: 21px; }
   .escena-resultado-acciones { flex-direction: column-reverse; }
   .escena-resultado-acciones > * { width: 100%; }
+}
+
+/* Estante de clásicos en Library: portadas ilustradas con el avance de cada libro */
+
+.estante { display: flex; flex-direction: column; gap: 12px; margin: 18px 0 26px; }
+
+.estante-cabeza h3,
+.estante-cuentos {
+  font-family: var(--font-titulo);
+  font-size: 22px;
+  font-weight: 560;
+  font-variation-settings: "SOFT" 100;
+  color: var(--blanco);
+}
+
+.estante-cabeza p { margin-top: 4px; font-size: 15px; line-height: 1.5; color: var(--gris); }
+.estante-cuentos { margin-bottom: 12px; }
+
+.libros-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.libros-lista[aria-busy="true"]:empty { min-height: 160px; border-radius: var(--radio); background: var(--gris-oscuro); }
+
+.libro-tarjeta {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--panel);
+  color: var(--blanco);
+  font-family: var(--font-display);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, box-shadow 0.2s ease, translate 0.2s var(--curva);
+}
+
+.libro-tarjeta:hover { border-color: var(--primario-borde); box-shadow: var(--sombra-2); translate: 0 -3px; }
+.libro-tarjeta:focus-visible { outline: 3px solid var(--primario); outline-offset: 2px; }
+
+.libro-tapa {
+  flex: none;
+  width: 84px;
+  aspect-ratio: 2 / 3;
+  border-radius: 4px 8px 8px 4px;
+  overflow: hidden;
+  box-shadow: inset 4px 0 6px -3px rgb(0 0 0 / 0.45), 0 8px 16px -8px rgb(15 42 28 / 0.55);
+  background: var(--gris-oscuro);
+}
+
+.libro-tapa img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.libro-tarjeta-texto { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 2px 0; }
+
+.libro-genero {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amarillo);
+}
+
+.libro-nombre {
+  font-family: var(--font-titulo);
+  font-size: 17px;
+  font-weight: 560;
+  line-height: 1.25;
+  font-variation-settings: "SOFT" 100;
+}
+
+.libro-autor { font-size: 13px; color: var(--gris); }
+
+.libro-avance { margin-top: auto; display: flex; flex-direction: column; gap: 5px; padding-top: 6px; }
+.libro-barra { display: block; height: 6px; border-radius: 999px; background: var(--gris-oscuro); overflow: hidden; }
+.libro-barra span { display: block; height: 100%; border-radius: inherit; background: var(--primario); }
+.libro-avance-texto { font-size: 12.5px; font-weight: 700; color: var(--gris); }
+.libro-terminado .libro-avance-texto { color: var(--verde); }
+.estante-aviso { font-size: 15px; color: var(--gris); }
+
+/* El lector: la portada sobre su propia luz desenfocada, como la escena de una película */
+
+.libro-escenario {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 440px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 4vw, 34px);
+  padding: 0 clamp(18px, 5vw, 44px);
+  background: #08150e;
+  color: #ffffff;
+}
+
+.libro-fondo { position: absolute; inset: 0; overflow: hidden; }
+
+.libro-fondo img,
+.libro-fondo video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.libro-fondo img {
+  scale: 1.25;
+  filter: blur(22px) saturate(1.25) brightness(0.55);
+  animation: libro-luz 28s ease-in-out infinite alternate;
+}
+
+.libro-escenario.con-video .libro-fondo img { display: none; }
+
+.libro-fondo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(3 14 8 / 0.35) 0%, rgb(3 14 8 / 0.2) 45%, rgb(3 14 8 / 0.65) 100%),
+              linear-gradient(180deg, transparent 60%, rgb(3 14 8 / 0.7) 100%);
+}
+
+@keyframes libro-luz { to { scale: 1.4; translate: -3% 2%; } }
+
+.libro-tapa-grande {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  height: 74%;
+  aspect-ratio: 2 / 3;
+  margin-top: -4%;
+  border-radius: 4px 10px 10px 4px;
+  overflow: hidden;
+  rotate: -2deg;
+  box-shadow: inset 6px 0 10px -4px rgb(0 0 0 / 0.5), 0 24px 40px -12px rgb(0 0 0 / 0.75);
+}
+
+.libro-tapa-grande img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.libro-titulos {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  margin-top: -4%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+#libro-capitulo-titulo {
+  font-family: var(--font-titulo);
+  font-size: clamp(24px, 3.4vw, 36px);
+  font-weight: 560;
+  font-variation-settings: "SOFT" 100;
+  line-height: 1.1;
+  color: #ffffff;
+  text-wrap: balance;
+}
+
+.libro-capitulo-es { font-size: 15px; font-style: italic; color: #fde68a; }
+.libro-capitulo-es:empty { display: none; }
+.libro-obra { font-size: 14px; line-height: 1.45; color: #cfe3d6; }
+
+.libro-subtitulo { bottom: 18px; z-index: 2; }
+
+.libro-navegacion {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.libro-navegacion .btn-principal { width: auto; min-height: 46px; padding: 0 26px; border-radius: 999px; }
+.libro-navegacion .btn-secundario:disabled { visibility: hidden; }
+
+@media (max-width: 620px) {
+  .libros-lista {
+    display: flex;
+    gap: 10px;
+    margin: 0 -16px;
+    padding: 2px 16px 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .libro-tarjeta {
+    flex: 0 0 136px;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    scroll-snap-align: start;
+  }
+
+  .libro-tapa { width: 100%; }
+  .libro-nombre { font-size: 15px; }
+  .libro-escenario { aspect-ratio: 4 / 3; padding: 0 16px; gap: 14px; }
+  .libro-tapa-grande { height: 66%; }
+  .libro-capitulo-es { font-size: 13px; }
+  .libro-obra { font-size: 12.5px; }
+  .libro-navegacion { flex-direction: column-reverse; }
+  .libro-navegacion > * { width: 100%; }
+  .libro-navegacion .btn-secundario:disabled { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .libro-fondo img { animation: none; }
 }
 
 @media (max-width: 767px) {

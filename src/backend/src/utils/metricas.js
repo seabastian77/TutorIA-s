@@ -11,6 +11,7 @@ const NOMBRES_MODULO = {
   escena: "Scene Mode",
   audio: "Audio Lab",
   biblioteca: "Library",
+  libros: "Classic books",
   juegos: "Word Games",
   visual: "Photo practice",
   nivel: "Level Check",

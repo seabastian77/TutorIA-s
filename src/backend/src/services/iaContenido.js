@@ -2,6 +2,7 @@
 
 const Groq = require("groq-sdk");
 const { instruccionVariedad } = require("../utils/variedad");
+const { normalizarCapitulo, largoPorNivel } = require("../utils/libroCapitulo");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const MODELO = "openai/gpt-oss-120b";
@@ -235,6 +236,29 @@ Reply ONLY with valid JSON:
   return pedirJSON(prompt);
 }
 
+/** Cuenta un capítulo de un clásico al nivel del estudiante, con el español línea por línea. */
+async function generarCapituloLibro({ libro, numero, nivel }) {
+  const capitulo = libro.capitulos[numero - 1];
+  const tiempo = nivel === "A1" ? "in the present simple" : "in the past tense, like a storyteller";
+  const prompt = `You write graded readers for Spanish-speaking learners of English.
+Retell chapter ${numero} of ${libro.capitulos.length}, "${capitulo.titulo}", of "${libro.titulo}" by ${libro.autor}, a public-domain classic, for a learner at CEFR level ${nivel}.
+
+Tell exactly these events, in this order, without adding characters or events:
+${capitulo.hechos}
+
+Write ${largoPorNivel(nivel)} lines ${tiempo}. Each line is ONE complete sentence. Use only vocabulary and grammar of level ${nivel}, never harder. Dialogue goes inside double quotes in the same sentence. Keep the mood of the original book.
+
+Give every line its natural Latin American Spanish translation, in the same order. Translate the meaning, not word by word.
+
+Reply ONLY with valid JSON:
+{
+  "lineas": ["first sentence", "second sentence"],
+  "traducciones": ["primera oración", "segunda oración"]
+}`;
+
+  return normalizarCapitulo(await pedirJSON(prompt));
+}
+
 async function traducirPalabra({ palabra, contexto, ayudaEs = true }) {
   const prompt = `A Spanish-speaking English learner tapped the word "${palabra}" while reading.
 
@@ -318,6 +342,7 @@ module.exports = {
   listarTemasLectura,
   obtenerTemaLectura,
   generarLectura,
+  generarCapituloLibro,
   traducirPalabra,
   generarDictado,
   generarComprensionAudio,
