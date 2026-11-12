@@ -600,16 +600,23 @@
     </header>
 
     <article id="escena-libro" class="escena-libro" aria-labelledby="escena-titulo" aria-busy="true">
-      <div class="escena-portada">
-        <div id="escena-video" class="escena-video oculto">
-          <video id="escena-video-fuente" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div id="escena-portada" class="escena-portada">
+        <div class="escena-pantalla">
+          <div id="escena-video" class="escena-video oculto">
+            <video id="escena-video-fuente" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          </div>
+          <span class="escena-sello"><i class="fa-solid fa-clapperboard"></i>Original scene</span>
+          <button id="btn-escena-video" class="escena-video-control oculto" type="button" aria-label="Pause the video">
+            <span class="escena-chip-icono"><i class="fa-solid fa-pause"></i></span>
+            <span class="escena-chip-icono escena-chip-parar"><i class="fa-solid fa-play"></i></span>
+          </button>
+          <div id="escena-subtitulo" class="escena-subtitulo oculto" aria-hidden="true"></div>
+          <p id="escena-video-credito" class="escena-video-credito"></p>
         </div>
         <div class="escena-portada-texto">
-          <span class="escena-sello"><i class="fa-solid fa-clapperboard"></i>Original scene</span>
           <h3 id="escena-titulo">Loading your scene...</h3>
           <p id="escena-situacion"></p>
         </div>
-        <p id="escena-video-credito" class="escena-video-credito"></p>
       </div>
 
       <div class="escena-pagina">

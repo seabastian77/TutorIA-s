@@ -9,6 +9,12 @@ function limpiar(valor, largo) {
   return typeof valor === "string" ? valor.replace(/\s+/g, " ").trim().slice(0, largo) : "";
 }
 
+/** La búsqueda del video de ambiente: pocas palabras en inglés, sin signos. */
+function limpiarAmbiente(valor) {
+  const palabras = limpiar(valor, 80).toLowerCase().replace(/[^a-z\s]/g, " ").split(/\s+/).filter(Boolean);
+  return palabras.slice(0, 5).join(" ");
+}
+
 /**
  * Deja la escena lista para el estudiante. Las traducciones solo pasan si vienen todas,
  * una por línea y distintas del inglés; si no, la escena sigue sin ellas.
@@ -33,6 +39,7 @@ function normalizarEscena(crudo) {
     situacion: limpiar(datos.situacion, 260),
     lineas: pares.map((par) => par.en),
     traducciones: traducida ? pares.map((par) => par.es) : null,
+    ambiente: limpiarAmbiente(datos.ambiente),
   };
 }
 

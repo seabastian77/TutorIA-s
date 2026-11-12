@@ -51,6 +51,12 @@ describe("normalizarEscena", () => {
     expect(() => normalizarEscena(null)).toThrow();
   });
 
+  test("la búsqueda del video queda corta, en minúsculas y sin signos", () => {
+    expect(normalizarEscena({ ...BASE, ambiente: "Rainy STREET-market, at night!!" }).ambiente).toBe("rainy street market at night");
+    expect(normalizarEscena({ ...BASE, ambiente: "one two three four five six seven" }).ambiente).toBe("one two three four five");
+    expect(normalizarEscena({ ...BASE, ambiente: 42 }).ambiente).toBe("");
+  });
+
   test("sin título usa uno genérico y nunca pasa algo que no sea texto", () => {
     const escena = normalizarEscena({ lineas: BASE.lineas, situacion: { malo: true } });
     expect(escena.titulo).toBe("Your scene");

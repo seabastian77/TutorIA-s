@@ -53,9 +53,19 @@ describe("normalizarVideo", () => {
     ],
   };
 
-  test("elige el archivo más liviano de los aceptables", () => {
-    // El de fondo no necesita full HD y así pesa menos para el estudiante
-    expect(normalizarVideo(VIDEO).url).toBe("https://x/640.mp4");
+  test("elige el archivo más liviano que se vea nítido en la pantalla de la escena", () => {
+    expect(normalizarVideo(VIDEO).url).toBe("https://x/1280.mp4");
+  });
+
+  test("si ninguno llega a 960 de ancho, usa el más grande que haya", () => {
+    const chicos = {
+      ...VIDEO,
+      video_files: [
+        { file_type: "video/mp4", width: 426, link: "https://x/426.mp4" },
+        { file_type: "video/mp4", width: 640, link: "https://x/640.mp4" },
+      ],
+    };
+    expect(normalizarVideo(chicos).url).toBe("https://x/640.mp4");
   });
 
   test("descarta los formatos que no son mp4", () => {

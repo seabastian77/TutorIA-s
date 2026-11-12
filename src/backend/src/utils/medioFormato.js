@@ -14,15 +14,13 @@ function normalizarFoto(foto) {
   };
 }
 
-/** Elige el archivo de video más liviano que siga siendo decente para el fondo. */
+/** Elige el mp4 más liviano que se vea nítido en la pantalla de la escena, o el más grande que haya. */
 function normalizarVideo(video) {
   if (!video) return null;
 
-  const archivos = (video.video_files || [])
-    .filter((a) => a.file_type === "video/mp4" && a.width >= 640)
-    .sort((a, b) => a.width - b.width);
-
-  const elegido = archivos[0] || (video.video_files || [])[0];
+  const mp4 = (video.video_files || []).filter((a) => a.file_type === "video/mp4" && a.link);
+  const nitidos = mp4.filter((a) => a.width >= 960).sort((a, b) => a.width - b.width);
+  const elegido = nitidos[0] || mp4.sort((a, b) => b.width - a.width)[0] || (video.video_files || [])[0];
   if (!elegido || !elegido.link) return null;
 
   return {

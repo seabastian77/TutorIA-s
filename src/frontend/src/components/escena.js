@@ -11,6 +11,7 @@ let reconocimientoEscena = null;
 let escuchandoEscena = false;
 let narrandoEscena = false;
 let turnoNarracion = 0;
+let videoPausadoEscena = false;
 
 const $escena = (id) => document.getElementById(id);
 
@@ -69,6 +70,7 @@ async function cargarEscena() {
     $escena("escena-situacion").textContent = escena.situacion || "";
     pintarVideoEscena(escena.video);
     pintarLineasEscena();
+    pintarSubtituloEscena(0);
     pintarTraduccionEscena(traduccionPrendidaEscena());
     habilitarHerramientasEscena(true);
     marcarLineaActual();
@@ -121,16 +123,21 @@ function pintarErrorEscena() {
   $escena("escena-final").classList.remove("oculto");
 }
 
-/** Pone el video de ambiente en la portada; sin video queda la portada de película. */
+/** Con video la portada se vuelve pantalla de cine con subtítulos; sin video queda la portada de película. */
 function pintarVideoEscena(video) {
+  const portada = $escena("escena-portada");
   const capa = $escena("escena-video");
   const fuente = $escena("escena-video-fuente");
   const credito = $escena("escena-video-credito");
   if (!capa || !fuente) return;
   credito.textContent = "";
+  const hayVideo = !!(video && video.url);
+  portada.classList.toggle("con-video", hayVideo);
+  capa.classList.toggle("oculto", !hayVideo);
+  $escena("btn-escena-video").classList.toggle("oculto", !hayVideo);
+  $escena("escena-subtitulo").classList.toggle("oculto", !hayVideo);
 
-  if (!video || !video.url) {
-    capa.classList.add("oculto");
+  if (!hayVideo) {
     fuente.pause();
     if (fuente.getAttribute("src")) {
       fuente.removeAttribute("src");
@@ -143,8 +150,9 @@ function pintarVideoEscena(video) {
   if (video.poster) fuente.poster = video.poster;
   else fuente.removeAttribute("poster");
   fuente.src = video.url;
-  capa.classList.remove("oculto");
-  if (!movimientoReducidoEscena()) fuente.play().catch(() => {});
+  videoPausadoEscena = movimientoReducidoEscena();
+  pintarBotonVideoEscena();
+  if (!videoPausadoEscena) fuente.play().catch(() => {});
 
   if (video.autor) {
     const autor = document.createElement("a");
@@ -221,6 +229,67 @@ function pintarLineasEscena() {
   });
 }
 
+/** Pone la línea en los subtítulos del video, con cada palabra lista para el marcador. */
+function pintarSubtituloEscena(i) {
+  const zona = $escena("escena-subtitulo");
+  if (!zona || !escenaActual || !$escena("escena-portada").classList.contains("con-video")) return;
+  zona.innerHTML = "";
+  const en = document.createElement("p");
+  en.className = "escena-subtitulo-en";
+  const caja = document.createElement("span");
+  LecturaGuiada.partirEnPiezas(escenaActual.lineas[i]).forEach((pieza) => {
+    if (!pieza.palabra) {
+      caja.appendChild(document.createTextNode(pieza.texto));
+      return;
+    }
+    const palabra = document.createElement("span");
+    palabra.className = "escena-sub-palabra";
+    palabra.textContent = pieza.texto;
+    caja.appendChild(palabra);
+  });
+  en.appendChild(caja);
+  zona.appendChild(en);
+  if (escenaActual.traducciones) {
+    const es = document.createElement("p");
+    es.className = "escena-subtitulo-es";
+    const texto = document.createElement("span");
+    texto.textContent = escenaActual.traducciones[i];
+    es.appendChild(texto);
+    zona.appendChild(es);
+  }
+}
+
+/** El botón del video muestra pausa mientras corre y play cuando está quieto. */
+function pintarBotonVideoEscena() {
+  const boton = $escena("btn-escena-video");
+  const quieto = $escena("escena-video-fuente").paused;
+  boton.classList.toggle("pausado", quieto);
+  boton.setAttribute("aria-label", quieto ? "Play the video" : "Pause the video");
+}
+
+function alternarVideoEscena() {
+  const fuente = $escena("escena-video-fuente");
+  if (!fuente.getAttribute("src")) return;
+  videoPausadoEscena = !fuente.paused;
+  if (videoPausadoEscena) fuente.pause();
+  else fuente.play().catch(() => {});
+}
+
+/** El video corre solo mientras se ve: fuera de la pantalla se pausa y al volver sigue, si el estudiante no lo paró. */
+function vigilarVideoEscena() {
+  const fuente = $escena("escena-video-fuente");
+  const pantalla = document.querySelector("#escena-portada .escena-pantalla");
+  if (!fuente || !pantalla) return;
+  fuente.addEventListener("play", pintarBotonVideoEscena);
+  fuente.addEventListener("pause", pintarBotonVideoEscena);
+  if (!("IntersectionObserver" in window)) return;
+  new IntersectionObserver(([entrada]) => {
+    if (!fuente.getAttribute("src")) return;
+    if (!entrada.isIntersecting) fuente.pause();
+    else if (!videoPausadoEscena) fuente.play().catch(() => {});
+  }, { threshold: 0.25 }).observe(pantalla);
+}
+
 function renglonEscena(i) {
   return document.querySelector(`#escena-lineas .escena-renglon[data-linea="${i}"]`);
 }
@@ -253,6 +322,7 @@ function irALineaEscena(i) {
   $escena("escena-resultado").classList.add("oculto");
   $escena("escena-final").classList.add("oculto");
   marcarLineaActual();
+  pintarSubtituloEscena(i);
   ponerEstadoEscena(ayudaDeLineaEscena());
 }
 
@@ -289,7 +359,9 @@ function narrarLineaEscena(i, turno) {
       return;
     }
     const linea = escenaActual.lineas[i];
+    pintarSubtituloEscena(i);
     const palabras = [...renglon.querySelectorAll(".escena-palabra")];
+    const subtitulos = [...document.querySelectorAll("#escena-subtitulo .escena-sub-palabra")];
     const piezas = LecturaGuiada.partirEnPiezas(linea);
     const marcas = LecturaGuiada.marcasDeTiempo(piezas);
     const estimado = LecturaGuiada.duracionEstimada(piezas, VozIngles.RITMO_INGLES);
@@ -299,7 +371,10 @@ function narrarLineaEscena(i, turno) {
     let ultimoAviso = 0;
     let terminado = false;
 
-    const marcar = (n) => palabras.forEach((p, j) => p.classList.toggle("sonando", j === n));
+    const marcar = (n) => {
+      palabras.forEach((p, j) => p.classList.toggle("sonando", j === n));
+      subtitulos.forEach((p, j) => p.classList.toggle("sonando", j === n));
+    };
     const fin = () => {
       if (terminado) return;
       terminado = true;
@@ -373,6 +448,7 @@ function pararNarracionEscena() {
   if (narrandoEscena) {
     narrandoEscena = false;
     pintarBotonNarracion(false);
+    pintarSubtituloEscena(indiceLinea);
   }
   VozIngles.callar();
 }
@@ -402,6 +478,7 @@ async function alternarNarracionEscena() {
   if (turno !== turnoNarracion) return;
   narrandoEscena = false;
   pintarBotonNarracion(false);
+  pintarSubtituloEscena(indiceLinea);
   mostrarRenglonEscena(indiceLinea);
   ponerEstadoEscena(
     soporteVozDisponibleEscena() ? `Your turn: read line ${indiceLinea + 1} aloud.` : ayudaDeLineaEscena(),
@@ -632,5 +709,7 @@ document.addEventListener("DOMContentLoaded", () => {
   enlazar("btn-siguiente-linea", siguienteLineaEscena);
   enlazar("btn-otra-escena", cargarEscena);
   enlazar("btn-salir-escena", salirDeEscena);
+  enlazar("btn-escena-video", alternarVideoEscena);
   vigilarSalidaEscena();
+  vigilarVideoEscena();
 });

@@ -264,12 +264,16 @@ for level ${nivel}.
 The student reads it like a bilingual book, so give every line its natural Latin American Spanish
 translation, in the same order. Translate the meaning, not word by word.
 
+The scene plays over a stock video of its setting, so also give a short English search for that
+footage: 2 to 5 words naming a place or atmosphere a camera could film, with no names or brands.
+
 Respond ONLY with valid JSON, no extra text, in this exact shape:
 {
   "titulo": "short original scene title",
   "situacion": "one sentence setting up the scene, in English",
   "lineas": ["line 1", "line 2", "line 3", "line 4"],
-  "traducciones": ["Spanish for line 1", "Spanish for line 2", "Spanish for line 3", "Spanish for line 4"]
+  "traducciones": ["Spanish for line 1", "Spanish for line 2", "Spanish for line 3", "Spanish for line 4"],
+  "ambiente": "rainy street market at night"
 }`;
 
   const completion = await groq.chat.completions.create({

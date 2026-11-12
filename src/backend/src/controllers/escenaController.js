@@ -11,6 +11,7 @@ const { obtenerMedio } = require("../services/medios");
 
 // Ambientes de video: la primera palabra que aparezca en la escena manda
 const AMBIENTES = [
+  { palabras: ["rain", "storm", "thunder"], consulta: "rain on city street" },
   { palabras: ["cafe", "coffee", "barista"], consulta: "coffee shop ambience" },
   { palabras: ["airport", "flight", "boarding"], consulta: "airport terminal people" },
   { palabras: ["office", "meeting", "interview"], consulta: "modern office people working" },
@@ -21,6 +22,13 @@ const AMBIENTES = [
   { palabras: ["shop", "store", "market"], consulta: "shopping street storefront" },
   { palabras: ["beach", "sea", "ocean"], consulta: "beach waves slow" },
   { palabras: ["home", "kitchen", "living"], consulta: "cozy living room home" },
+  { palabras: ["forest", "jungle", "mountain"], consulta: "forest trees light" },
+  { palabras: ["hospital", "doctor", "nurse"], consulta: "hospital corridor" },
+  { palabras: ["school", "class", "teacher"], consulta: "empty classroom" },
+  { palabras: ["party", "concert", "stage"], consulta: "concert lights crowd" },
+  { palabras: ["road", "car", "highway"], consulta: "car driving road" },
+  { palabras: ["snow", "winter", "cold"], consulta: "snow falling" },
+  { palabras: ["night", "dark", "moon"], consulta: "city lights at night" },
 ];
 
 const AMBIENTE_POR_DEFECTO = "city street ambience";
@@ -34,16 +42,26 @@ function consultaDeAmbiente(escena) {
   return encontrado ? encontrado.consulta : AMBIENTE_POR_DEFECTO;
 }
 
+/** Busca el video: primero lo que pidió la IA, luego el tema de la escena y al final una calle. */
+async function videoDeAmbiente(escena) {
+  const consultas = [...new Set([escena.ambiente, consultaDeAmbiente(escena), AMBIENTE_POR_DEFECTO].filter(Boolean))];
+  for (const consulta of consultas) {
+    const video = await obtenerMedio("video", consulta);
+    if (video) return video;
+  }
+  return null;
+}
+
 const EscenaController = {
   async nueva(req, res) {
     try {
       const nivel = req.usuario.nivel_mcer || "B1";
-      const escena = await generarEscenaGuion({ nivel });
+      const { ambiente, ...escena } = await generarEscenaGuion({ nivel });
 
-      // El video es solo ambiente: si falla, la escena sigue funcionando igual
+      // Sin video la escena funciona igual: solo se pierde la pantalla de cine
       let video = null;
       try {
-        video = await obtenerMedio("video", consultaDeAmbiente(escena));
+        video = await videoDeAmbiente({ ...escena, ambiente });
       } catch (error) {
         reportarError("No se pudo traer el video de ambiente", error);
       }
