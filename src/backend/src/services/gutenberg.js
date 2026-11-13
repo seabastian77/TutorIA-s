@@ -48,13 +48,18 @@ function leer(clave) {
 }
 
 async function pedirJSON(url) {
-  const respuesta = await fetch(url, { headers: { "User-Agent": AGENTE, Accept: "application/json" }, signal: AbortSignal.timeout(15000) });
+  let respuesta;
+  try {
+    respuesta = await fetch(url, { headers: { "User-Agent": AGENTE, Accept: "application/json" }, signal: AbortSignal.timeout(15000) });
+  } catch (error) {
+    throw errorConEstado(502, `Gutendex no respondió: ${error.message}`);
+  }
   if (respuesta.status === 404) throw errorConEstado(404, "That book doesn't exist");
   if (!respuesta.ok) throw errorConEstado(502, `Gutendex respondió ${respuesta.status}`);
   return respuesta.json();
 }
 
-/** Una página de libros en inglés que se pueden leer en Colombia, por búsqueda, por género o los más leídos. */
+/** Una página de libros en inglés que se pueden leer en Colombia; guarda la ficha de cada uno para abrirlo sin volver a Gutendex. */
 async function buscarLibros({ busqueda = "", genero = "", pagina = 1 } = {}) {
   const params = new URLSearchParams({ languages: "en", mime_type: "text/plain" });
   if (busqueda) params.set("search", busqueda);
@@ -66,9 +71,10 @@ async function buscarLibros({ busqueda = "", genero = "", pagina = 1 } = {}) {
 
   const datos = await pedirJSON(url);
   const vistos = new Set();
-  const libros = (Array.isArray(datos.results) ? datos.results : [])
-    .map((libro) => normalizarResultado(libro))
-    .filter((libro) => libro && !vistos.has(libro.titulo.toLowerCase()) && vistos.add(libro.titulo.toLowerCase()))
+  const fichas = (Array.isArray(datos.results) ? datos.results : []).map((libro) => normalizarResultado(libro)).filter(Boolean);
+  fichas.forEach((ficha) => guardar(`${URL_GUTENDEX}/books/${ficha.gutenbergId}`, ficha));
+  const libros = fichas
+    .filter((libro) => !vistos.has(libro.titulo.toLowerCase()) && vistos.add(libro.titulo.toLowerCase()))
     .map(({ textoUrl, ...libro }) => libro);
   const resultado = { libros, hayMas: Boolean(datos.next), total: Number(datos.count) || 0 };
   guardar(url, resultado);
@@ -86,14 +92,20 @@ async function obtenerFicha(gutenbergId) {
   return ficha;
 }
 
-/** Baja el texto del libro desde Gutenberg y lo deja limpio; prueba la dirección de la ficha y luego la de respaldo. */
+/** Baja el texto del libro desde Gutenberg: primero el archivo directo, luego la dirección de la ficha y, si el servidor no contesta, no insiste. */
 async function descargarTexto(ficha) {
-  const candidatas = [ficha.textoUrl, `${URL_GUTENBERG}/cache/epub/${ficha.gutenbergId}/pg${ficha.gutenbergId}.txt`];
+  const candidatas = [`${URL_GUTENBERG}/cache/epub/${ficha.gutenbergId}/pg${ficha.gutenbergId}.txt`, ficha.textoUrl];
   let ultimoError = null;
   for (const url of [...new Set(candidatas)]) {
     if (!/^https:\/\/(www\.)?gutenberg\.org\//.test(url)) continue;
+    let respuesta;
     try {
-      const respuesta = await fetch(url, { headers: { "User-Agent": AGENTE }, signal: AbortSignal.timeout(20000) });
+      respuesta = await fetch(url, { headers: { "User-Agent": AGENTE }, signal: AbortSignal.timeout(20000) });
+    } catch (error) {
+      ultimoError = error;
+      break;
+    }
+    try {
       if (!respuesta.ok) throw new Error(`Gutenberg respondió ${respuesta.status}`);
       const texto = (await respuesta.text()).slice(0, MAX_BYTES_TEXTO);
       if (texto.length < 500) throw new Error("El texto llegó vacío");
@@ -105,4 +117,11 @@ async function descargarTexto(ficha) {
   throw errorConEstado(502, ultimoError ? ultimoError.message : "No se pudo bajar el libro");
 }
 
-module.exports = { buscarLibros, obtenerFicha, descargarTexto, GENEROS, URL_GUTENBERG };
+/** Deja lista la primera página del catálogo al arrancar y la renueva cuando vence, para que el estante abra sin esperar. */
+function mantenerCatalogoListo() {
+  const calentar = () => buscarLibros().catch(() => {});
+  setTimeout(calentar, 5000).unref();
+  setInterval(calentar, HORAS_CACHE * 3600 * 1000 + 60000).unref();
+}
+
+module.exports = { buscarLibros, obtenerFicha, descargarTexto, mantenerCatalogoListo, GENEROS, URL_GUTENBERG };

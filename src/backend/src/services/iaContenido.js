@@ -14,13 +14,30 @@ function instruccionAyuda(ayudaEs) {
     : "El estudiante tiene desactivada la ayuda en español: las explicaciones y correcciones van EN INGLÉS sencillo, apropiado a su nivel.";
 }
 
-async function pedirJSON(prompt) {
-  const completion = await groq.chat.completions.create({
-    model: MODELO,
-    messages: [{ role: "user", content: prompt }],
-    response_format: { type: "json_object" },
-  });
-  return JSON.parse(completion.choices[0].message.content);
+/** Pide a la IA una respuesta en JSON: si llega rota la pide otra vez, y si el modelo no acepta el esfuerzo pedido, la pide sin él. */
+async function pedirJSON(prompt, { esfuerzo } = {}) {
+  let extras = esfuerzo ? { reasoning_effort: esfuerzo } : {};
+  let repetirJson = true;
+  for (;;) {
+    try {
+      const completion = await groq.chat.completions.create({
+        model: MODELO,
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" },
+        ...extras,
+      });
+      return JSON.parse(completion.choices[0].message.content);
+    } catch (error) {
+      const texto = String(error.message).toLowerCase();
+      if (error.status === 400 && extras.reasoning_effort && texto.includes("reasoning_effort")) {
+        extras = {};
+      } else if (repetirJson && (error instanceof SyntaxError || (error.status === 400 && texto.includes("json")))) {
+        repetirJson = false;
+      } else {
+        throw error;
+      }
+    }
+  }
 }
 
 // Roleplay
@@ -256,10 +273,10 @@ Reply ONLY with valid JSON:
   "traducciones": ["primera oración", "segunda oración"]
 }`;
 
-  return normalizarCapitulo(await pedirJSON(prompt));
+  return normalizarCapitulo(await pedirJSON(prompt, { esfuerzo: "low" }));
 }
 
-/** Cuenta una parte de cualquier libro del catálogo libre a partir de su texto original. */
+/** Cuenta una parte de cualquier libro del catálogo libre a partir de su texto original; si salen muy pocas líneas, la pide otra vez. */
 async function generarParteLibro({ libro, numero, parte, nivel }) {
   const tiempo = nivel === "A1" ? "in the present simple" : "in the past tense, like a storyteller";
   const original = parte.texto.replace(/"""/g, '"');
@@ -284,7 +301,14 @@ Reply ONLY with valid JSON:
   "traducciones": ["primera oración", "segunda oración"]
 }`;
 
-  return normalizarParte(await pedirJSON(prompt));
+  for (let intento = 1; ; intento += 1) {
+    const pedido = intento === 1 ? prompt : `${prompt}\n\nYour last answer had too few lines. Write at least 8 lines.`;
+    try {
+      return normalizarParte(await pedirJSON(pedido, { esfuerzo: "low" }));
+    } catch (error) {
+      if (intento >= 2 || !/líneas suficientes/.test(String(error.message))) throw error;
+    }
+  }
 }
 
 async function traducirPalabra({ palabra, contexto, ayudaEs = true }) {

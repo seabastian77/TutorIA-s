@@ -9,7 +9,7 @@ const {
   traducirPalabra,
 } = require("../services/iaContenido");
 const { LIBROS, obtenerLibro } = require("../data/libros");
-const { buscarLibros, obtenerFicha, descargarTexto, GENEROS, URL_GUTENBERG } = require("../services/gutenberg");
+const { buscarLibros, obtenerFicha, descargarTexto, mantenerCatalogoListo, GENEROS, URL_GUTENBERG } = require("../services/gutenberg");
 const { partirEnPartes } = require("../utils/textoGutenberg");
 const { obtenerMedio } = require("../services/medios");
 const { registrarActividad } = require("../utils/gamificacion");
@@ -29,11 +29,14 @@ const XP_POR_CAPITULO = 10;
 const NUEVOS_POR_DIA = 20; // capítulos que la IA escribe al día por estudiante; los ya escritos se leen sin límite
 const ID_EXTERNO = /^pg(\d{1,7})$/;
 const MAX_EN_MEMORIA = 12;
+const ESPERA_SIGUIENTE_MS = 45000; // la parte que sigue se escribe después, para no gastar de golpe el cupo por minuto de la IA
 
 // Si dos estudiantes abren a la vez un capítulo o un libro nuevo, se prepara una sola vez
 const capitulosEnCamino = new Map();
 const librosEnCamino = new Map();
 const librosEnMemoria = new Map();
+
+if (process.env.NODE_ENV !== "test") mantenerCatalogoListo();
 
 function errorConEstado(estado, mensaje) {
   const error = new Error(mensaje);
@@ -120,7 +123,7 @@ async function capituloDelNivel(datos, numero, nivel, usuarioId) {
       "SELECT COUNT(*)::int AS n FROM libros_capitulos WHERE creado_por = $1 AND fecha > NOW() - INTERVAL '1 day'",
       [usuarioId],
     );
-    if (hoy[0].n >= NUEVOS_POR_DIA) throw errorConEstado(429, "Ya pidió muchos capítulos nuevos hoy");
+    if (hoy[0].n >= NUEVOS_POR_DIA) throw Object.assign(errorConEstado(429, "Ya pidió muchos capítulos nuevos hoy"), { cupo: true });
     const promesa = (async () => {
       const parte = datos.partes ? datos.partes[numero - 1] : null;
       const nuevo = datos.clasico
@@ -142,6 +145,15 @@ async function capituloDelNivel(datos, numero, nivel, usuarioId) {
     capitulosEnCamino.set(clave, promesa);
   }
   return capitulosEnCamino.get(clave);
+}
+
+/** Deja escrita la parte que sigue mientras el estudiante lee esta; si falla, se escribe cuando la abra. */
+function prepararSiguiente(datos, numero, nivel, usuarioId) {
+  if (numero >= datos.libro.total || process.env.NODE_ENV === "test") return;
+  const reloj = setTimeout(() => {
+    capituloDelNivel(datos, numero + 1, nivel, usuarioId).catch(() => {});
+  }, ESPERA_SIGUIENTE_MS);
+  if (reloj.unref) reloj.unref();
 }
 
 /** El número de capítulo que pide la ruta, solo si existe en ese libro. */
@@ -403,13 +415,12 @@ const BibliotecaController = {
   /** Un capítulo contado al nivel del estudiante, con su español y, si hay, video de ambiente. */
   async capitulo(req, res) {
     try {
-      const datos = await resolverLibro(req.params.libro);
+      const [datos, { nivel }] = await Promise.all([resolverLibro(req.params.libro), obtenerPerfil(req.usuario.id)]);
       const numero = datos && numeroDeCapitulo(datos.libro.total, req.params.numero);
       if (!datos || !numero) {
         return res.status(404).json({ error: "That chapter doesn't exist" });
       }
 
-      const { nivel } = await obtenerPerfil(req.usuario.id);
       const contenido = await capituloDelNivel(datos, numero, nivel, req.usuario.id);
 
       const { rows: leido } = await pool.query(
@@ -449,15 +460,22 @@ const BibliotecaController = {
         leido: leido.length > 0,
         video,
       });
+      prepararSiguiente(datos, numero, nivel, req.usuario.id);
     } catch (error) {
-      if (error.status === 429) {
+      if (error.cupo) {
         return res.status(429).json({ error: "You opened many new chapters today. Read one you already started, or come back tomorrow." });
       }
       if (error.status === 404 || error.status === 422) {
         return res.status(404).json({ error: "This book can't be read here. Try another one." });
       }
       reportarError("Error en /biblioteca/libros/capitulo", error);
-      res.status(error.status === 502 ? 502 : 500).json({ error: "Could not open the chapter" });
+      if (error.status === 502) {
+        return res.status(502).json({ error: "Project Gutenberg isn't answering right now. Try again in a minute, or pick another book." });
+      }
+      if (error.status === 429) {
+        return res.status(503).json({ error: "The AI is busy right now. Try again in a minute." });
+      }
+      res.status(500).json({ error: "The AI couldn't write this part right now. Try again." });
     }
   },
 
