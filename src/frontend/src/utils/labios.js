@@ -62,6 +62,16 @@ function aperturaSintetica(ms, semilla = 0) {
   return golpe * variacion;
 }
 
+/** Tono de una frase para los gestos del avatar: corrige, felicita, pregunta o explica. */
+function tonoDeFrase(texto) {
+  const t = String(texto || "").toLowerCase();
+  const correccion = /\b(not quite|not exactly|almost|careful|small mistake|little mistake|try again|instead of|should be|we say|we don't say|it's better to say|the correct (form|word|answer|way))\b/;
+  if (correccion.test(t)) return "corrige";
+  const elogio = /\b(great|well done|good job|good work|excellent|perfect|awesome|amazing|fantastic|brilliant|nice (work|job)|congratulations|bravo|exactly|that's right|that's correct|you got it)\b/;
+  if (elogio.test(t)) return "feliz";
+  return t.includes("?") ? "pregunta" : "neutro";
+}
+
 const r = (n) => Math.round(n * 10) / 10;
 
 /**
@@ -125,7 +135,7 @@ function aPcm16(muestras, frecuenciaOrigen, frecuenciaDestino = 16000) {
 
 const Labios = {
   nivelDesdeMuestras, aperturaDesdeNivel, suavizar, anchuraDesdeEspectro,
-  silabasDePalabra, silabasDe, duracionEstimada, aperturaSintetica, formaDeBoca, aPcm16,
+  silabasDePalabra, silabasDe, duracionEstimada, aperturaSintetica, formaDeBoca, aPcm16, tonoDeFrase,
 };
 
 if (typeof window !== "undefined") window.Labios = Labios;

@@ -2,7 +2,7 @@
 
 const Groq = require("groq-sdk");
 const { instruccionVariedad } = require("../utils/variedad");
-const { normalizarCapitulo, largoPorNivel } = require("../utils/libroCapitulo");
+const { normalizarCapitulo, normalizarParte, largoPorNivel } = require("../utils/libroCapitulo");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const MODELO = "openai/gpt-oss-120b";
@@ -259,6 +259,34 @@ Reply ONLY with valid JSON:
   return normalizarCapitulo(await pedirJSON(prompt));
 }
 
+/** Cuenta una parte de cualquier libro del catálogo libre a partir de su texto original. */
+async function generarParteLibro({ libro, numero, parte, nivel }) {
+  const tiempo = nivel === "A1" ? "in the present simple" : "in the past tense, like a storyteller";
+  const original = parte.texto.replace(/"""/g, '"');
+  const prompt = `You write graded readers for Spanish-speaking learners of English.
+Below is part ${numero} of ${libro.total} of "${libro.titulo}" by ${libro.autor}, a public-domain book${parte.titulo ? ` (original heading: "${parte.titulo}")` : ""}. Retell ONLY what happens in this part for a learner at CEFR level ${nivel}.
+
+Write ${largoPorNivel(nivel)} lines ${tiempo}. Each line is ONE complete sentence. Follow the events of the text in order. Do not add events or characters that are not in it, and do not tell what happens after this part. Use only vocabulary and grammar of level ${nivel}, never harder. Dialogue goes inside double quotes in the same sentence. Keep the mood of the original. If this part has no story (a preface, a list of contents or notes), sum up what it says in simple words.
+
+Give the part a short English title of up to 8 words and its Spanish translation. Give every line its natural Latin American Spanish translation, in the same order. Translate the meaning, not word by word. Add "ambiente": 2 to 4 English words for the place or mood, to look for a background video, with no names (for example "foggy city street at night").
+
+Original text:
+"""
+${original}
+"""
+
+Reply ONLY with valid JSON:
+{
+  "titulo": "short title",
+  "tituloEs": "título corto",
+  "ambiente": "two to four words",
+  "lineas": ["first sentence", "second sentence"],
+  "traducciones": ["primera oración", "segunda oración"]
+}`;
+
+  return normalizarParte(await pedirJSON(prompt));
+}
+
 async function traducirPalabra({ palabra, contexto, ayudaEs = true }) {
   const prompt = `A Spanish-speaking English learner tapped the word "${palabra}" while reading.
 
@@ -343,6 +371,7 @@ module.exports = {
   obtenerTemaLectura,
   generarLectura,
   generarCapituloLibro,
+  generarParteLibro,
   traducirPalabra,
   generarDictado,
   generarComprensionAudio,

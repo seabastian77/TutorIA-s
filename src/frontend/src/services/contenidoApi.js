@@ -54,6 +54,13 @@ const BibliotecaAPI = {
 
   libros: () => pedirContenido("/biblioteca/libros"),
 
+  buscarLibros: ({ busqueda = "", genero = "", pagina = 1 } = {}) => {
+    const params = new URLSearchParams({ pagina: String(pagina) });
+    if (busqueda) params.set("q", busqueda);
+    if (genero) params.set("genero", genero);
+    return pedirContenido(`/biblioteca/libros/buscar?${params}`);
+  },
+
   capitulo: (libro, numero) =>
     pedirContenido(`/biblioteca/libros/${encodeURIComponent(libro)}/${encodeURIComponent(numero)}`),
 

@@ -823,7 +823,7 @@
       <div class="cabecera-seccion cabecera-modulo">
         <div>
           <h2>Library</h2>
-          <p>Classic books and short stories at your level. Tap any word while you read to see what it means.</p>
+          <p>Classic books, thousands more to choose from and short stories, all at your level. Tap any word while you read to see what it means.</p>
         </div>
         <span id="biblioteca-nivel" class="nivel-progreso"></span>
       </div>
@@ -834,6 +834,44 @@
           <p>Famous stories told at your level, with Spanish line by line. Listen while you read.</p>
         </div>
         <div id="libros-lista" class="libros-lista"></div>
+      </section>
+
+      <section id="estante-mios" class="estante oculto" aria-labelledby="mios-titulo">
+        <div class="estante-cabeza">
+          <h3 id="mios-titulo">Keep reading</h3>
+          <p>Books you started from the full catalog.</p>
+        </div>
+        <div id="mios-lista" class="libros-lista"></div>
+      </section>
+
+      <section id="explorar" class="explorar" aria-labelledby="explorar-titulo">
+        <div class="estante-cabeza">
+          <h3 id="explorar-titulo">Find any book</h3>
+          <p>Thousands of free classics. Pick one and read it at your level, part by part, with Spanish line by line.</p>
+        </div>
+        <form id="explorar-form" class="explorar-busqueda" role="search">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input id="explorar-texto" type="search" maxlength="80" autocomplete="off" enterkeyhint="search" placeholder="Search by title or author" aria-label="Search books by title or author">
+          <button class="explorar-buscar" type="submit">Search</button>
+        </form>
+        <div id="explorar-generos" class="explorar-generos" role="group" aria-label="Genres">
+          <button type="button" class="explorar-genero activo" data-genero="" aria-pressed="true">Popular</button>
+          <button type="button" class="explorar-genero" data-genero="adventure" aria-pressed="false">Adventure</button>
+          <button type="button" class="explorar-genero" data-genero="mystery" aria-pressed="false">Mystery</button>
+          <button type="button" class="explorar-genero" data-genero="horror" aria-pressed="false">Horror</button>
+          <button type="button" class="explorar-genero" data-genero="fantasy" aria-pressed="false">Fantasy</button>
+          <button type="button" class="explorar-genero" data-genero="scifi" aria-pressed="false">Sci-fi</button>
+          <button type="button" class="explorar-genero" data-genero="romance" aria-pressed="false">Romance</button>
+          <button type="button" class="explorar-genero" data-genero="children" aria-pressed="false">Children</button>
+          <button type="button" class="explorar-genero" data-genero="humor" aria-pressed="false">Humor</button>
+          <button type="button" class="explorar-genero" data-genero="stories" aria-pressed="false">Short stories</button>
+          <button type="button" class="explorar-genero" data-genero="fairy" aria-pressed="false">Fairy tales</button>
+        </div>
+        <ul id="explorar-lista" class="explorar-lista"></ul>
+        <p id="explorar-estado" class="explorar-estado" role="status"></p>
+        <button id="btn-explorar-mas" class="btn-secundario explorar-mas oculto" type="button">Show more books</button>
+        <div id="explorar-final" class="explorar-final" aria-hidden="true"></div>
+        <p class="explorar-fuente">Books from <a href="https://www.gutenberg.org" target="_blank" rel="noopener">Project Gutenberg</a>, all in the public domain in Colombia.</p>
       </section>
 
       <h3 class="estante-cuentos">Short stories</h3>
@@ -881,9 +919,10 @@
             <p id="libro-final-texto"></p>
           </div>
           <div class="libro-navegacion">
-            <button id="btn-capitulo-anterior" class="btn-secundario" type="button"><i class="fa-solid fa-chevron-left"></i>Previous chapter</button>
+            <button id="btn-capitulo-anterior" class="btn-secundario" type="button"><i class="fa-solid fa-chevron-left"></i><span id="libro-anterior-texto">Previous chapter</span></button>
             <button id="btn-capitulo-terminar" class="btn-principal" type="button" disabled>Finish chapter</button>
           </div>
+          <p id="libro-fuente" class="libro-fuente oculto"></p>
           <div id="libro-reporte" class="zona-reporte escena-reporte"></div>
         </div>
       </article>

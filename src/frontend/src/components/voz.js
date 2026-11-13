@@ -229,6 +229,7 @@ function hablarConNavegador(texto) {
 async function decir(texto) {
   const mio = ++turnoHabla;
   ponerEstado("hablando", "Numi is speaking. Tap the mic to interrupt.");
+  if (avatar && avatar.animo) avatar.animo(texto);
   mostrarSubtitulo(texto, "ia");
 
   const buffer = await obtenerAudio(texto);

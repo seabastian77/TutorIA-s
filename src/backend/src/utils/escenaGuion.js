@@ -1,16 +1,10 @@
 // Revisa el guion de Scene Mode que devuelve la IA: título, situación, líneas en inglés y su traducción
 
-const { limpiar, emparejarLineas } = require("./lineasBilingues");
+const { limpiar, limpiarAmbiente, emparejarLineas } = require("./lineasBilingues");
 
 const LINEAS_MINIMAS = 3;
 const LINEAS_MAXIMAS = 6;
 const LARGO_LINEA = 220;
-
-/** La búsqueda del video de ambiente: pocas palabras en inglés, sin signos. */
-function limpiarAmbiente(valor) {
-  const palabras = limpiar(valor, 80).toLowerCase().replace(/[^a-z\s]/g, " ").split(/\s+/).filter(Boolean);
-  return palabras.slice(0, 5).join(" ");
-}
 
 /** Deja la escena lista para el estudiante; sin traducciones completas, la escena sigue sin ellas. */
 function normalizarEscena(crudo) {

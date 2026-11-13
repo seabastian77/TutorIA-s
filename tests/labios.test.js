@@ -75,4 +75,15 @@ describe("Sincronía de labios del avatar", () => {
     const saturado = Labios.aPcm16(Float32Array.from([3]), 16000);
     expect(new DataView(saturado.buffer).getInt16(0, true)).toBe(0x7fff);
   });
+
+  test("el tono de la frase decide si Numi sonríe, duda, alza las cejas o solo explica", () => {
+    expect(Labios.tonoDeFrase("Great job! Your sentence is perfect.")).toBe("feliz");
+    expect(Labios.tonoDeFrase("That's right, well done.")).toBe("feliz");
+    expect(Labios.tonoDeFrase("What did you do last weekend?")).toBe("pregunta");
+    expect(Labios.tonoDeFrase("Not quite right. We say 'I went', not 'I goed'.")).toBe("corrige");
+    expect(Labios.tonoDeFrase("Almost! Great try, but it should be 'went'.")).toBe("corrige");
+    expect(Labios.tonoDeFrase("Can you tell me more about it?")).toBe("pregunta");
+    expect(Labios.tonoDeFrase("The past of 'go' is 'went'.")).toBe("neutro");
+    expect(Labios.tonoDeFrase("")).toBe("neutro");
+  });
 });

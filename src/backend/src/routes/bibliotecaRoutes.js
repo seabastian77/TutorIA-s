@@ -8,6 +8,7 @@ router.get("/lectura/:slug", verificarAuth, BibliotecaController.lectura);
 router.post("/traducir", verificarAuth, BibliotecaController.traducir);
 router.post("/responder", verificarAuth, BibliotecaController.responder);
 router.get("/libros", verificarAuth, BibliotecaController.libros);
+router.get("/libros/buscar", verificarAuth, BibliotecaController.buscarLibros);
 router.get("/libros/:libro/:numero", verificarAuth, BibliotecaController.capitulo);
 router.post("/libros/:libro/:numero/terminar", verificarAuth, BibliotecaController.terminarCapitulo);
 

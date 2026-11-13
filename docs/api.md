@@ -114,8 +114,9 @@ descenso que corresponda según cómo le fue la semana anterior.
 | GET | `/biblioteca/lectura/:slug` | Abre la lectura (la genera si no existía) |
 | POST | `/biblioteca/traducir` | Body: `palabra`, `contexto` |
 | POST | `/biblioteca/responder` | Body: `lecturaId`, `respuestas` |
-| GET | `/biblioteca/libros` | Estante de clásicos con los capítulos que ya terminó el estudiante |
-| GET | `/biblioteca/libros/:libro/:numero` | Capítulo contado al nivel del estudiante, con su español (la IA lo escribe la primera vez y queda guardado) |
+| GET | `/biblioteca/libros` | Estante de clásicos con los capítulos que ya terminó el estudiante y los libros del catálogo libre que ya empezó |
+| GET | `/biblioteca/libros/buscar?q=&genero=&pagina=` | Catálogo libre de Project Gutenberg por título, autor o género (solo libros de dominio público en Colombia), de a una página |
+| GET | `/biblioteca/libros/:libro/:numero` | Capítulo o parte contada al nivel del estudiante, con su español (la IA la escribe la primera vez y queda guardada; los libros del catálogo libre usan el id `pg` + su número de Gutenberg) |
 | POST | `/biblioteca/libros/:libro/:numero/terminar` | Marca el capítulo como leído; el XP se gana solo la primera vez |
 
 ## Laboratorio de audio

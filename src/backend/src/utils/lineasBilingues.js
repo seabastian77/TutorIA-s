@@ -5,6 +5,12 @@ function limpiar(valor, largo) {
   return typeof valor === "string" ? valor.replace(/\s+/g, " ").trim().slice(0, largo) : "";
 }
 
+/** La búsqueda del video de ambiente: pocas palabras en inglés, sin signos. */
+function limpiarAmbiente(valor) {
+  const palabras = limpiar(valor, 80).toLowerCase().replace(/[^a-z\s]/g, " ").split(/\s+/).filter(Boolean);
+  return palabras.slice(0, 5).join(" ");
+}
+
 /**
  * Empareja cada línea con su traducción. Las traducciones solo pasan si vienen todas,
  * una por línea y distintas del inglés; si no, el texto sigue sin ellas.
@@ -28,4 +34,4 @@ function emparejarLineas(lineasCrudas, traduccionesCrudas, { minimas, maximas, l
   };
 }
 
-module.exports = { limpiar, emparejarLineas };
+module.exports = { limpiar, limpiarAmbiente, emparejarLineas };
